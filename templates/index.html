@@ -5,89 +5,25 @@
     <title>Commande</title>
 </head>
 <body>
-    <h1>Commande </h1>
+    <h1>Passer une Commande</h1>
+    <form action="/submit_order" method="post">
 
-    <script>
-        function updateModeles() {
-            var cordageSelect = document.getElementById('cordage_id');
-            var selectedMarque = cordageSelect.options[cordageSelect.selectedIndex].value;
-            var modeleSelect = document.getElementById('modele_id');
-            var allCordages = {{ cordages|tojson|safe }};  // Convertir la liste Python en tableau JavaScript
+        <label for="client_email">Email du client :</label>
+        <input type="email" id="client_email" name="client_email" placeholder="Ex: client@example.com" required>
 
-            // Vider les options actuelles
-            modeleSelect.innerHTML = '';
-
-            // Utilisé pour éviter les doublons
-            var addedModeles = new Set();
-
-            // Ajouter les modèles pour la marque sélectionnée
-            for (var i = 0; i < allCordages.length; i++) {
-                if (allCordages[i]['fields']['Marque'] === selectedMarque) {
-                    var currentModele = allCordages[i]['fields']['Modèle'];
-                    
-                    // Vérifier si le modèle n'a pas déjà été ajouté
-                    if (!addedModeles.has(currentModele)) {
-                        var option = document.createElement('option');
-                        option.value = currentModele;
-                        option.text = currentModele;
-                        modeleSelect.appendChild(option);
-                        
-                        // Ajouter le modèle au set pour éviter les doublons
-                        addedModeles.add(currentModele);
-                    }
-                }
-            }
-        };
-    
-    function updateTailles() {
-        var modeleSelect = document.getElementById('modele_id');
-        var selectedModele = modeleSelect.options[modeleSelect.selectedIndex].value;
-        var tailleSelect = document.getElementById('taille_id');
-        var allCordages = {{ cordages|tojson|safe }}; // Convertir la liste Python en tableau JavaScript
-
-        // Vider les options actuelles
-        tailleSelect.innerHTML = '';
-
-        // Ajouter les tailles pour la marque et le modèle sélectionnés
-        for (var i = 0; i < allCordages.length; i++) {
-            if (allCordages[i]['fields']['Modèle'] === selectedModele) {
-                var option = document.createElement('option');
-                option.value = allCordages[i]['fields']['Jauge'];
-                option.text = allCordages[i]['fields']['Jauge'];
-                tailleSelect.appendChild(option);
-        };
-    }
-}
-</script>
-
-    <form action="/choose_cordage" method="post">
-
-        <label for="email">Veuillez entrer votre mail.</label>
-        <input type="email" id="email" name="email" placeholder="Ex: andréngn@gmail.com" required>
-
-        <!-- Choix du cordage -->
-        <label for="cordage_id">Quelle est la marque de votre raquette ?</label>
-        <select id="cordage_id" name="cordage_id" onchange="updateModeles()">
+        <!-- Choix de la marque de cordage -->
+        <label for="cordage_marque">Marque du cordage :</label>
+        <select id="cordage_marque" name="cordage_marque" required>
             {% for marque in marques %}
                 <option value="{{ marque }}">{{ marque }}</option>
             {% endfor %}
         </select>
-            
-        <!-- Date de récupération -->
-        <label for="date_recuperation">Quand souhaitez-vous la récuperer ?</label>
-        <input type="date" id="date_recuperation" name="date_recuperation">
         
-        <input type="submit" value="Choisir">
+        <!-- Quantité de cordage -->
+        <label for="cordage_quantite">Quantité :</label>
+        <input type="number" id="cordage_quantite" name="cordage_quantite" min="1" placeholder="Quantité" required>
+      
+        <input type="submit" value="Passer la commande">
     </form>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-    <a href="/client"><h2>Retour à l'accueil</h2></a>
 </body>
 </html>

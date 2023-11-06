@@ -20,15 +20,17 @@ airtable_cordages = Airtable(BASE_ID_PRODUCTS,PRODUCTS_TABLE, API_KEY)
 
 
 @app.route('/')
-def reparation():
-
+def commande():
     # Extraire les données de la base de données
     cordages_raw = airtable_cordages.get_all()
 
-    # Extraire les valeurs uniques
-    unique_marques = set(cordage['fields'].get('String', '') for cordage in cordages_raw)
-    
-    return render_template('index.html', marques=sorted(unique_marques), cordages = cordages_raw)
+    # Filtrer pour ne garder que les cordages en stock
+    cordages_en_stock = [cordage for cordage in cordages_raw if cordage['fields'].get('En stock')]
+
+    # Extraire les valeurs uniques des marques pour les cordages en stock
+    unique_marques = set(cordage['fields'].get('String', '') for cordage in cordages_en_stock)
+
+    return render_template('index.html', marques=sorted(unique_marques), cordages=cordages_en_stock)
 
 @app.route('/client')
 def index():    
@@ -83,6 +85,7 @@ def add_client():
 
     # Retour à la page d'accueil
     return redirect(url_for('index'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)
