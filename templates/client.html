@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="/static/styles.css">
+    <title>Client</title>
+</head>
+<body>
+
+    <div class="container">
+        <form action="/search_client" method="post">
+            <h2>Rechercher un client</h2>
+            
+            <label for="search_email">Email :</label>
+            <input type="email" id="search_email" name="search_email" placeholder="Entrez votre email" required>
+            
+            <input type="submit" value="Rechercher">
+        </form>
+
+        <form action="/add_client" method="post">
+
+            <h2>ajouter un nouveau client</h2>
+
+            <label for="nom">Nom :</label>
+            <input type="text" id="nom" name="nom" placeholder="Ex: André" required>
+            
+            <label for="prenom">Prénom :</label>
+            <input type="text" id="prenom" name="prenom" placeholder="Ex: Nguyen" required>
+            
+            <label for="email">Email :</label>
+            <input type="email" id="email" name="email" placeholder="Ex: andréngn@gmail.com" required>
+            
+            <label for="ville">Ville :</label>
+            <input type="text" id="ville" name="ville" placeholder="Ex: Paris" required>
+            
+            <label for="codepostal">Code Postal :</label>
+            <input type="text" id="codepostal" name="codepostal" placeholder="Ex: 75019" required>
+            
+            <label for="genre">Genre :</label>
+            <input type="text" id="genre" name="genre" placeholder="Homme,Femme,Autres" required>     
+            
+            <label for="datedenaissance">Date de naissance :</label>
+            <input type="date" id="datedenaissance" name="datedenaissance" required>
+            
+            <input type="submit" value="Ajouter">
+        </form>
+    </div>
+    <a href="/"><h2>Retour à l'accueil</h2></a>
+</body>
+</html>

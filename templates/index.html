@@ -2,47 +2,36 @@
 <html>
 <head>
     <link rel="stylesheet" href="/static/styles.css">
-    <title>Tennis Cordage</title>
+    <title>Commande</title>
 </head>
 <body>
-    <h1 class="main-title">Réparation de cordage</h1>
-    <div class="container">
-        <form action="/search_client" method="post">
-            <h2>Recherchez vos informations</h2>
-            
-            <label for="search_email">Email :</label>
-            <input type="email" id="search_email" name="search_email" placeholder="Entrez votre email" required>
-            
-            <input type="submit" value="Rechercher">
-        </form>
+    <h1>Commande</h1>
 
-        <form action="/add_client" method="post">
+    <form action="/choose_cordage" method="post">
 
-            <h2>Inscrivez-vous ici</h2>
+        <!--<label for="email">Veuillez entrer votre mail.</label>
+        <input type="email" id="email" name="email" placeholder="Ex: andréngn@gmail.com" required>-->
 
-            <label for="nom">Nom :</label>
-            <input type="text" id="nom" name="nom" placeholder="Ex: Wayne" required>
-            
-            <label for="prenom">Prénom :</label>
-            <input type="text" id="prenom" name="prenom" placeholder="Ex: Bruce" required>
-            
-            <label for="email">Email :</label>
-            <input type="email" id="email" name="email" placeholder="Ex: brucewayne@gmail.com" required>
-            
-            <label for="ville">Ville :</label>
-            <input type="text" id="ville" name="ville" placeholder="Ex: Paris" required>
-            
-            <label for="codepostal">Code Postal :</label>
-            <input type="text" id="codepostal" name="codepostal" placeholder="Ex: 75019" required>
-            
-            <label for="genre">Genre :</label>
-            <input type="text" id="genre" name="genre" placeholder="Homme,Femme,Autres" required>     
-            
-            <label for="datedenaissance">Date de naissance :</label>
-            <input type="date" id="datedenaissance" name="datedenaissance" required>
-            
-            <input type="submit" value="Ajouter">
-        </form>
-    </div>
+        <!-- Choix du cordage -->
+        <label for="cordage_id">Quelle est la marque de votre raquette ?</label>
+        <select id="cordage_id" name="cordage_id" onchange="">
+        </select>
+        
+        <!-- Choix du modèle -->
+        <label for="modele_id">Quel est le modèle de votre raquette ?</label>
+        <select id="modele_id" name="modele_id" onchange="">
+        </select>
+
+        <!-- Choix de la taille -->
+        <label for="taille_id">Quelle est sa taille ?</label>
+        <select id="taille_id" name="taille_id">
+        </select>
+    
+        <!-- Date de récupération -->
+        <label for="date_recuperation">Quand souhaitez-vous la récuperer ?</label>
+        <input type="date" id="date_recuperation" name="date_recuperation">
+        
+        <input type="submit" value="Choisir">
+    </form>
 </body>
 </html>

@@ -9,11 +9,11 @@ app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SECRET_KEY')
 
 # Configuration Airtable
-API_KEY = os.getenv('AIRTABLE_API_KEY')
-BASE_ID = os.getenv('AIRTABLE_BASE_ID')
+API_KEY_LEADS = os.getenv('AIRTABLE_API_KEY_LEADS')
+BASE_ID_LEADS = os.getenv('AIRTABLE_BASE_ID_LEADS')
 CLIENT_TABLE = 'Leads'
 
-airtable_clients = Airtable(BASE_ID,CLIENT_TABLE, API_KEY)
+airtable_clients = Airtable(BASE_ID_LEADS ,CLIENT_TABLE, API_KEY_LEADS)
 
 @app.route('/')
 def index():    
