@@ -9,15 +9,14 @@ app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SECRET_KEY')
 
 # Configuration Airtable
-API_KEY_LEADS = os.getenv('AIRTABLE_API_KEY_LEADS')
+API_KEY = os.getenv('AIRTABLE_API_KEY')
 BASE_ID_LEADS = os.getenv('AIRTABLE_BASE_ID_LEADS')
 BASE_ID_PRODUCTS = os.getenv('AIRTABLE_BASE_ID_PRODUCTS')
-API_KEY_PRODUCTS = os.getenv('AIRTABLE_API_KEY_PRODUCTS')
-CLIENT_TABLE = 'Leads'
-PRODUCTS_TABLE = 'Cordages'
+CLIENT_TABLE = 'leads'
+PRODUCTS_TABLE = 'strings'
 
-airtable_clients = Airtable(BASE_ID_LEADS ,CLIENT_TABLE, API_KEY_LEADS)
-airtable_cordages = Airtable(BASE_ID_PRODUCTS,PRODUCTS_TABLE, API_KEY_PRODUCTS)
+airtable_clients = Airtable(BASE_ID_LEADS ,CLIENT_TABLE, API_KEY)
+airtable_cordages = Airtable(BASE_ID_PRODUCTS,PRODUCTS_TABLE, API_KEY)
 
 
 @app.route('/')
@@ -27,22 +26,23 @@ def reparation():
     cordages_raw = airtable_cordages.get_all()
 
     # Extraire les valeurs uniques
-    unique_marques = set(cordage['fields'].get('Marque', '') for cordage in cordages_raw)
-    unique_modeles = set(cordage['fields'].get('Modèle', '') for cordage in cordages_raw)
-    unique_tailles = set(cordage['fields'].get('Jauge', '') for cordage in cordages_raw)
+    unique_marques = set(cordage['fields'].get('String', '') for cordage in cordages_raw)
     
-    return render_template('index.html', marques=sorted(unique_marques), modeles=sorted(unique_modeles), tailles=sorted(unique_tailles), cordages = cordages_raw)
+    return render_template('index.html', marques=sorted(unique_marques), cordages = cordages_raw)
+
+@app.route('/client')
+def index():    
+    return render_template('client.html')
 
 @app.route('/search_client', methods=['POST'])
 def search_client():
     search_email = request.form['search_email']
-    
+
     # Utilisez l'API Airtable pour rechercher l'utilisateur par e-mail
     client_record = airtable_clients.search('Email', search_email)
     
     if client_record:
         # L'utilisateur a été trouvé, affichez ses informations
-        # (Assurez-vous que les champs correspondent à ceux de votre table Airtable)
         client_info = client_record[0]['fields']
         return render_template('client_info.html', client_info=client_info)
     else:
