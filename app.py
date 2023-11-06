@@ -65,8 +65,6 @@ def add_client():
         'Age': age 
     }
 
-    print(data)
-
     # Ajout à la base de données
     airtable_clients.insert(data)
 

@@ -37,9 +37,6 @@ form {
     margin: 20px; /* Marge autour des formulaires */
 }
 
-/* ... autres styles ... */
-
-
 input, select {
     width: 100%; /* Utiliser toute la largeur disponible */
     padding: 10px; /* Espacement à l'intérieur des champs */
