@@ -2,29 +2,38 @@
 <html>
 <head>
     <link rel="stylesheet" href="/static/styles.css">
-    <title>Commande</title>
+    <title>Tennis Cordage</title>
 </head>
 <body>
-    <h1>Commande</h1>
+    <h1>Réparation de cordage </h1>
 
     <form action="/choose_cordage" method="post">
 
-        <!--<label for="email">Veuillez entrer votre mail.</label>
-        <input type="email" id="email" name="email" placeholder="Ex: andréngn@gmail.com" required>-->
+        <label for="email">Veuillez entrer votre mail.</label>
+        <input type="email" id="email" name="email" placeholder="Ex: brucewayne@gmail.com" required>
 
         <!-- Choix du cordage -->
         <label for="cordage_id">Quelle est la marque de votre raquette ?</label>
-        <select id="cordage_id" name="cordage_id" onchange="">
+        <select id="cordage_id" name="cordage_id" onchange="updateModeles()">
+            {% for marque in marques %}
+                <option value="{{ marque }}">{{ marque }}</option>
+            {% endfor %}
         </select>
         
         <!-- Choix du modèle -->
         <label for="modele_id">Quel est le modèle de votre raquette ?</label>
-        <select id="modele_id" name="modele_id" onchange="">
+        <select id="modele_id" name="modele_id" onchange="updateTailles();">
+            {% for modele in modeles %}
+                <option value="{{ modele }}">{{modele }}</option>
+            {% endfor %}
         </select>
 
         <!-- Choix de la taille -->
         <label for="taille_id">Quelle est sa taille ?</label>
         <select id="taille_id" name="taille_id">
+            {% for taille in tailles %}
+                <option value="{{ taille }}">{{ taille }}</option>
+            {% endfor %}
         </select>
     
         <!-- Date de récupération -->
@@ -33,5 +42,15 @@
         
         <input type="submit" value="Choisir">
     </form>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <a href="/"><h2>Retour à l'accueil</h2></a>
 </body>
 </html>

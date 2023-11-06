@@ -14,21 +14,19 @@ BASE_ID_LEADS = os.getenv('AIRTABLE_BASE_ID_LEADS')
 BASE_ID_PRODUCTS = os.getenv('AIRTABLE_BASE_ID_PRODUCTS')
 API_KEY_PRODUCTS = os.getenv('AIRTABLE_API_KEY_PRODUCTS')
 CLIENT_TABLE = 'Leads'
-PRODUCTS_TABLE = 'Products'
+PRODUCTS_TABLE = 'Cordages'
 
 airtable_clients = Airtable(BASE_ID_LEADS ,CLIENT_TABLE, API_KEY_LEADS)
 airtable_cordages = Airtable(BASE_ID_PRODUCTS,PRODUCTS_TABLE, API_KEY_PRODUCTS)
 
-@app.route('/')
-def index():    
-    return render_template('index.html')
 
-@app.route('/reparation')
+@app.route('/')
 def reparation():
 
     # Extraire les données de la base de données
     cordages_raw = airtable_cordages.get_all()
-    
+
+    print(cordages_raw)
     # Extraire les valeurs uniques
     unique_marques = set(cordage['fields'].get('Marque', '') for cordage in cordages_raw)
     unique_modeles = set(cordage['fields'].get('Modèle', '') for cordage in cordages_raw)
