@@ -1,12 +1,16 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from airtable import Airtable
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = '1254'
+app.secret_key = os.getenv('FLASK_SECRET_KEY')
 
 # Configuration Airtable
-API_KEY = 'pat8ocpNqxyGQpATw.ee85cef19f90dcd5a070e8057b7e8d84d148b116471ce54843d8c4f5f3ae1465'
-BASE_ID = 'app35hW4vdSCSF1zJ'
+API_KEY = os.getenv('AIRTABLE_API_KEY')
+BASE_ID = os.getenv('AIRTABLE_BASE_ID')
 CLIENT_TABLE = 'Leads'
 
 airtable_clients = Airtable(BASE_ID,CLIENT_TABLE, API_KEY)
