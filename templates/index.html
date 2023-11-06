@@ -2,15 +2,68 @@
 <html>
 <head>
     <link rel="stylesheet" href="/static/styles.css">
-    <title>Tennis Cordage</title>
+    <title>Commande</title>
 </head>
 <body>
-    <h1>Réparation de cordage </h1>
+    <h1>Commande </h1>
+
+    <script>
+        function updateModeles() {
+            var cordageSelect = document.getElementById('cordage_id');
+            var selectedMarque = cordageSelect.options[cordageSelect.selectedIndex].value;
+            var modeleSelect = document.getElementById('modele_id');
+            var allCordages = {{ cordages|tojson|safe }};  // Convertir la liste Python en tableau JavaScript
+
+            // Vider les options actuelles
+            modeleSelect.innerHTML = '';
+
+            // Utilisé pour éviter les doublons
+            var addedModeles = new Set();
+
+            // Ajouter les modèles pour la marque sélectionnée
+            for (var i = 0; i < allCordages.length; i++) {
+                if (allCordages[i]['fields']['Marque'] === selectedMarque) {
+                    var currentModele = allCordages[i]['fields']['Modèle'];
+                    
+                    // Vérifier si le modèle n'a pas déjà été ajouté
+                    if (!addedModeles.has(currentModele)) {
+                        var option = document.createElement('option');
+                        option.value = currentModele;
+                        option.text = currentModele;
+                        modeleSelect.appendChild(option);
+                        
+                        // Ajouter le modèle au set pour éviter les doublons
+                        addedModeles.add(currentModele);
+                    }
+                }
+            }
+        };
+    
+    function updateTailles() {
+        var modeleSelect = document.getElementById('modele_id');
+        var selectedModele = modeleSelect.options[modeleSelect.selectedIndex].value;
+        var tailleSelect = document.getElementById('taille_id');
+        var allCordages = {{ cordages|tojson|safe }}; // Convertir la liste Python en tableau JavaScript
+
+        // Vider les options actuelles
+        tailleSelect.innerHTML = '';
+
+        // Ajouter les tailles pour la marque et le modèle sélectionnés
+        for (var i = 0; i < allCordages.length; i++) {
+            if (allCordages[i]['fields']['Modèle'] === selectedModele) {
+                var option = document.createElement('option');
+                option.value = allCordages[i]['fields']['Jauge'];
+                option.text = allCordages[i]['fields']['Jauge'];
+                tailleSelect.appendChild(option);
+        };
+    }
+}
+</script>
 
     <form action="/choose_cordage" method="post">
 
         <label for="email">Veuillez entrer votre mail.</label>
-        <input type="email" id="email" name="email" placeholder="Ex: brucewayne@gmail.com" required>
+        <input type="email" id="email" name="email" placeholder="Ex: andréngn@gmail.com" required>
 
         <!-- Choix du cordage -->
         <label for="cordage_id">Quelle est la marque de votre raquette ?</label>
