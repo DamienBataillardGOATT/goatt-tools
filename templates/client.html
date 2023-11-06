@@ -10,7 +10,7 @@
         <form action="/search_client" method="post">
             <h2>Rechercher un client</h2>
             
-            <label for="search_email">Email :</label>
+            <label for="search_email">Quel est ton adresse email ?</label>
             <input type="email" id="search_email" name="search_email" placeholder="Entrez votre email" required>
             
             <input type="submit" value="Rechercher">
@@ -18,29 +18,32 @@
 
         <form action="/add_client" method="post">
 
-            <h2>ajouter un nouveau client</h2>
+            <h2>Ajouter un nouveau client</h2>
+            
+            <label for="email">Quel est ton adresse email ?</label>
+            <input type="email" id="email" name="email" placeholder="Ex: andréngn@gmail.com" required>
 
-            <label for="nom">Nom :</label>
+            <label for="source">Comment tu as connu GOATT ?</label>
+            <input type="source" id="source" name="source" placeholder="Tiktok, Youtube, Facebook, ..." required>
+
+            <label for="nom">Comment t'appelles-tu ?</label>
             <input type="text" id="nom" name="nom" placeholder="Ex: André" required>
             
-            <label for="prenom">Prénom :</label>
+            <label for="prenom"></label>
             <input type="text" id="prenom" name="prenom" placeholder="Ex: Nguyen" required>
             
-            <label for="email">Email :</label>
-            <input type="email" id="email" name="email" placeholder="Ex: andréngn@gmail.com" required>
-            
-            <label for="ville">Ville :</label>
-            <input type="text" id="ville" name="ville" placeholder="Ex: Paris" required>
-            
-            <label for="codepostal">Code Postal :</label>
-            <input type="text" id="codepostal" name="codepostal" placeholder="Ex: 75019" required>
-            
-            <label for="genre">Genre :</label>
+            <label for="datedenaissance">Quel est ta date de naissance :</label>
+            <input type="date" id="datedenaissance" name="datedenaissance" required>
+
+            <label for="genre">Quel est ton genre :</label>
             <input type="text" id="genre" name="genre" placeholder="Homme,Femme,Autres" required>     
             
-            <label for="datedenaissance">Date de naissance :</label>
-            <input type="date" id="datedenaissance" name="datedenaissance" required>
+            <label for="ville">Dans quelle vilte habites-tu ?</label>
+            <input type="text" id="ville" name="ville" placeholder="Ex: Paris" required>
             
+            <label for="codepostal">Quel est ton code postal ?</label>
+            <input type="text" id="codepostal" name="codepostal" placeholder="Ex: 75019" required>
+           
             <input type="submit" value="Ajouter">
         </form>
     </div>
