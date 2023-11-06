@@ -5,8 +5,8 @@ app = Flask(__name__)
 app.secret_key = '1254'
 
 # Configuration Airtable
-API_KEY = 'keyS4y9yGGRj96S7V'
-BASE_ID = 'patkrzVdzKq4ayajx.7d18d25b2b81051d5b1ae99788e8a49747daa7f6068bb40b9c8fdeac7ca77dc9'
+API_KEY = 'pat8ocpNqxyGQpATw.ee85cef19f90dcd5a070e8057b7e8d84d148b116471ce54843d8c4f5f3ae1465'
+BASE_ID = 'app35hW4vdSCSF1zJ'
 CLIENT_TABLE = 'Leads'
 
 airtable_clients = Airtable(BASE_ID,CLIENT_TABLE, API_KEY)
@@ -15,19 +15,23 @@ airtable_clients = Airtable(BASE_ID,CLIENT_TABLE, API_KEY)
 def index():    
     return render_template('index.html')
 
-@app.route('/reparation')
-def reparation():
-
-    # Extraire les données de la base de données
-    cordages_raw = airtable_cordages.get_all()
+@app.route('/search_client', methods=['POST'])
+def search_client():
+    search_email = request.form['search_email']
     
-    # Extraire les valeurs uniques
-    unique_marques = set(cordage['fields'].get('Marque', '') for cordage in cordages_raw)
-    unique_modeles = set(cordage['fields'].get('Modèle', '') for cordage in cordages_raw)
-    unique_tailles = set(cordage['fields'].get('Size', '') for cordage in cordages_raw)
+    # Utilisez l'API Airtable pour rechercher l'utilisateur par e-mail
+    client_record = airtable_clients.search('Email', search_email)
     
-    return render_template('reparation.html', marques=sorted(unique_marques), modeles=sorted(unique_modeles), tailles=sorted(unique_tailles), cordages = cordages_raw)
-
+    if client_record:
+        # L'utilisateur a été trouvé, affichez ses informations
+        # (Assurez-vous que les champs correspondent à ceux de votre table Airtable)
+        client_info = client_record[0]['fields']
+        return render_template('client_info.html', client_info=client_info)
+    else:
+        # L'utilisateur n'a pas été trouvé, affichez un message d'erreur
+        flash('Aucun utilisateur trouvé avec cet email.', 'danger')
+        return redirect(url_for('index'))
+    
 @app.route('/add_client', methods=['POST'])
 def add_client():
 
@@ -48,7 +52,7 @@ def add_client():
         'Prénom' : request.form['prenom'],
         'Email': request.form['email'],
         'Ville': request.form['ville'],
-        'Code postal': request.form['codepostal'],
+        'Code Postal': request.form['codepostal'],
         'Genre': request.form['genre'],
         'Date de naissance': request.form['datedenaissance']
     }
@@ -61,38 +65,6 @@ def add_client():
 
     # Retour à la page d'accueil
     return redirect(url_for('index'))
-
-@app.route('/choose_cordage', methods=['POST'])
-def choose_cordage():
-
-    # Récuperer l'email rentrer dans le formulaire
-    email = request.form['email']
-    
-    # Vérifiez si l'utilisateur est déjà dans la base de données
-    existing_client = airtable_clients.search('Email', email)
-    
-    # Si non, rédirection vers la page d'accueil pour s'inscrire
-    if not existing_client:
-        flash("L'utilisateur n'existe pas dans la base de données. Veuillez vous inscrire d'abord.", "failure")
-        return redirect(url_for('index'))
-    
-    # Si l'utilisateur est dans la base de données, ajoutez sa réservation
-    data = {
-        'Email': email,
-        'Marque': request.form['cordage_id'],
-        'Modèle': request.form['modele_id'],  # Assurez-vous que le nom du champ correspond à celui de votre formulaire
-        'Size': request.form['taille_id'],  # Assurez-vous que le nom du champ correspond à celui de votre formulaire
-        'Date de récupération': request.form['date_recuperation']
-    }
-    
-    # Insérez les données dans la table "reservation"
-    airtable_reservation.insert(data)
-    
-    # Message de confirmation
-    flash("Votre réservation a été effectuée avec succès!", "success")
-
-    #Retour à la page reparation
-    return redirect(url_for('reparation'))
 
 if __name__ == '__main__':
     app.run(debug=True)

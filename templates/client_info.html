@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="/static/styles.css">
+    <title>Informations du Client</title>
+</head>
+<body>
+    <h1>Informations du Client</h1>
+    
+    <p>Nom : {{ client_info['Nom'] }}</p>
+    <p>Prénom : {{ client_info['Prénom'] }}</p>
+    <p>Email : {{ client_info['Email'] }}</p>
+    <p>Ville : {{ client_info['Ville'] }}</p>
+    <p>Code Postal : {{ client_info['Code postal'] }}</p>
+    <p>Genre : {{ client_info['Genre'] }}</p>
+    <p>Date de naissance : {{ client_info['Date de naissance'] }}</p>
+    
+    <a href="/">Retour à l'accueil</a>
+</body>
+</html>

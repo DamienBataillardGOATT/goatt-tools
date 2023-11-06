@@ -5,46 +5,45 @@
     <title>Tennis Cordage</title>
 </head>
 <body>
-    <h1>Réparation de cordage</h1>
-    
-    <form action="/add_client" method="post">
+    <h1 class="main-title">Réparation de cordage</h1>
+    <div class="container">
+        <form action="/search_client" method="post">
+            <h2>Recherchez vos informations</h2>
+            
+            <label for="search_email">Email :</label>
+            <input type="email" id="search_email" name="search_email" placeholder="Entrez votre email" required>
+            
+            <input type="submit" value="Rechercher">
+        </form>
 
-        <h2>Inscrivez-vous ici</h2>
+        <form action="/add_client" method="post">
 
-        <label for="nom">Nom :</label>
-        <input type="text" id="nom" name="nom" placeholder="Ex: Wayne" required>
-        
-        <label for="prenom">Prénom :</label>
-        <input type="text" id="prenom" name="prenom" placeholder="Ex: Bruce" required>
-        
-        <label for="email">Email :</label>
-        <input type="email" id="email" name="email" placeholder="Ex: brucewayne@gmail.com" required>
-        
-        <label for="ville">Ville :</label>
-        <input type="text" id="ville" name="ville" placeholder="Ex: Paris" required>
-        
-        <label for="codepostal">Code Postal :</label>
-        <input type="text" id="codepostal" name="codepostal" placeholder="Ex: 75019" required>
-        
-        <label for="genre">Genre :</label>
-        <input type="text" id="genre" name="genre" placeholder="Homme,Femme,Autres" required>     
-        
-        <label for="datedenaissance">Date de naissance :</label>
-        <input type="date" id="datedenaissance" name="datedenaissance" required>
-        
-        <input type="submit" value="Ajouter">
-    </form>
+            <h2>Inscrivez-vous ici</h2>
 
-    <form action="/search_client" method="post">
-        <h2>Recherchez vos informations</h2>
-        
-        <label for="search_email">Email :</label>
-        <input type="email" id="search_email" name="search_email" placeholder="Entrez votre email" required>
-        
-        <input type="submit" value="Rechercher">
-    </form>
-
-
-        <a href="/reparation"><h2>Déja inscrit</h2></a>
+            <label for="nom">Nom :</label>
+            <input type="text" id="nom" name="nom" placeholder="Ex: Wayne" required>
+            
+            <label for="prenom">Prénom :</label>
+            <input type="text" id="prenom" name="prenom" placeholder="Ex: Bruce" required>
+            
+            <label for="email">Email :</label>
+            <input type="email" id="email" name="email" placeholder="Ex: brucewayne@gmail.com" required>
+            
+            <label for="ville">Ville :</label>
+            <input type="text" id="ville" name="ville" placeholder="Ex: Paris" required>
+            
+            <label for="codepostal">Code Postal :</label>
+            <input type="text" id="codepostal" name="codepostal" placeholder="Ex: 75019" required>
+            
+            <label for="genre">Genre :</label>
+            <input type="text" id="genre" name="genre" placeholder="Homme,Femme,Autres" required>     
+            
+            <label for="datedenaissance">Date de naissance :</label>
+            <input type="date" id="datedenaissance" name="datedenaissance" required>
+            
+            <input type="submit" value="Ajouter">
+        </form>
+    </div>
+    <a href="/reparation"><h2>Déja inscrit</h2></a>
 </body>
 </html>

@@ -1,45 +1,58 @@
 body, html {
     margin: 0;
     padding: 0;
-
     font-family: Arial, sans-serif;
-    flex-direction: column;   /* Affiche les éléments enfants en colonne */
+    height: 100%; /* Assurez-vous que le body prend toute la hauteur */
 }
 
 body {
     display: flex;
-    justify-content: center; /* Centrer horizontalement */
-    align-items: center;     /* Centrer verticalement */
+    flex-direction: column; /* Organise les éléments enfants en colonne */
+    justify-content: flex-start; /* Aligner les éléments au début verticalement */
+    align-items: center; /* Centrer les éléments horizontalement */
     background-color: #f4f4f4; /* Couleur d'arrière-plan pour un contraste doux */
+}
+
+.main-title {
+    text-align: center; /* Centrer le texte du titre */
+    width: 100%; /* Assurez-vous que le titre prend toute la largeur */
+    margin-top: 20px; /* Ajouter un peu d'espace au-dessus du titre */
+    margin-bottom: 20px; /* Ajouter un peu d'espace en dessous du titre avant les formulaires */
+}
+
+.container {
+    display: flex;
+    justify-content: space-around; /* Espacer uniformément les formulaires */
+    width: 100%; /* Prendre toute la largeur */
+    max-width: 800px; /* Largeur maximale du conteneur */
+    flex-wrap: wrap; /* Permet aux éléments de passer à la ligne suivante si nécessaire */
 }
 
 form {
     background-color: #ffffff; /* Couleur d'arrière-plan du formulaire */
-    padding: 30px;             /* Espacement à l'intérieur du formulaire */
-    border-radius: 5px;        /* Coins arrondis */
+    padding: 30px; /* Espacement à l'intérieur du formulaire */
+    border-radius: 5px; /* Coins arrondis */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre douce autour du formulaire */
-    width: 100%;               /* Utiliser toute la largeur disponible */
-    max-width: 400px;          /* Largeur maximale pour le formulaire */
-    margin-bottom: 20px;       /* Ajoutez une marge en bas pour espacer les formulaires */
+    width: calc(50% - 40px); /* Calculez la largeur pour inclure la marge */
+    margin: 20px; /* Marge autour des formulaires */
 }
 
-form:last-of-type {
-    margin-bottom: 0;         /* Supprimez la marge en bas pour le dernier formulaire */
-}
+/* ... autres styles ... */
+
 
 input, select {
-    width: 100%;               /* Utiliser toute la largeur disponible */
-    padding: 10px;             /* Espacement à l'intérieur des champs */
-    margin-bottom: 10px;      /* Espacement entre les champs */
-    border: 1px solid #ccc;   /* Bordure des champs */
-    border-radius: 4px;       /* Coins arrondis pour les champs */
+    width: 100%; /* Utiliser toute la largeur disponible */
+    padding: 10px; /* Espacement à l'intérieur des champs */
+    margin-bottom: 10px; /* Espacement entre les champs */
+    border: 1px solid #ccc; /* Bordure des champs */
+    border-radius: 4px; /* Coins arrondis pour les champs */
 }
 
 input[type="submit"] {
     background-color: #007BFF; /* Couleur d'arrière-plan du bouton */
-    color: #ffffff;            /* Couleur du texte du bouton */
-    border: none;              /* Supprimer la bordure du bouton */
-    cursor: pointer;           /* Changer le curseur en main lors du survol du bouton */
+    color: #ffffff; /* Couleur du texte du bouton */
+    border: none; /* Supprimer la bordure du bouton */
+    cursor: pointer; /* Changer le curseur en main lors du survol du bouton */
     transition: background-color 0.3s; /* Transition douce lors du survol du bouton */
 }
 
