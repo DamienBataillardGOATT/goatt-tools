@@ -1,7 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from airtable import Airtable
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
 
 app = Flask(__name__)
 app.secret_key = '1254'
@@ -36,40 +34,34 @@ def search_client():
     
 @app.route('/add_client', methods=['POST'])
 def add_client():
-    # Récupérer l'email rentré dans le formulaire
+
+    # Récuperer l'email rentrer dans le formulaire
     email = request.form['email']
     
     # Vérifiez si l'utilisateur est déjà dans la base de données
     existing_client = airtable_clients.search('Email', email)
     
-    # Si oui, alors retour à la page d'accueil avec un message d'erreur
+    # Si oui, alors retour à la page d'accueil
     if existing_client:
         flash("L'utilisateur existe déjà dans la base de données!", "failure")
         return redirect(url_for('index'))
     
-    # Récupérer la date de naissance et calculer l'âge
-    date_of_birth = request.form['datedenaissance']
-    birth_date = datetime.strptime(date_of_birth, '%Y-%m-%d')
-    current_date = datetime.now()
-    age = relativedelta(current_date, birth_date).years
-
     # Création des données pour ajouter à la base de données
     data = {
         'Nom': request.form['nom'],
-        'Prénom': request.form['prenom'],
-        'Email': email,
+        'Prénom' : request.form['prenom'],
+        'Email': request.form['email'],
         'Ville': request.form['ville'],
         'Code Postal': request.form['codepostal'],
         'Genre': request.form['genre'],
-        'Date de naissance': date_of_birth,
-        'Age': age 
+        'Date de naissance': request.form['datedenaissance']
     }
 
     # Ajout à la base de données
     airtable_clients.insert(data)
 
     # Message de validation
-    flash("L'utilisateur a été ajouté à la base de données avec succès!", "success")
+    flash("L'utilisateur a ete ajouter à la base de données!", "success")
 
     # Retour à la page d'accueil
     return redirect(url_for('index'))
