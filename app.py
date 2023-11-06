@@ -27,10 +27,13 @@ def commande():
     # Filtrer pour ne garder que les cordages en stock
     cordages_en_stock = [cordage for cordage in cordages_raw if cordage['fields'].get('En stock')]
 
-    # Extraire les valeurs uniques des marques pour les cordages en stock
-    unique_marques = set(cordage['fields'].get('String', '') for cordage in cordages_en_stock)
+    # Extraire les valeurs uniques des marques et les prix pour les cordages en stock
+    cordages_info = {cordage['fields'].get('String', ''): {'prix': cordage['fields'].get('price', 0)} for cordage in cordages_en_stock}
 
-    return render_template('index.html', marques=sorted(unique_marques), cordages=cordages_en_stock)
+    # Trier les cordages par marque dans l'ordre alphabétique
+    cordages_info_sorted = dict(sorted(cordages_info.items()))
+    
+    return render_template('index.html', cordages_info=cordages_info_sorted)
 
 @app.route('/client')
 def index():    

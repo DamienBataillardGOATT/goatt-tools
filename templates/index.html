@@ -10,17 +10,69 @@
 
         <!-- Choix de la marque de cordage -->
         <label for="cordage_marque">Marque du cordage :</label>
-        <select id="cordage_marque" name="cordage_marque" required>
-            {% for marque in marques %}
-                <option value="{{ marque }}">{{ marque }}</option>
+        <select id="cordage_id" name="cordage_id" onchange="updatePrix()">
+            {% for marque, info in cordages_info.items() %}
+                <option value="{{ marque }}" data-prix="{{ info.prix }}">{{ marque }}</option>
             {% endfor %}
         </select>
+        
+        <p id="prix_cordage">Prix: </p>
         
         <!-- Quantité de cordage -->
         <label for="cordage_quantite">Quantité :</label>
         <input type="number" id="cordage_quantite" name="cordage_quantite" min="1" placeholder="Quantité" required>
+
+        <!-- Option de récupération -->
+        <div>
+            <p>Choisissez l'option de récupération :</p>
+            <input type="radio" id="recuperation_adresse" name="option_recuperation" value="adresse" required>
+            <label for="recuperation_adresse">À une adresse personnelle</label><br>
+            
+            <input type="radio" id="recuperation_magasin" name="option_recuperation" value="magasin" required>
+            <label for="recuperation_magasin">Dans un magasin</label>
+        </div>
+
+        <!-- Adresse de récupération -->
+        <div id="adresse_recuperation_container" style="display:none;">
+            <label for="adresse_recuperation">Adresse de récupération :</label>
+            <input type="text" id="adresse_recuperation" name="adresse_recuperation" placeholder="Ex : 15 Av de CLichy, 75017 Paris, France">
+        </div>
+
+        <!-- Sélection du magasin -->
+        <div id="magasin_recuperation_container" style="display:none;">
+            <label for="magasin_recuperation">Sélectionnez un magasin :</label>
+            <select id="magasin_recuperation" name="magasin_recuperation">
+                <!-- Insérez les options de magasin ici -->
+                <option value="magasin1">Magasin 1</option>
+                <option value="magasin2">Magasin 2</option>
+            </select>
+        </div>
       
         <input type="submit" value="Passer la commande">
     </form>
+
+    <script>
+        // Script pour afficher/cacher les champs en fonction de l'option de récupération choisie
+        document.addEventListener('DOMContentLoaded', function() {
+            var recuperationOptions = document.querySelectorAll('input[name="option_recuperation"]');
+            recuperationOptions.forEach(function(option) {
+                option.addEventListener('change', function() {
+                    if (this.value === 'adresse') {
+                        document.getElementById('adresse_recuperation_container').style.display = 'block';
+                        document.getElementById('magasin_recuperation_container').style.display = 'none';
+                    } else if (this.value === 'magasin') {
+                        document.getElementById('adresse_recuperation_container').style.display = 'none';
+                        document.getElementById('magasin_recuperation_container').style.display = 'block';
+                    }
+                });
+            });
+        });
+
+        function updatePrix() {
+            var selectElement = document.getElementById('cordage_id');
+            var prix = selectElement.options[selectElement.selectedIndex].getAttribute('data-prix');
+            document.getElementById('prix_cordage').textContent = 'Prix: ' + prix + ' €';
+        };
+    </script>
 </body>
 </html>
