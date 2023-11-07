@@ -59,6 +59,12 @@
                 <option value="magasin2">Magasin 2</option>
             </select>
         </div>
+
+        <!-- Sélection de la date de récupération -->
+        <label for="date_recuperation">Date de récupération/Livraison :</label>
+        <select id="date_recuperation" name="date_recuperation">
+        <!-- Les options de date seront ajoutées ici par JavaScript -->
+        </select>
       
         <input type="submit" value="Passer la commande">
     </form>
@@ -111,6 +117,29 @@
             totalPanier.textContent = total.toFixed(2);
         }
 
+        // Fonction pour récupérer les créneaux disponibles et les afficher
+        function recupererEtAfficherCreneaux() {
+            fetch('https://goatt-db.onrender.com/get_available_slots')
+                .then(response => response.json())
+                .then(data => {
+                    const selectElement = document.getElementById('date_recuperation');
+                    selectElement.innerHTML = ''; // Effacer les options existantes
+
+                    // Boucler sur les données pour ajouter les options
+                    for (const [date, creneaux] of Object.entries(data)) {
+                        creneaux.forEach(creneau => {
+                            const option = document.createElement('option');
+                            option.value = date + ' ' + creneau;
+                            option.textContent = date + ' ' + creneau;
+                            selectElement.appendChild(option);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la récupération des créneaux disponibles', error);
+                });
+        }
+
         // Script pour afficher/cacher les champs en fonction de l'option de récupération choisie
         document.addEventListener('DOMContentLoaded', function() {
             var recuperationOptions = document.querySelectorAll('input[name="option_recuperation"]');
@@ -125,6 +154,8 @@
                     }
                 });
             });
+            // Récupérer et afficher les créneaux disponibles
+            recupererEtAfficherCreneaux();
         });
 
         
