@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
-from airtable import Airtable
 import os
+from flask import Flask, render_template, request, redirect, url_for, flash, session
+from airtable import Airtable
 from dotenv import load_dotenv
+from datetime import datetime
 
 load_dotenv()
 
@@ -15,12 +16,40 @@ BASE_ID_PRODUCTS = os.getenv('AIRTABLE_BASE_ID_PRODUCTS')
 BASE_ID_COMMANDES = os.getenv('AIRTABLE_BASE_ID_COMMANDES')
 CLIENT_TABLE = 'leads'
 PRODUCTS_TABLE = 'strings'
-COMMANDES_TABLE = 'Cordage'
+COMMANDES_TABLE = 'Cordage test'
 
 airtable_clients = Airtable(BASE_ID_LEADS ,CLIENT_TABLE, API_KEY)
 airtable_cordages = Airtable(BASE_ID_PRODUCTS,PRODUCTS_TABLE, API_KEY)
 airtable_commandes = Airtable(BASE_ID_COMMANDES, COMMANDES_TABLE, API_KEY)
 
+def calculate_age(birthdate):
+    today = datetime.today()
+    return today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+
+def complete_order(client_info):
+    order_data = session.get('order_data', {})
+    
+    # Convertissez la date de naissance en objet datetime pour calculer l'âge
+    birthdate = datetime.strptime(client_info['Date de naissance'], '%Y-%m-%d')
+    age = calculate_age(birthdate)
+    
+    # Ajoutez les informations du client à order_data
+    order_data.update({
+        'Email': client_info['Email'],
+        'Nom complet': f"{client_info['Prénom']} {client_info['Nom']}",
+        'Date de naissance': client_info['Date de naissance'],
+        'Age': age,
+        'Sexe': client_info['Genre'],
+    })
+
+    print(order_data)
+    
+    # Insérez la commande complète dans la base de données Airtable
+    airtable_commandes.insert(order_data)
+
+    # Nettoyez la session
+    session.pop('order_data', None)
+    return redirect(url_for('order_confirmation'))
 
 @app.route('/')
 def commande():
@@ -39,7 +68,7 @@ def commande():
     return render_template('index.html', cordages_info=cordages_info_sorted)
 
 @app.route('/client')
-def index():    
+def client():    
     return render_template('client.html')
 
 @app.route('/search_client', methods=['POST'])
@@ -47,16 +76,15 @@ def search_client():
     search_email = request.form['search_email']
 
     # Utilisez l'API Airtable pour rechercher l'utilisateur par e-mail
-    client_record = airtable_clients.search('Email', search_email)
+    client_info = airtable_clients.search('Email', search_email)
     
-    if client_record:
-        # L'utilisateur a été trouvé, affichez ses informations
-        client_info = client_record[0]['fields']
-        return render_template('client_info.html', client_info=client_info)
+    if client_info:
+        client_info = client_info[0]['fields']
+        complete_order(client_info)
+        return redirect(url_for('order_confirmation'))
     else:
-        # L'utilisateur n'a pas été trouvé, affichez un message d'erreur
         flash('Aucun utilisateur trouvé avec cet email.', 'danger')
-        return redirect(url_for('index'))
+        return redirect(url_for('client'))
     
 @app.route('/add_client', methods=['POST'])
 def add_client():
@@ -73,7 +101,7 @@ def add_client():
         return redirect(url_for('index'))
     
     # Création des données pour ajouter à la base de données
-    data = {
+    client_info = {
         'Nom': request.form['nom'],
         'Prénom' : request.form['prenom'],
         'Email': request.form['email'],
@@ -83,22 +111,17 @@ def add_client():
         'Date de naissance': request.form['datedenaissance']
     }
 
-    # Ajout à la base de données
-    airtable_clients.insert(data)
+    airtable_clients.insert(client_info)
 
-    # Message de validation
-    flash("L'utilisateur a ete ajouter à la base de données!", "success")
-
-    # Retour à la page d'accueil
-    return redirect(url_for('index'))
+    complete_order(client_info)
+    return redirect(url_for('order_confirmation'))
 
 @app.route('/submit_order', methods=['POST'])
 def submit_order():
     # Récupérer les données du formulaire
-    cordage_id = request.form['cordage_id']
-    quantite = request.form['cordage_quantite']
     option_recuperation = request.form['option_recuperation']
     option_livraison = request.form['option_livraison']
+    date_livraison = request.form['date_recuperation']
 
      # Préparer les données pour la récupération
     if option_recuperation == 'adresse':
@@ -114,33 +137,24 @@ def submit_order():
 
     # Créer un dictionnaire avec les données de la commande
     order_data = {
-        'CordageID': cordage_id,
-        'Quantite': quantite,
-        'OptionRecuperation': option_recuperation,
-        'AdresseRecuperation': adresse_recuperation if option_recuperation == 'adresse' else None,
-        'MagasinRecuperation': magasin_recuperation if option_recuperation == 'magasin' else None,
-        'OptionLivraison': option_livraison,
-        'AdresseLivraison': adresse_livraison if option_livraison == 'adresse' else None,
-        'MagasinLivraison': magasin_livraison if option_livraison == 'magasin' else None,
+        'Articles': f"{request.form['cordage_quantite']}x {request.form['cordage_id']}",
+        'Type de commande': 'cordage',
+        'Adresse de récupération': adresse_recuperation if option_recuperation == 'adresse' else None,
+
+        'Adresse de livraison': adresse_livraison if option_livraison == 'adresse' else None,
+
     }
 
-    print(order_data)
-    # Ajout à la base de données
-    """try:
-        airtable_commandes.insert(data)
-        flash("La commande a été ajoutée avec succès à la base de données!", "success")
-    except Exception as e:
-        flash("Une erreur est survenue lors de l'ajout de la commande à la base de données.", "error")
-        return redirect(url_for('index'))"""
+    # Stockez les données de la commande dans la session pour les utiliser après la création ou la récupération du client
+    session['order_data'] = order_data
 
-    # Redirection vers la page de confirmation
-    return redirect(url_for('order_confirmation'))
+    # Redirection vers la page client pour vérifier si c'est une nouvelle commande ou non
+    return redirect(url_for('client'))
 
 @app.route('/order_confirmation')
 def order_confirmation():
     # Afficher une page de confirmation de commande
     return "Merci pour votre commande!"
-
 
 if __name__ == '__main__':
     app.run(debug=True)
