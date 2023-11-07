@@ -95,22 +95,36 @@ def add_client():
 @app.route('/submit_order', methods=['POST'])
 def submit_order():
     # Récupérer les données du formulaire
-    cordage_marque = request.form['cordage_id']
-    cordage_quantite = request.form['cordage_quantite']
+    cordage_id = request.form['cordage_id']
+    quantite = request.form['cordage_quantite']
     option_recuperation = request.form['option_recuperation']
-    adresse_recuperation = request.form['adresse_recuperation'] if 'adresse_recuperation' in request.form else None
-    magasin_recuperation = request.form['magasin_recuperation'] if 'magasin_recuperation' in request.form else None
+    option_livraison = request.form['option_livraison']
 
-    # Création des données pour ajouter à la base de données
-    data = {
-        'Marque': cordage_marque,
-        'Quantité': cordage_quantite,
-        'Option de récupération': option_recuperation,
-        'Adresse de récupération': adresse_recuperation,
-        'Magasin de récupération': magasin_recuperation
+     # Préparer les données pour la récupération
+    if option_recuperation == 'adresse':
+        adresse_recuperation = request.form['adresse_recuperation']
+    elif option_recuperation == 'magasin':
+        magasin_recuperation = request.form['magasin_recuperation']
+    
+    # Préparer les données pour la livraison
+    if option_livraison == 'adresse':
+        adresse_livraison = request.form['adresse_livraison']
+    elif option_livraison == 'magasin':
+        magasin_livraison = request.form['magasin_livraison']
+
+    # Créer un dictionnaire avec les données de la commande
+    order_data = {
+        'CordageID': cordage_id,
+        'Quantite': quantite,
+        'OptionRecuperation': option_recuperation,
+        'AdresseRecuperation': adresse_recuperation if option_recuperation == 'adresse' else None,
+        'MagasinRecuperation': magasin_recuperation if option_recuperation == 'magasin' else None,
+        'OptionLivraison': option_livraison,
+        'AdresseLivraison': adresse_livraison if option_livraison == 'adresse' else None,
+        'MagasinLivraison': magasin_livraison if option_livraison == 'magasin' else None,
     }
 
-    print(data)
+    print(order_data)
     # Ajout à la base de données
     """try:
         airtable_commandes.insert(data)
