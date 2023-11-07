@@ -12,11 +12,14 @@ app.secret_key = os.getenv('FLASK_SECRET_KEY')
 API_KEY = os.getenv('AIRTABLE_API_KEY')
 BASE_ID_LEADS = os.getenv('AIRTABLE_BASE_ID_LEADS')
 BASE_ID_PRODUCTS = os.getenv('AIRTABLE_BASE_ID_PRODUCTS')
+BASE_ID_COMMANDES = os.getenv('AIRTABLE_BASE_ID_COMMANDES')
 CLIENT_TABLE = 'leads'
 PRODUCTS_TABLE = 'strings'
+COMMANDES_TABLE = 'Cordage'
 
 airtable_clients = Airtable(BASE_ID_LEADS ,CLIENT_TABLE, API_KEY)
 airtable_cordages = Airtable(BASE_ID_PRODUCTS,PRODUCTS_TABLE, API_KEY)
+airtable_commandes = Airtable(BASE_ID_COMMANDES, COMMANDES_TABLE, API_KEY)
 
 
 @app.route('/')
@@ -88,6 +91,41 @@ def add_client():
 
     # Retour à la page d'accueil
     return redirect(url_for('index'))
+
+@app.route('/submit_order', methods=['POST'])
+def submit_order():
+    # Récupérer les données du formulaire
+    cordage_marque = request.form['cordage_id']
+    cordage_quantite = request.form['cordage_quantite']
+    option_recuperation = request.form['option_recuperation']
+    adresse_recuperation = request.form['adresse_recuperation'] if 'adresse_recuperation' in request.form else None
+    magasin_recuperation = request.form['magasin_recuperation'] if 'magasin_recuperation' in request.form else None
+
+    # Création des données pour ajouter à la base de données
+    data = {
+        'Marque': cordage_marque,
+        'Quantité': cordage_quantite,
+        'Option de récupération': option_recuperation,
+        'Adresse de récupération': adresse_recuperation,
+        'Magasin de récupération': magasin_recuperation
+    }
+
+    print(data)
+    # Ajout à la base de données
+    """try:
+        airtable_commandes.insert(data)
+        flash("La commande a été ajoutée avec succès à la base de données!", "success")
+    except Exception as e:
+        flash("Une erreur est survenue lors de l'ajout de la commande à la base de données.", "error")
+        return redirect(url_for('index'))"""
+
+    # Redirection vers la page de confirmation
+    return redirect(url_for('order_confirmation'))
+
+@app.route('/order_confirmation')
+def order_confirmation():
+    # Afficher une page de confirmation de commande
+    return "Merci pour votre commande!"
 
 
 if __name__ == '__main__':

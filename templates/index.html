@@ -6,7 +6,7 @@
 </head>
 <body>
     <h1>Passer une Commande</h1>
-    <form action="" method="post" id="orderForm">
+    <form action="/submit_order" method="post" id="orderForm">
 
         <!-- Choix de la marque de cordage -->
         <label for="cordage_marque">Marque du cordage :</label>
@@ -36,7 +36,7 @@
 
         <!-- Option de récupération -->
         <div>
-            <p>Choisissez l'option de récupération :</p>
+            <p>Ou souhaitez-vous déposer votre raquette ? :</p>
             <input type="radio" id="recuperation_adresse" name="option_recuperation" value="adresse" required>
             <label for="recuperation_adresse">À une adresse personnelle</label><br>
             
@@ -54,6 +54,32 @@
         <div id="magasin_recuperation_container" style="display:none;">
             <label for="magasin_recuperation">Sélectionnez un magasin :</label>
             <select id="magasin_recuperation" name="magasin_recuperation">
+                <!-- Insérez les options de magasin ici -->
+                <option value="magasin1">Magasin 1</option>
+                <option value="magasin2">Magasin 2</option>
+            </select>
+        </div>
+
+        <!-- Option de livraison -->
+        <div>
+            <p>Ou souhaitez-vous récuperer votre raquette :</p>
+            <input type="radio" id="livraison_adresse" name="option_livraison" value="adresse" required>
+            <label for="livraison_adresse">À une adresse personnelle</label><br>
+            
+            <input type="radio" id="livraison_magasin" name="option_livraison" value="magasin" required>
+            <label for="livraison_magasin">Dans un magasin</label>
+        </div>
+
+        <!-- Adresse de livraison -->
+        <div id="adresse_livraison_container" style="display:none;">
+            <label for="adresse_livraison">Adresse de livraison :</label>
+            <input type="text" id="adresse_livraison" name="adresse_livraison" placeholder="Ex : 15 Av de CLichy, 75017 Paris, France">
+        </div>
+
+        <!-- Sélection du magasin pour la livraison -->
+        <div id="magasin_livraison_container" style="display:none;">
+            <label for="magasin_livraison">Sélectionnez un magasin pour la livraison :</label>
+            <select id="magasin_livraison" name="magasin_livraison">
                 <!-- Insérez les options de magasin ici -->
                 <option value="magasin1">Magasin 1</option>
                 <option value="magasin2">Magasin 2</option>
@@ -154,6 +180,20 @@
                     }
                 });
             });
+
+            var livraisonOptions = document.querySelectorAll('input[name="option_livraison"]');
+            livraisonOptions.forEach(function(option) {
+                option.addEventListener('change', function() {
+                    if (this.value === 'adresse') {
+                        document.getElementById('adresse_livraison_container').style.display = 'block';
+                        document.getElementById('magasin_livraison_container').style.display = 'none';
+                    } else if (this.value === 'magasin') {
+                        document.getElementById('adresse_livraison_container').style.display = 'none';
+                        document.getElementById('magasin_livraison_container').style.display = 'block';
+                    }
+                });
+            });
+            
             // Récupérer et afficher les créneaux disponibles
             recupererEtAfficherCreneaux();
         });
