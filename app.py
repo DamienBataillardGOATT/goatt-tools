@@ -122,6 +122,7 @@ def submit_order():
     option_recuperation = request.form['option_recuperation']
     option_livraison = request.form['option_livraison']
     date_livraison = request.form['date_recuperation']
+    heure_recuperation = request.form['heure_recuperation']
 
      # Préparer les données pour la récupération
     if option_recuperation == 'adresse':
@@ -138,11 +139,10 @@ def submit_order():
     # Créer un dictionnaire avec les données de la commande
     order_data = {
         'Articles': f"{request.form['cordage_quantite']}x {request.form['cordage_id']}",
-        'Type de commande': 'cordage',
+        'Date de récupération': request.form['date_depot'],
+        'Heure de récupération': int(heure_recuperation),
         'Adresse de récupération': adresse_recuperation if option_recuperation == 'adresse' else None,
-
         'Adresse de livraison': adresse_livraison if option_livraison == 'adresse' else None,
-
     }
 
     # Stockez les données de la commande dans la session pour les utiliser après la création ou la récupération du client

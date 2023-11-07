@@ -60,6 +60,18 @@
             </select>
         </div>
 
+        <!-- Sélection de la date de récupération de la raquette -->
+        <div>
+            <label for="date_depot">Date de dépôt de la raquette :</label>
+            <input type="date" id="date_depot" name="date_depot" required>
+        </div>
+
+        <!-- Sélection de l'heure de récupération de la raquette en heures pleines -->
+        <div>
+            <label for="heure_recuperation">Heure de récupération (0-23) :</label>
+            <input type="number" id="heure_recuperation" name="heure_recuperation" min="0" max="23" step="1" placeholder="13" required>
+        </div>
+
         <!-- Option de livraison -->
         <div>
             <p>Ou souhaitez-vous récuperer votre raquette :</p>
@@ -86,8 +98,8 @@
             </select>
         </div>
 
-        <!-- Sélection de la date de récupération -->
-        <label for="date_recuperation">Date de récupération/Livraison :</label>
+        <!-- Sélection de la date de récupération/livraison -->
+        <label for="date_recuperation">Date de récupération/livraison :</label>
         <select id="date_recuperation" name="date_recuperation">
         <!-- Les options de date seront ajoutées ici par JavaScript -->
         </select>
