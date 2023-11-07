@@ -6,7 +6,7 @@
 </head>
 <body>
     <h1>Passer une Commande</h1>
-    <form action="/submit_order" method="post">
+    <form action="" method="post" id="orderForm">
 
         <!-- Choix de la marque de cordage -->
         <label for="cordage_marque">Marque du cordage :</label>
@@ -21,6 +21,18 @@
         <!-- Quantité de cordage -->
         <label for="cordage_quantite">Quantité :</label>
         <input type="number" id="cordage_quantite" name="cordage_quantite" min="1" placeholder="Quantité" required>
+
+        <!-- Bouton pour ajouter au panier -->
+        <button type="button" onclick="ajouterAuPanier()">Ajouter au panier</button>
+
+        <!-- Panier -->
+        <div id="panier">
+            <h2>Votre panier :</h2>
+            <ul id="listePanier">
+                <!-- Les articles du panier seront ajoutés ici -->
+            </ul>
+            <p>Total: <span id="totalPanier">0</span> €</p>
+        </div>
 
         <!-- Option de récupération -->
         <div>
@@ -52,6 +64,53 @@
     </form>
 
     <script>
+        var panier = [];
+
+        function updatePrix() {
+            var selectElement = document.getElementById('cordage_id');
+            var prixUnitaire = selectElement.options[selectElement.selectedIndex].getAttribute('data-prix');
+            var quantite = document.getElementById('cordage_quantite').value;
+            var prixTotal = prixUnitaire * quantite;
+            document.getElementById('prix_cordage').textContent = 'Prix: ' + prixTotal.toFixed(2) + ' €';
+        }
+
+        // Ajouter un écouteur d'événements sur le champ de quantité
+        document.getElementById('cordage_quantite').addEventListener('change', updatePrix);
+
+        // Mettre à jour le prix initial lors du chargement de la page
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePrix();
+        });
+        
+        function ajouterAuPanier() {
+            var selectElement = document.getElementById('cordage_id');
+            var marque = selectElement.value;
+            var prix = selectElement.options[selectElement.selectedIndex].getAttribute('data-prix');
+            var quantite = document.getElementById('cordage_quantite').value;
+            var totalArticle = prix * quantite;
+
+            panier.push({ marque: marque, quantite: quantite, prix: prix, totalArticle: totalArticle });
+            afficherPanier();
+        }
+
+        function afficherPanier() {
+            var listePanier = document.getElementById('listePanier');
+            var totalPanier = document.getElementById('totalPanier');
+            var total = 0;
+
+            listePanier.innerHTML = '';
+
+            panier.forEach(function(article, index) {
+                var li = document.createElement('li');
+                li.textContent = article.marque + ' x ' + article.quantite + ' : ' + article.totalArticle + ' €';
+                listePanier.appendChild(li);
+
+                total += parseFloat(article.totalArticle);
+            });
+
+            totalPanier.textContent = total.toFixed(2);
+        }
+
         // Script pour afficher/cacher les champs en fonction de l'option de récupération choisie
         document.addEventListener('DOMContentLoaded', function() {
             var recuperationOptions = document.querySelectorAll('input[name="option_recuperation"]');
@@ -68,11 +127,7 @@
             });
         });
 
-        function updatePrix() {
-            var selectElement = document.getElementById('cordage_id');
-            var prix = selectElement.options[selectElement.selectedIndex].getAttribute('data-prix');
-            document.getElementById('prix_cordage').textContent = 'Prix: ' + prix + ' €';
-        };
+        
     </script>
 </body>
 </html>
