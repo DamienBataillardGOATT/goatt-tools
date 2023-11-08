@@ -121,28 +121,42 @@ def submit_order():
     # Récupérer les données du formulaire
     option_recuperation = request.form['option_recuperation']
     option_livraison = request.form['option_livraison']
-    date_livraison = request.form['date_recuperation']
     heure_recuperation = request.form['heure_recuperation']
+    date_heure_livraison = request.form['date_recuperation']
+    heure_livraison = request.form['heure_livraison']
+    prix_total_panier = request.form['prixTotalPanier']
+    
+    # Initialiser les variables pour les adresses
+    adresse_recuperation = None
+    adresse_livraison = None
+    adresse_magasin_recuperation = None
+    adresse_magasin_livraison = None
 
-     # Préparer les données pour la récupération
+    # Extraire uniquement la date
+    date_livraison = date_heure_livraison.split(' ')[0]
+
+    # Préparer les données pour la récupération
     if option_recuperation == 'adresse':
         adresse_recuperation = request.form['adresse_recuperation']
     elif option_recuperation == 'magasin':
-        magasin_recuperation = request.form['magasin_recuperation']
+        adresse_magasin_recuperation = request.form['adresse_magasin']  # Récupérer l'adresse du magasin de récupération
     
     # Préparer les données pour la livraison
     if option_livraison == 'adresse':
         adresse_livraison = request.form['adresse_livraison']
     elif option_livraison == 'magasin':
-        magasin_livraison = request.form['magasin_livraison']
+        adresse_magasin_livraison = request.form['adresse_magasin']  # Récupérer l'adresse du magasin de livraison
 
     # Créer un dictionnaire avec les données de la commande
     order_data = {
         'Articles': f"{request.form['cordage_quantite']}x {request.form['cordage_id']}",
         'Date de récupération': request.form['date_depot'],
         'Heure de récupération': int(heure_recuperation),
-        'Adresse de récupération': adresse_recuperation if option_recuperation == 'adresse' else None,
-        'Adresse de livraison': adresse_livraison if option_livraison == 'adresse' else None,
+        'Adresse de récupération': adresse_recuperation if option_recuperation == 'adresse' else adresse_magasin_recuperation,
+        'Date de livraison': date_livraison,
+        'Heure de livraison': int(heure_livraison),
+        'Adresse de livraison': adresse_livraison if option_livraison == 'adresse' else adresse_magasin_livraison,
+        'Prix': float(prix_total_panier),
     }
 
     # Stockez les données de la commande dans la session pour les utiliser après la création ou la récupération du client

@@ -32,6 +32,8 @@
                 <!-- Les articles du panier seront ajoutés ici -->
             </ul>
             <p>Total: <span id="totalPanier">0</span> €</p>
+            <!-- Champ caché pour stocker le total du panier -->
+            <input type="hidden" id="prixTotalPanier" name="prixTotalPanier" value="0">
         </div>
 
         <!-- Option de récupération -->
@@ -55,10 +57,13 @@
             <label for="magasin_recuperation">Sélectionnez un magasin :</label>
             <select id="magasin_recuperation" name="magasin_recuperation">
                 <!-- Insérez les options de magasin ici -->
-                <option value="magasin1">Magasin 1</option>
-                <option value="magasin2">Magasin 2</option>
+                <option value="magasin1" data-adresse="174 Quai de Jemmapes, 75010 Paris, France">Magasin 1</option>
+                <option value="magasin2" data-adresse="174 Quai de Jemmapes, 75010 Paris, France">Magasin 2</option>
             </select>
         </div>
+
+        <!-- Champ caché pour stocker l'adresse du magasin sélectionné -->
+        <input type="hidden" id="adresse_magasin" name="adresse_magasin">
 
         <!-- Sélection de la date de récupération de la raquette -->
         <div>
@@ -93,17 +98,26 @@
             <label for="magasin_livraison">Sélectionnez un magasin pour la livraison :</label>
             <select id="magasin_livraison" name="magasin_livraison">
                 <!-- Insérez les options de magasin ici -->
-                <option value="magasin1">Magasin 1</option>
-                <option value="magasin2">Magasin 2</option>
+                <option value="magasin1" data-adresse="174 Quai de Jemmapes, 75010 Paris, France">Magasin 1</option>
+                <option value="magasin2" data-adresse="174 Quai de Jemmapes, 75010 Paris, France">Magasin 2</option>
             </select>
         </div>
+
+        <!-- Champ caché pour stocker l'adresse du magasin de livraison sélectionné -->
+        <input type="hidden" id="adresse_magasin_livraison" name="adresse_magasin_livraison">
 
         <!-- Sélection de la date de récupération/livraison -->
         <label for="date_recuperation">Date de récupération/livraison :</label>
         <select id="date_recuperation" name="date_recuperation">
         <!-- Les options de date seront ajoutées ici par JavaScript -->
         </select>
-      
+
+        <!-- Sélection de l'heure de livraison -->
+        <div>
+            <label for="heure_livraison">Heure de livraison (entrez "10h-12h" ou "18h-20h") :</label>
+            <input type="text" id="heure_livraison" name="heure_livraison" title="Heure de livraison doit être '10h-12h' ou '18h-20h'" required placeholder="Ex: 10h-12h ou 18h-20h">
+        </div>
+            
         <input type="submit" value="Passer la commande">
     </form>
 
@@ -140,6 +154,7 @@
         function afficherPanier() {
             var listePanier = document.getElementById('listePanier');
             var totalPanier = document.getElementById('totalPanier');
+            var inputPrixTotalPanier = document.getElementById('prixTotalPanier');
             var total = 0;
 
             listePanier.innerHTML = '';
@@ -147,12 +162,25 @@
             panier.forEach(function(article, index) {
                 var li = document.createElement('li');
                 li.textContent = article.marque + ' x ' + article.quantite + ' : ' + article.totalArticle + ' €';
+                
+                // Créer un bouton de suppression
+                var btnSupprimer = document.createElement('button');
+                btnSupprimer.textContent = 'Supprimer';
+                btnSupprimer.onclick = function() { supprimerDuPanier(index); }; // Fonction de suppression
+                li.appendChild(btnSupprimer);
+
                 listePanier.appendChild(li);
 
                 total += parseFloat(article.totalArticle);
             });
 
             totalPanier.textContent = total.toFixed(2);
+            inputPrixTotalPanier.value = total.toFixed(2);
+        }
+
+        function supprimerDuPanier(index) {
+            panier.splice(index, 1); // Supprime l'article du tableau
+            afficherPanier(); // Met à jour l'affichage du panier
         }
 
         // Fonction pour récupérer les créneaux disponibles et les afficher
@@ -177,6 +205,16 @@
                     console.error('Erreur lors de la récupération des créneaux disponibles', error);
                 });
         }
+
+        document.getElementById('magasin_recuperation').addEventListener('change', function() {
+            var adresseMagasin = this.options[this.selectedIndex].getAttribute('data-adresse');
+            document.getElementById('adresse_magasin').value = adresseMagasin;
+        });
+
+        document.getElementById('magasin_livraison').addEventListener('change', function() {
+            var adresseMagasin = this.options[this.selectedIndex].getAttribute('data-adresse');
+            document.getElementById('adresse_magasin').value = adresseMagasin;
+        });
 
         // Script pour afficher/cacher les champs en fonction de l'option de récupération choisie
         document.addEventListener('DOMContentLoaded', function() {
