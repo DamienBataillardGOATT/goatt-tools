@@ -122,8 +122,8 @@ def submit_order():
     option_recuperation = request.form['option_recuperation']
     option_livraison = request.form['option_livraison']
     heure_recuperation = request.form['heure_recuperation']
-    date_heure_livraison = request.form['date_recuperation']
-    heure_livraison = request.form['heure_livraison']
+    date_livraison = request.form['date_recuperation']
+    heure_livraison = request.form['creneauSelectionne']
     prix_total_panier = request.form['prixTotalPanier']
     
     # Initialiser les variables pour les adresses
@@ -132,8 +132,6 @@ def submit_order():
     adresse_magasin_recuperation = None
     adresse_magasin_livraison = None
 
-    # Extraire uniquement la date
-    date_livraison = date_heure_livraison.split(' ')[0]
 
     # Préparer les données pour la récupération
     if option_recuperation == 'adresse':

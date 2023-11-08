@@ -108,21 +108,25 @@
 
         <!-- Sélection de la date de récupération/livraison -->
         <label for="date_recuperation">Date de récupération/livraison :</label>
-        <select id="date_recuperation" name="date_recuperation">
+        <select id="date_recuperation" name="date_recuperation" onchange="afficherCreneauxPourDate()">
         <!-- Les options de date seront ajoutées ici par JavaScript -->
         </select>
 
-        <!-- Sélection de l'heure de livraison -->
-        <div>
-            <label for="heure_livraison">Heure de livraison (entrez "10h-12h" ou "18h-20h") :</label>
-            <input type="text" id="heure_livraison" name="heure_livraison" title="Heure de livraison doit être '10h-12h' ou '18h-20h'" required placeholder="Ex: 10h-12h ou 18h-20h">
+        <!-- Conteneur pour les boutons de créneaux horaires -->
+        <div id="creneauxHorairesContainer">
+            <!-- Les boutons de créneaux seront ajoutés ici par JavaScript -->
         </div>
-            
+
+        <!-- Champ caché pour stocker le créneau de récupération/livraison sélectionné -->
+        <input type="hidden" id="creneauSelectionne" name="creneauSelectionne">
+
         <input type="submit" value="Passer la commande">
     </form>
 
     <script>
         var panier = [];
+
+        var creneauxDisponibles = {}; // Pour stocker les créneaux disponibles
 
         function updatePrix() {
             var selectElement = document.getElementById('cordage_id');
@@ -183,27 +187,79 @@
             afficherPanier(); // Met à jour l'affichage du panier
         }
 
-        // Fonction pour récupérer les créneaux disponibles et les afficher
+        // Fonction pour récupérer les créneaux disponibles et les afficher dans le menu déroulant
         function recupererEtAfficherCreneaux() {
             fetch('https://goatt-db.onrender.com/get_available_slots')
                 .then(response => response.json())
                 .then(data => {
+                    creneauxDisponibles = data; // Stocker les données
                     const selectElement = document.getElementById('date_recuperation');
                     selectElement.innerHTML = ''; // Effacer les options existantes
 
-                    // Boucler sur les données pour ajouter les options
-                    for (const [date, creneaux] of Object.entries(data)) {
-                        creneaux.forEach(creneau => {
-                            const option = document.createElement('option');
-                            option.value = date + ' ' + creneau;
-                            option.textContent = date + ' ' + creneau;
-                            selectElement.appendChild(option);
-                        });
+                    // Boucler sur les données pour ajouter les options de date
+                    for (const date in data) {
+                        const option = document.createElement('option');
+                        option.value = date;
+                        option.textContent = date;
+                        selectElement.appendChild(option);
                     }
+
+                    // Afficher les créneaux pour la première date disponible
+                    afficherCreneauxPourDate();
                 })
                 .catch(error => {
                     console.error('Erreur lors de la récupération des créneaux disponibles', error);
                 });
+        }
+
+        // Fonction pour décomposer les créneaux en heures individuelles et créer des boutons pour chaque heure
+        function afficherHeuresPourCreneau(creneau, date) {
+            const heures = creneau.split('-'); // Exemple: "10h - 12h" devient ["10h ", " 12h"]
+            const heureDebut = parseInt(heures[0]); // Exemple: "10h " devient 10
+            const heureFin = parseInt(heures[1]); // Exemple: " 12h" devient 12
+            const container = document.getElementById('creneauxHorairesContainer');
+
+            // Créer un bouton pour chaque heure dans l'intervalle, y compris l'heure de fin
+            for (let heure = heureDebut; heure <= heureFin; heure++) { // Utilisez "<=" pour inclure l'heure de fin
+                const bouton = document.createElement('button');
+                bouton.textContent = `${heure}h`; // Exemple: "10h"
+                bouton.value = `${date} ${heure}h`;
+                bouton.classList.add('creneau-btn'); // Ajouter une classe pour le style
+                bouton.onclick = function() { choisirCreneau(this.value); }; // Fonction à définir pour gérer la sélection
+                container.appendChild(bouton);
+            }
+        }
+
+        // Fonction pour afficher les boutons de créneaux horaires pour la date sélectionnée
+        function afficherCreneauxPourDate(dateSelectionnee, creneauxPourDate) {
+            const container = document.getElementById('creneauxHorairesContainer');
+            container.innerHTML = '';
+
+            // Créer un bouton pour chaque créneau horaire et le décomposer en heures
+            creneauxPourDate.forEach(creneau => {
+                afficherHeuresPourCreneau(creneau.trim(), dateSelectionnee);
+            });
+        }
+
+        function extraireHeure(creneau) {
+        // Utilisez une expression régulière pour trouver les chiffres avant le 'h'
+        const resultat = creneau.match(/(\d+)h/);
+
+        // Vérifiez si le résultat n'est pas nul et renvoyez le premier groupe capturé
+        if (resultat && resultat[1]) {
+            return parseInt(resultat[1], 10); // Convertissez le résultat en nombre
+        } else {
+            console.error('Format de créneau invalide');
+            return null; // ou vous pouvez renvoyer une valeur par défaut ou lever une erreur
+        }
+        }
+
+        // Fonction pour gérer la sélection d'un créneau horaire
+        function choisirCreneau(heure) {
+            console.log('Heure sélectionnée:', heure);
+            const heuresansdate = extraireHeure(heure);
+            // Mettre à jour le champ caché avec la valeur de l'heure sélectionnée
+            document.getElementById('creneauSelectionne').value = heuresansdate;
         }
 
         document.getElementById('magasin_recuperation').addEventListener('change', function() {
@@ -246,6 +302,11 @@
             
             // Récupérer et afficher les créneaux disponibles
             recupererEtAfficherCreneaux();
+            document.getElementById('date_recuperation').addEventListener('change', function() {
+                const dateSelectionnee = this.value;
+                const creneauxPourDate = creneauxDisponibles[dateSelectionnee] || [];
+                afficherCreneauxPourDate(dateSelectionnee, creneauxPourDate);
+            });
         });
 
         
