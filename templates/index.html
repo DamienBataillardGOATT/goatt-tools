@@ -220,12 +220,16 @@
             const container = document.getElementById('creneauxHorairesContainer');
 
             // Créer un bouton pour chaque heure dans l'intervalle, y compris l'heure de fin
-            for (let heure = heureDebut; heure <= heureFin; heure++) { // Utilisez "<=" pour inclure l'heure de fin
+            for (let heure = heureDebut; heure <= heureFin; heure++) {
                 const bouton = document.createElement('button');
+                bouton.type = 'button'; // Assurez-vous de définir le type sur 'button'
                 bouton.textContent = `${heure}h`; // Exemple: "10h"
                 bouton.value = `${date} ${heure}h`;
                 bouton.classList.add('creneau-btn'); // Ajouter une classe pour le style
-                bouton.onclick = function() { choisirCreneau(this.value); }; // Fonction à définir pour gérer la sélection
+                bouton.onclick = function(event) {
+                    event.preventDefault(); // Empêche la soumission du formulaire
+                    choisirCreneau(this.value);
+                };
                 container.appendChild(bouton);
             }
         }
