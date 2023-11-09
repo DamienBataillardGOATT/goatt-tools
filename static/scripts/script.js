@@ -1,188 +1,188 @@
-        var panier = [];
+    var cart = [];
 
-        var creneauxDisponibles = {}; // Pour stocker les créneaux disponibles
+    var availableSlots = {}; // To store available time slots
 
-        function updatePrix() {
-            var selectElement = document.getElementById('cordage_id');
-            var prixUnitaire = selectElement.options[selectElement.selectedIndex].getAttribute('data-prix');
-            var quantite = document.getElementById('cordage_quantite').value;
-            var prixTotal = prixUnitaire * quantite;
-            document.getElementById('prix_cordage').textContent = 'Prix: ' + prixTotal.toFixed(2) + ' €';
+    function updatePrice() {
+        var selectElement = document.getElementById('string_id');
+        var unitPrice = selectElement.options[selectElement.selectedIndex].getAttribute('data-prix');
+        var quantity = document.getElementById('string_quantity').value;
+        var totalPrice = unitPrice * quantity;
+        document.getElementById('string_price').textContent = 'Prix: ' + totalPrice.toFixed(2) + ' €';
+    }
+
+    // Add an event listener to the quantity field
+    document.getElementById('string_quantity').addEventListener('change', updatePrice);
+
+    // Update the initial price when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        updatePrice();
+    });
+
+    function addToCart() {
+        var selectElement = document.getElementById('string_id');
+        var brand = selectElement.value;
+        var price = selectElement.options[selectElement.selectedIndex].getAttribute('data-prix');
+        var quantity = document.getElementById('string_quantity').value;
+        var totalItem = price * quantity;
+
+        cart.push({ brand: brand, quantity: quantity, price: price, totalItem: totalItem });
+        displayCart();
+    }
+
+    function displayCart() {
+        var cartList = document.getElementById('cartList');
+        var cartTotal = document.getElementById('cartTotal');
+        var inputTotalCartPrice = document.getElementById('totalCartPrice');
+        var total = 0;
+
+        cartList.innerHTML = '';
+
+        cart.forEach(function(item, index) {
+            var li = document.createElement('li');
+            li.textContent = item.brand + ' x ' + item.quantity + ' : ' + item.totalItem + ' €';
+            
+            // Create a delete button
+            var deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Supprimer';
+            deleteButton.onclick = function() { removeFromCart(index); }; // Delete function
+            li.appendChild(deleteButton);
+
+            cartList.appendChild(li);
+
+            total += parseFloat(item.totalItem);
+        });
+
+        cartTotal.textContent = total.toFixed(2);
+        inputTotalCartPrice.value = total.toFixed(2);
+    }
+
+    function removeFromCart(index) {
+        cart.splice(index, 1); // Remove the item from the array
+        displayCart(); // Update the cart display
+    }
+
+    // Function to retrieve available slots and display them in the dropdown menu
+    function retrieveAndDisplaySlots() {
+        fetch('https://goatt-db.onrender.com/get_available_slots')
+            .then(response => response.json())
+            .then(data => {
+                availableSlots = data; // Store the data
+                const selectElement = document.getElementById('pickup_delivery_date');
+                selectElement.innerHTML = ''; // Clear existing options
+
+                // Loop through the data to add date options
+                for (const date in data) {
+                    const option = document.createElement('option');
+                    option.value = date;
+                    option.textContent = date;
+                    selectElement.appendChild(option);
+                }
+
+                // Display slots for the first available date
+                displaySlotsForDate();
+            })
+            .catch(error => {
+                console.error('Error retrieving available slots', error);
+            });
+    }
+
+    // Function to break down slots into individual hours and create buttons for each hour
+    function displayHoursForSlot(slot, date) {
+        const hours = slot.split('-'); // Example: "10h - 12h" becomes ["10h ", " 12h"]
+        const startHour = parseInt(hours[0]); // Example: "10h " becomes 10
+        const endHour = parseInt(hours[1]); // Example: " 12h" becomes 12
+        const container = document.getElementById('timeSlotsContainer');
+
+        // Create a button for each hour in the interval, including the end hour
+        for (let hour = startHour; hour <= endHour; hour++) {
+            const button = document.createElement('button');
+            button.type = 'button'; // Make sure to set the type to 'button'
+            button.textContent = `${hour}h`; // Example: "10h"
+            button.value = `${date} ${hour}h`;
+            button.classList.add('slot-btn'); // Add a class for styling
+            button.onclick = function(event) {
+                event.preventDefault(); // Prevent form submission
+                chooseSlot(this.value);
+            };
+            container.appendChild(button);
         }
+    }
 
-        // Ajouter un écouteur d'événements sur le champ de quantité
-        document.getElementById('cordage_quantite').addEventListener('change', updatePrix);
+    // Function to display time slot buttons for the selected date
+    function displaySlotsForDate(selectedDate, slotsForDate) {
+        const container = document.getElementById('timeSlotsContainer');
+        container.innerHTML = '';
 
-        // Mettre à jour le prix initial lors du chargement de la page
-        document.addEventListener('DOMContentLoaded', function() {
-            updatePrix();
+        // Create a button for each time slot and break it down into hours
+        slotsForDate.forEach(slot => {
+            displayHoursForSlot(slot.trim(), selectedDate);
+        });
+    }
+
+    function extractHour(slot) {
+        // Use a regular expression to find the digits before the 'h'
+        const result = slot.match(/(\d+)h/);
+
+        // Check if the result is not null and return the first captured group
+        if (result && result[1]) {
+            return parseInt(result[1], 10); // Convert the result to a number
+        } else {
+            console.error('Invalid slot format');
+            return null; // or you can return a default value or throw an error
+        }
+    }
+
+    // Function to handle the selection of a time slot
+    function chooseSlot(hour) {
+        console.log('Selected hour:', hour);
+        const hourWithoutDate = extractHour(hour);
+        // Update the hidden field with the value of the selected hour
+        document.getElementById('selected_slot').value = hourWithoutDate;
+    }
+
+    document.getElementById('store_pickup').addEventListener('change', function() {
+        var storeAddress = this.options[this.selectedIndex].getAttribute('data-address');
+        document.getElementById('store_address').value = storeAddress;
+    });
+
+    document.getElementById('store_delivery').addEventListener('change', function() {
+        var storeAddress = this.options[this.selectedIndex].getAttribute('data-address');
+        document.getElementById('store_delivery_address').value = storeAddress;
+    });
+
+    // Script to show/hide fields based on the chosen pickup option
+    document.addEventListener('DOMContentLoaded', function() {
+        var pickupOptions = document.querySelectorAll('input[name="pickup_option"]');
+        pickupOptions.forEach(function(option) {
+            option.addEventListener('change', function() {
+                if (this.value === 'address') {
+                    document.getElementById('pickup_address_container').style.display = 'block';
+                    document.getElementById('store_pickup_container').style.display = 'none';
+                } else if (this.value === 'store') {
+                    document.getElementById('pickup_address_container').style.display = 'none';
+                    document.getElementById('store_pickup_container').style.display = 'block';
+                }
+            });
+        });
+
+        var deliveryOptions = document.querySelectorAll('input[name="delivery_option"]');
+        deliveryOptions.forEach(function(option) {
+            option.addEventListener('change', function() {
+                if (this.value === 'address') {
+                    document.getElementById('delivery_address_container').style.display = 'block';
+                    document.getElementById('store_delivery_container').style.display = 'none';
+                } else if (this.value === 'store') {
+                    document.getElementById('delivery_address_container').style.display = 'none';
+                    document.getElementById('store_delivery_container').style.display = 'block';
+                }
+            });
         });
         
-        function ajouterAuPanier() {
-            var selectElement = document.getElementById('cordage_id');
-            var marque = selectElement.value;
-            var prix = selectElement.options[selectElement.selectedIndex].getAttribute('data-prix');
-            var quantite = document.getElementById('cordage_quantite').value;
-            var totalArticle = prix * quantite;
-
-            panier.push({ marque: marque, quantite: quantite, prix: prix, totalArticle: totalArticle });
-            afficherPanier();
-        }
-
-        function afficherPanier() {
-            var listePanier = document.getElementById('listePanier');
-            var totalPanier = document.getElementById('totalPanier');
-            var inputPrixTotalPanier = document.getElementById('prixTotalPanier');
-            var total = 0;
-
-            listePanier.innerHTML = '';
-
-            panier.forEach(function(article, index) {
-                var li = document.createElement('li');
-                li.textContent = article.marque + ' x ' + article.quantite + ' : ' + article.totalArticle + ' €';
-                
-                // Créer un bouton de suppression
-                var btnSupprimer = document.createElement('button');
-                btnSupprimer.textContent = 'Supprimer';
-                btnSupprimer.onclick = function() { supprimerDuPanier(index); }; // Fonction de suppression
-                li.appendChild(btnSupprimer);
-
-                listePanier.appendChild(li);
-
-                total += parseFloat(article.totalArticle);
-            });
-
-            totalPanier.textContent = total.toFixed(2);
-            inputPrixTotalPanier.value = total.toFixed(2);
-        }
-
-        function supprimerDuPanier(index) {
-            panier.splice(index, 1); // Supprime l'article du tableau
-            afficherPanier(); // Met à jour l'affichage du panier
-        }
-
-        // Fonction pour récupérer les créneaux disponibles et les afficher dans le menu déroulant
-        function recupererEtAfficherCreneaux() {
-            fetch('https://goatt-db.onrender.com/get_available_slots')
-                .then(response => response.json())
-                .then(data => {
-                    creneauxDisponibles = data; // Stocker les données
-                    const selectElement = document.getElementById('date_recuperation');
-                    selectElement.innerHTML = ''; // Effacer les options existantes
-
-                    // Boucler sur les données pour ajouter les options de date
-                    for (const date in data) {
-                        const option = document.createElement('option');
-                        option.value = date;
-                        option.textContent = date;
-                        selectElement.appendChild(option);
-                    }
-
-                    // Afficher les créneaux pour la première date disponible
-                    afficherCreneauxPourDate();
-                })
-                .catch(error => {
-                    console.error('Erreur lors de la récupération des créneaux disponibles', error);
-                });
-        }
-
-        // Fonction pour décomposer les créneaux en heures individuelles et créer des boutons pour chaque heure
-        function afficherHeuresPourCreneau(creneau, date) {
-            const heures = creneau.split('-'); // Exemple: "10h - 12h" devient ["10h ", " 12h"]
-            const heureDebut = parseInt(heures[0]); // Exemple: "10h " devient 10
-            const heureFin = parseInt(heures[1]); // Exemple: " 12h" devient 12
-            const container = document.getElementById('creneauxHorairesContainer');
-
-            // Créer un bouton pour chaque heure dans l'intervalle, y compris l'heure de fin
-            for (let heure = heureDebut; heure <= heureFin; heure++) {
-                const bouton = document.createElement('button');
-                bouton.type = 'button'; // Assurez-vous de définir le type sur 'button'
-                bouton.textContent = `${heure}h`; // Exemple: "10h"
-                bouton.value = `${date} ${heure}h`;
-                bouton.classList.add('creneau-btn'); // Ajouter une classe pour le style
-                bouton.onclick = function(event) {
-                    event.preventDefault(); // Empêche la soumission du formulaire
-                    choisirCreneau(this.value);
-                };
-                container.appendChild(bouton);
-            }
-        }
-
-        // Fonction pour afficher les boutons de créneaux horaires pour la date sélectionnée
-        function afficherCreneauxPourDate(dateSelectionnee, creneauxPourDate) {
-            const container = document.getElementById('creneauxHorairesContainer');
-            container.innerHTML = '';
-
-            // Créer un bouton pour chaque créneau horaire et le décomposer en heures
-            creneauxPourDate.forEach(creneau => {
-                afficherHeuresPourCreneau(creneau.trim(), dateSelectionnee);
-            });
-        }
-
-        function extraireHeure(creneau) {
-        // Utilisez une expression régulière pour trouver les chiffres avant le 'h'
-        const resultat = creneau.match(/(\d+)h/);
-
-        // Vérifiez si le résultat n'est pas nul et renvoyez le premier groupe capturé
-        if (resultat && resultat[1]) {
-            return parseInt(resultat[1], 10); // Convertissez le résultat en nombre
-        } else {
-            console.error('Format de créneau invalide');
-            return null; // ou vous pouvez renvoyer une valeur par défaut ou lever une erreur
-        }
-        }
-
-        // Fonction pour gérer la sélection d'un créneau horaire
-        function choisirCreneau(heure) {
-            console.log('Heure sélectionnée:', heure);
-            const heuresansdate = extraireHeure(heure);
-            // Mettre à jour le champ caché avec la valeur de l'heure sélectionnée
-            document.getElementById('creneauSelectionne').value = heuresansdate;
-        }
-
-        document.getElementById('magasin_recuperation').addEventListener('change', function() {
-            var adresseMagasin = this.options[this.selectedIndex].getAttribute('data-adresse');
-            document.getElementById('adresse_magasin').value = adresseMagasin;
+        // Retrieve and display available slots
+        retrieveAndDisplaySlots();
+        document.getElementById('pickup_delivery_date').addEventListener('change', function() {
+            const selectedDate = this.value;
+            const slotsForDate = availableSlots[selectedDate] || [];
+            displaySlotsForDate(selectedDate, slotsForDate);
         });
-
-        document.getElementById('magasin_livraison').addEventListener('change', function() {
-            var adresseMagasin = this.options[this.selectedIndex].getAttribute('data-adresse');
-            document.getElementById('adresse_magasin').value = adresseMagasin;
-        });
-
-        // Script pour afficher/cacher les champs en fonction de l'option de récupération choisie
-        document.addEventListener('DOMContentLoaded', function() {
-            var recuperationOptions = document.querySelectorAll('input[name="option_recuperation"]');
-            recuperationOptions.forEach(function(option) {
-                option.addEventListener('change', function() {
-                    if (this.value === 'adresse') {
-                        document.getElementById('adresse_recuperation_container').style.display = 'block';
-                        document.getElementById('magasin_recuperation_container').style.display = 'none';
-                    } else if (this.value === 'magasin') {
-                        document.getElementById('adresse_recuperation_container').style.display = 'none';
-                        document.getElementById('magasin_recuperation_container').style.display = 'block';
-                    }
-                });
-            });
-
-            var livraisonOptions = document.querySelectorAll('input[name="option_livraison"]');
-            livraisonOptions.forEach(function(option) {
-                option.addEventListener('change', function() {
-                    if (this.value === 'adresse') {
-                        document.getElementById('adresse_livraison_container').style.display = 'block';
-                        document.getElementById('magasin_livraison_container').style.display = 'none';
-                    } else if (this.value === 'magasin') {
-                        document.getElementById('adresse_livraison_container').style.display = 'none';
-                        document.getElementById('magasin_livraison_container').style.display = 'block';
-                    }
-                });
-            });
-            
-            // Récupérer et afficher les créneaux disponibles
-            recupererEtAfficherCreneaux();
-            document.getElementById('date_recuperation').addEventListener('change', function() {
-                const dateSelectionnee = this.value;
-                const creneauxPourDate = creneauxDisponibles[dateSelectionnee] || [];
-                afficherCreneauxPourDate(dateSelectionnee, creneauxPourDate);
-            });
-        });
+    });

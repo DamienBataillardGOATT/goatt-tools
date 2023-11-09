@@ -1,73 +1,73 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from static.routes.config import API_KEY, BASE_ID_LEADS, CLIENT_TABLE, BASE_ID_COMMANDES, COMMANDES_TABLE, BASE_ID_PRODUCTS, PRODUCTS_TABLE, COMMANDES_TEST_TABLE
+from static.routes.config import API_KEY, BASE_ID_PRODUCTS, PRODUCTS_TABLE
 from airtable import Airtable
 
-# Création d'un Blueprint pour les routes client
+# Creating a Blueprint for order routes
 order_bp = Blueprint('order_bp', __name__)
 
-# Initialisation de la connexion Airtable pour les clients
-airtable_cordages = Airtable(BASE_ID_PRODUCTS,PRODUCTS_TABLE, API_KEY)
+# Initializing Airtable connection for products
+airtable_strings = Airtable(BASE_ID_PRODUCTS, PRODUCTS_TABLE, API_KEY)
 
 @order_bp.route('/')
 def order():
-    # Extraire les données de la base de données
-    cordages_raw = airtable_cordages.get_all()
+    # Extract data from the database
+    strings_raw = airtable_strings.get_all()
 
-    # Filtrer pour ne garder que les cordages en stock
-    cordages_en_stock = [cordage for cordage in cordages_raw if cordage['fields'].get('En stock')]
+    # Filter to keep only strings in stock
+    strings_in_stock = [string for string in strings_raw if string['fields'].get('En stock')]
 
-    # Extraire les valeurs uniques des marques et les prix pour les cordages en stock
-    cordages_info = {cordage['fields'].get('String', ''): {'prix': cordage['fields'].get('price', 0)} for cordage in cordages_en_stock}
+    # Extract unique values of brands and prices for strings in stock
+    strings_info = {string['fields'].get('String', ''): {'prix': string['fields'].get('price', 0)} for string in strings_in_stock}
 
-    # Trier les cordages par marque dans l'ordre alphabétique
-    cordages_info_sorted = dict(sorted(cordages_info.items()))
+    # Sort strings by brand in alphabetical order
+    strings_info_sorted = dict(sorted(strings_info.items()))
     
-    return render_template('index.html', cordages_info=cordages_info_sorted)
+    return render_template('index.html', strings_info=strings_info_sorted)
 
 @order_bp.route('/submit_order', methods=['POST'])
 def submit_order():
 
-    # Récupérer les données du formulaire
-    option_recuperation = request.form['option_recuperation']
-    option_livraison = request.form['option_livraison']
-    heure_recuperation = request.form['heure_recuperation']
-    date_livraison = request.form['date_recuperation']
-    heure_livraison = request.form['creneauSelectionne']
-    prix_total_panier = request.form['prixTotalPanier']
+    # Retrieve form data
+    pickup_option = request.form['pickup_option']
+    delivery_option = request.form['delivery_option']
+    pickup_time = request.form['pickup_time']
+    delivery_date = request.form['pickup_delivery_date']
+    delivery_time = request.form['selected_slot']
+    total_cart_price = request.form['totalCartPrice']
     
-    # Initialiser les variables pour les adresses
-    adresse_recuperation = None
-    adresse_livraison = None
-    adresse_magasin_recuperation = None
-    adresse_magasin_livraison = None
+    # Initialize variables for addresses
+    pickup_address = None
+    delivery_address = None
+    store_pickup_address = None
+    store_delivery_address = None
 
-    # Préparer les données pour la récupération
-    if option_recuperation == 'adresse':
-        adresse_recuperation = request.form['adresse_recuperation']
-    elif option_recuperation == 'magasin':
-        adresse_magasin_recuperation = request.form['adresse_magasin']  # Récupérer l'adresse du magasin de récupération
+    # Prepare data for pickup
+    if pickup_option == 'address':
+        pickup_address = request.form['pickup_address']
+    elif pickup_option == 'store':
+        store_pickup_address = request.form['store_address']  # Retrieve the address of the pickup store
     
-    # Préparer les données pour la livraison
-    if option_livraison == 'adresse':
-        adresse_livraison = request.form['adresse_livraison']
-    elif option_livraison == 'magasin':
-        adresse_magasin_livraison = request.form['adresse_magasin']  # Récupérer l'adresse du magasin de livraison
+    # Prepare data for delivery
+    if delivery_option == 'address':
+        delivery_address = request.form['delivery_address']
+    elif delivery_option == 'store':
+        store_delivery_address = request.form['store_address']  # Retrieve the address of the delivery store
 
-    # Créer un dictionnaire avec les données de la commande
+    # Create a dictionary with the order data
     order_data = {
-        'Articles': f"{request.form['cordage_quantite']}x {request.form['cordage_id']}",
-        'Quantité': request.form['cordage_quantite'],
-        'Date de récupération': request.form['date_depot'],
-        'Heure de récupération': int(heure_recuperation),
-        'Adresse de récupération': adresse_recuperation if option_recuperation == 'adresse' else adresse_magasin_recuperation,
-        'Date de livraison': date_livraison,
-        'Heure de livraison': int(heure_livraison),
-        'Adresse de livraison': adresse_livraison if option_livraison == 'adresse' else adresse_magasin_livraison,
-        'Prix': float(prix_total_panier),
+        'Articles': f"{request.form['string_quantity']}x {request.form['string_id']}",
+        'Quantité': request.form['string_quantity'],
+        'Date de récupération': request.form['deposit_date'],
+        'Heure de récupération': int(pickup_time),
+        'Adresse de récupération': pickup_address if pickup_option == 'adresse' else store_pickup_address,
+        'Date de livraison': delivery_date,
+        'Heure de livraison': int(delivery_time),
+        'Adresse de livraison': delivery_address if delivery_option == 'adresse' else store_delivery_address,
+        'Prix': float(total_cart_price),
     }
 
-    # Stockez les données de la commande dans la session pour les utiliser après la création ou la récupération du client
+    # Store the order data in the session to use after creating or retrieving the client
     session['order_data'] = order_data
 
-    # Redirection vers la page client pour vérifier si c'est une nouvelle commande ou non
+    # Redirect to the client page to check if it's a new order or not
     return redirect(url_for('client_bp.client'))

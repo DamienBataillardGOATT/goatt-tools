@@ -8,121 +8,120 @@
     <h1>Passer une Commande</h1>
     <form action="/order/submit_order" method="post" id="orderForm">
 
-        <!-- Choix de la marque de cordage -->
-        <label for="cordage_marque">Marque du cordage :</label>
-        <select id="cordage_id" name="cordage_id" onchange="updatePrix()">
-            {% for marque, info in cordages_info.items() %}
+        <!-- Choice of string brand -->
+        <label for="string_brand">Marque du cordage :</label>
+        <select id="string_id" name="string_id" onchange="updatePrice()">
+            {% for marque, info in strings_info.items() %}
                 <option value="{{ marque }}" data-prix="{{ info.prix }}">{{ marque }}</option>
             {% endfor %}
         </select>
         
-        <p id="prix_cordage">Prix: </p>
+        <p id="string_price"></p>
         
-        <!-- Quantité de cordage -->
-        <label for="cordage_quantite">Quantité :</label>
-        <input type="number" id="cordage_quantite" name="cordage_quantite" min="1" placeholder="Quantité" required>
+        <!-- Quantity of string -->
+        <label for="string_quantity">Quantité: </label>
+        <input type="number" id="string_quantity" name="string_quantity" min="0" placeholder="1,2,3,..." required>
 
-        <!-- Bouton pour ajouter au panier -->
-        <button type="button" onclick="ajouterAuPanier()">Ajouter au panier</button>
+        <!-- Button to add to cart -->
+        <button type="button" onclick="addToCart()">Ajouter au panier</button>
 
-        <!-- Panier -->
-        <div id="panier">
+        <!-- Cart -->
+        <div id="cart">
             <h2>Votre panier :</h2>
-            <ul id="listePanier">
-                <!-- Les articles du panier seront ajoutés ici -->
+            <ul id="cartList">
+                <!-- Cart items will be added here -->
             </ul>
-            <p>Total: <span id="totalPanier">0</span> €</p>
-            <!-- Champ caché pour stocker le total du panier -->
-            <input type="hidden" id="prixTotalPanier" name="prixTotalPanier" value="0">
+            <p>Total: <span id="cartTotal">0</span> €</p>
+            <!-- Hidden field to store the total cart price -->
+            <input type="hidden" id="totalCartPrice" name="totalCartPrice" value="0">
         </div>
 
-        <!-- Option de récupération -->
+        <!-- Pickup option -->
         <div>
             <p>Ou souhaitez-vous déposer votre raquette ? :</p>
-            <input type="radio" id="recuperation_adresse" name="option_recuperation" value="adresse" required>
-            <label for="recuperation_adresse">À une adresse personnelle</label><br>
+            <input type="radio" id="pickup_address" name="pickup_option" value="address" required>
+            <label for="pickup_address">À une adresse personnelle</label><br>
             
-            <input type="radio" id="recuperation_magasin" name="option_recuperation" value="magasin" required>
-            <label for="recuperation_magasin">Dans un magasin</label>
+            <input type="radio" id="pickup_store" name="pickup_option" value="store" required>
+            <label for="pickup_store">Dans un magasin</label>
         </div>
 
-        <!-- Adresse de récupération -->
-        <div id="adresse_recuperation_container" style="display:none;">
-            <label for="adresse_recuperation">Adresse de récupération :</label>
-            <input type="text" id="adresse_recuperation" name="adresse_recuperation" placeholder="Ex : 15 Av de CLichy, 75017 Paris, France">
+        <!-- Pickup address -->
+        <div id="pickup_address_container" style="display:none;">
+            <label for="pickup_address">Adresse de récupération :</label>
+            <input type="text" id="pickup_address" name="pickup_address" placeholder="Ex: 15 Av de Clichy, 75017 Paris, France">
         </div>
 
-        <!-- Sélection du magasin -->
-        <div id="magasin_recuperation_container" style="display:none;">
-            <label for="magasin_recuperation">Sélectionnez un magasin :</label>
-            <select id="magasin_recuperation" name="magasin_recuperation">
-                <!-- Insérez les options de magasin ici -->
-                <option value="magasin1" data-adresse="174 Quai de Jemmapes, 75010 Paris, France">Magasin 1</option>
-                <option value="magasin2" data-adresse="174 Quai de Jemmapes, 75010 Paris, France">Magasin 2</option>
+        <!-- Store selection for pickup -->
+        <div id="store_pickup_container" style="display:none;">
+            <label for="store_pickup">Sélectionnez un magasin :</label>
+            <select id="store_pickup" name="store_pickup">
+                <!-- Insert store options here -->
+                <option value="store1" data-address="174 Quai de Jemmapes, 75010 Paris, France">Magasin 1</option>
+                <option value="store2" data-address="174 Quai de Jemmapes, 75010 Paris, France">Magasin 2</option>
             </select>
         </div>
 
-        <!-- Champ caché pour stocker l'adresse du magasin sélectionné -->
-        <input type="hidden" id="adresse_magasin" name="adresse_magasin">
+        <!-- Hidden field to store the selected store's address -->
+        <input type="hidden" id="store_address" name="store_address">
 
-        <!-- Sélection de la date de récupération de la raquette -->
+        <!-- Selection of racket drop-off date -->
         <div>
-            <label for="date_depot">Date de dépôt de la raquette :</label>
-            <input type="date" id="date_depot" name="date_depot" required>
+            <label for="deposit_date">Date de dépôt de la raquette :</label>
+            <input type="date" id="deposit_date" name="deposit_date" required>
         </div>
 
-        <!-- Sélection de l'heure de récupération de la raquette en heures pleines -->
+        <!-- Selection of racket pickup time in full hours -->
         <div>
-            <label for="heure_recuperation">Heure de récupération (0-23) :</label>
-            <input type="number" id="heure_recuperation" name="heure_recuperation" min="0" max="23" step="1" placeholder="13" required>
+            <label for="pickup_time">Heure de récupération (0-23) :</label>
+            <input type="number" id="pickup_time" name="pickup_time" min="0" max="23" step="1" placeholder="13" required>
         </div>
 
-        <!-- Option de livraison -->
+        <!-- Delivery option -->
         <div>
             <p>Ou souhaitez-vous récuperer votre raquette :</p>
-            <input type="radio" id="livraison_adresse" name="option_livraison" value="adresse" required>
-            <label for="livraison_adresse">À une adresse personnelle</label><br>
+            <input type="radio" id="delivery_address" name="delivery_option" value="address" required>
+            <label for="delivery_address">À une adresse personnelle</label><br>
             
-            <input type="radio" id="livraison_magasin" name="option_livraison" value="magasin" required>
-            <label for="livraison_magasin">Dans un magasin</label>
+            <input type="radio" id="delivery_store" name="delivery_option" value="store" required>
+            <label for="delivery_store">Dans un magasin</label>
         </div>
 
-        <!-- Adresse de livraison -->
-        <div id="adresse_livraison_container" style="display:none;">
-            <label for="adresse_livraison">Adresse de livraison :</label>
-            <input type="text" id="adresse_livraison" name="adresse_livraison" placeholder="Ex : 15 Av de CLichy, 75017 Paris, France">
+        <!-- Delivery address -->
+        <div id="delivery_address_container" style="display:none;">
+            <label for="delivery_address">Adresse de livraison :</label>
+            <input type="text" id="delivery_address" name="delivery_address" placeholder="Ex: 15 Av de Clichy, 75017 Paris, France">
         </div>
 
-        <!-- Sélection du magasin pour la livraison -->
-        <div id="magasin_livraison_container" style="display:none;">
-            <label for="magasin_livraison">Sélectionnez un magasin pour la livraison :</label>
-            <select id="magasin_livraison" name="magasin_livraison">
-                <!-- Insérez les options de magasin ici -->
-                <option value="magasin1" data-adresse="174 Quai de Jemmapes, 75010 Paris, France">Magasin 1</option>
-                <option value="magasin2" data-adresse="174 Quai de Jemmapes, 75010 Paris, France">Magasin 2</option>
+        <!-- Store selection for delivery -->
+        <div id="store_delivery_container" style="display:none;">
+            <label for="store_delivery">Sélectionnez un magasin pour la livraison :</label>
+            <select id="store_delivery" name="store_delivery">
+                <!-- Insert store options here -->
+                <option value="store1" data-address="174 Quai de Jemmapes, 75010 Paris, France">Magasin 1</option>
+                <option value="store2" data-address="174 Quai de Jemmapes, 75010 Paris, France">Magasin 2</option>
             </select>
         </div>
 
-        <!-- Champ caché pour stocker l'adresse du magasin de livraison sélectionné -->
-        <input type="hidden" id="adresse_magasin_livraison" name="adresse_magasin_livraison">
+        <!-- Hidden field to store the selected delivery store's address -->
+        <input type="hidden" id="store_delivery_address" name="store_delivery_address">
 
-        <!-- Sélection de la date de récupération/livraison -->
-        <label for="date_recuperation">Date de récupération/livraison :</label>
-        <select id="date_recuperation" name="date_recuperation" onchange="afficherCreneauxPourDate()">
-        <!-- Les options de date seront ajoutées ici par JavaScript -->
+        <!-- Selection of pickup/delivery date -->
+        <label for="pickup_delivery_date">Date de récupération/livraison :</label>
+        <select id="pickup_delivery_date" name="pickup_delivery_date" onchange="displaySlotsForDate()">
+        <!-- Date options will be added here by JavaScript -->
         </select>
 
-        <!-- Conteneur pour les boutons de créneaux horaires -->
-        <div id="creneauxHorairesContainer">
-            <!-- Les boutons de créneaux seront ajoutés ici par JavaScript -->
+        <!-- Container for time slot buttons -->
+        <div id="timeSlotsContainer">
+            <!-- Time slot buttons will be added here by JavaScript -->
         </div>
 
-        <!-- Champ caché pour stocker le créneau de récupération/livraison sélectionné -->
-        <input type="hidden" id="creneauSelectionne" name="creneauSelectionne">
+        <!-- Hidden field to store the selected pickup/delivery time slot -->
+        <input type="hidden" id="selected_slot" name="selected_slot">
 
         <input type="submit" value="Passer la commande">
     </form>
-
     <script src="/static/scripts/script.js"></script>
 </body>
 </html>
