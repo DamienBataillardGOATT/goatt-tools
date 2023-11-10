@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from static.routes.config import API_KEY, BASE_ID_LEADS, CLIENT_TABLE, BASE_ID_ORDERS, ORDERS_TABLE, BASE_ID_PRODUCTS, PRODUCTS_TABLE, ORDERS_TEST_TABLE
+from static.routes.config import API_KEY, BASE_ID_LEADS, CLIENT_TABLE, BASE_ID_ORDERS, ORDERS_TABLE, BASE_ID_PRODUCTS, PRODUCTS_TABLE, ORDERS_TEST_TABLE, SHOPIFY_API_KEY, SHOPIFY_PASSWORD, SHOPIFY_SHOP_NAME
 from airtable import Airtable
 from datetime import datetime
 import requests
@@ -17,36 +17,25 @@ def calculate_age(birthdate):
     today = datetime.today()
     return today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
 
-def send_draft_order_to_shopify(order_data):
-    api_endpoint = 'https://goatt-shopify.onrender.com/create_draft_order'
-    shopify_variant_id = order_data.get('ShopifyVariantId')
-    quantity = order_data.get('Quantité', 1)
-
-    line_items = [
-        {
-            "variant_id": shopify_variant_id,
-            "quantity": quantity
-        }
-    ]
-
-    order_payload = {
-        "draft_order": {
-            "line_items": line_items
-        }
+def get_shopify_headers():
+    return {
+        "Content-Type": "application/json",
+        "X-Shopify-Access-Token": SHOPIFY_API_KEY
     }
 
-    headers = {
-        'Content-Type': 'application/json',
-    }
-
-    response = requests.post(api_endpoint, json=order_payload, headers=headers)
+def search_shopify_customer(email, SHOPIFY_SHOP_NAME):
+    url = f"https://{SHOPIFY_SHOP_NAME}.myshopify.com/admin/api/2021-01/customers/search.json?query=email:{email}"
+    response = requests.get(url, headers=get_shopify_headers())
     if response.status_code == 200:
-        return response.json()
+        customers = response.json().get('customers', [])
+        return customers[0] if customers else None
     else:
-        return {"error": "Failed to create draft order", "status_code": response.status_code}
+        raise Exception(f"Failed to search customer: {response.text}")
 
 def complete_order(client_info, client_info_string=None):
     order_data = session.get('order_data', {})
+
+    print(search_shopify_customer(client_info['Email'], SHOPIFY_SHOP_NAME))
     
     # Convert the birthdate into a datetime object to calculate age
     birthdate = datetime.strptime(client_info['Date de naissance'], '%Y-%m-%d')
@@ -89,9 +78,6 @@ def complete_order(client_info, client_info_string=None):
 
     print(order_data)
 
-    # Send draft order to Shopify
-    shopify_response = send_draft_order_to_shopify(order_data)
-    print(shopify_response) 
 
     # Remove the 'ShopifyVariantId' key from order_data if it exists
     order_data.pop('ShopifyVariantId', None)
