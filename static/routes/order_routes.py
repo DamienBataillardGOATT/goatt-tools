@@ -13,11 +13,14 @@ def order():
     # Extract data from the database
     strings_raw = airtable_strings.get_all()
 
-    # Filter to keep only strings in stock
-    strings_in_stock = [string for string in strings_raw if string['fields'].get('En stock')]
-
-    # Extract unique values of brands and prices for strings in stock
-    strings_info = {string['fields'].get('String', ''): {'prix': string['fields'].get('price', 0)} for string in strings_in_stock}
+    # Filter to keep only strings in stock and extract necessary info
+    strings_info = {}
+    for string in strings_raw:
+        if string['fields'].get('En stock'):
+            string_name = string['fields'].get('String', '')
+            prix = string['fields'].get('price', 0)
+            shopify_variant_id = string['fields'].get('Shopify variant id', '')
+            strings_info[string_name] = {'prix': prix, 'shopify_variant_id': shopify_variant_id}
 
     # Sort strings by brand in alphabetical order
     strings_info_sorted = dict(sorted(strings_info.items()))
@@ -34,6 +37,7 @@ def submit_order():
     delivery_date = request.form['pickup_delivery_date']
     delivery_time = request.form['selected_slot']
     total_cart_price = request.form['totalCartPrice']
+    shopify_variant_id = request.form['shopifyVariantId']
     
     # Initialize variables for addresses
     pickup_address = None
@@ -57,6 +61,7 @@ def submit_order():
     order_data = {
         'Articles': f"{request.form['string_quantity']}x {request.form['string_id']}",
         'Quantité': request.form['string_quantity'],
+        'ShopifyVariantId': shopify_variant_id,
         'Date de récupération': request.form['deposit_date'],
         'Heure de récupération': int(pickup_time),
         'Adresse de récupération': pickup_address if pickup_option == 'adresse' else store_pickup_address,

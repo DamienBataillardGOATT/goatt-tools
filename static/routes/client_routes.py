@@ -23,7 +23,7 @@ def complete_order(client_info, client_info_string=None):
     birthdate = datetime.strptime(client_info['Date de naissance'], '%Y-%m-%d')
     age = calculate_age(birthdate)
 
-    # Utiliser les informations de la commande précédente si disponible
+    # Using the informations from the last sale
     if client_info_string:
         # Retrieve the specific string price
         string_info = airtable_strings.search('String', client_info_string['Cordage'])
@@ -41,7 +41,7 @@ def complete_order(client_info, client_info_string=None):
         quantity = int(client_info_string.get('Quantité', 1))
         total_price = string_price * quantity
 
-        # Mettre à jour order_data avec les informations de la commande précédente
+        # Update order_data with the informations from the last sale
         order_data.update({
             'Cordage': cordage,
             'Tension': tension,
@@ -59,6 +59,9 @@ def complete_order(client_info, client_info_string=None):
     })
 
     print(order_data)
+
+    # Remove the 'Quantité' key from order_data if it exists
+    order_data.pop('ShopifyVariantId', None)
 
     # Remove the 'Quantité' key from order_data if it exists
     order_data.pop('Quantité', None)

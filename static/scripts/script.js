@@ -4,10 +4,13 @@
 
     function updatePrice() {
         var selectElement = document.getElementById('string_id');
-        var unitPrice = selectElement.options[selectElement.selectedIndex].getAttribute('data-prix');
+        var selectedOption = selectElement.options[selectElement.selectedIndex];
+        var unitPrice = selectedOption.getAttribute('data-prix');
+        var shopifyVariantId = selectedOption.getAttribute('data-shopify-variant-id');
         var quantity = document.getElementById('string_quantity').value;
         var totalPrice = unitPrice * quantity;
         document.getElementById('string_price').textContent = 'Prix: ' + totalPrice.toFixed(2) + ' €';
+        document.getElementById('shopifyVariantId').value = shopifyVariantId;
     }
 
     // Add an event listener to the quantity field
@@ -186,3 +189,35 @@
             displaySlotsForDate(selectedDate, slotsForDate);
         });
     });
+
+    const apiEndpoint = 'https://goatt-shopify.onrender.com/create_draft_order';  // Replace with your actual endpoint
+    let lineItems = [
+    {
+        variant_id: "48665394905414",
+        requires_shipping: "false",
+        quantity: 2
+    },
+    ];
+
+    // Function to create a Shopify draft order
+    const createDraftOrder = () => {
+        const orderData = {
+            "draft_order": {
+                "line_items": lineItems
+            }
+        };
+        fetch(apiEndpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(orderData),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Response from Flask API:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    };

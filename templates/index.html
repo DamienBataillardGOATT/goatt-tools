@@ -12,9 +12,12 @@
         <label for="string_brand">Marque du cordage :</label>
         <select id="string_id" name="string_id" onchange="updatePrice()">
             {% for marque, info in strings_info.items() %}
-                <option value="{{ marque }}" data-prix="{{ info.prix }}">{{ marque }}</option>
+                <option value="{{ marque }}" data-prix="{{ info.prix }}" data-shopify-variant-id="{{ info.shopify_variant_id }}">{{ marque }}</option>
             {% endfor %}
         </select>
+
+        <!-- Hidden field to store the shopify variant id -->
+        <input type="hidden" id="shopifyVariantId" name="shopifyVariantId">
         
         <p id="string_price"></p>
         
