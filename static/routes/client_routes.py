@@ -61,7 +61,12 @@ def create_draft_order(data):
         "variant_id": data['variant_id'],
         "requires_shipping": 'false',
         "quantity": data['quantité']
-    }]
+    },
+     {
+        "variant_id": '48665394905414',
+        "requires_shipping": 'false',
+        "quantity": data['quantité']
+    },]
 
     draft_order_data = {
         "draft_order": {
@@ -151,8 +156,8 @@ def complete_order(client_info, client_info_string=None):
         'prenom': client_info['Prénom'],
         'pickup_town': client_info['Ville'],
         'pickup_postal_code': client_info['Code Postal'],
-        'price_delivery': '5',
-        'pose_type': 'Type de pose',
+        'price_delivery': '5.99',
+        'pose_type': 'Standar',
         'cmd_id': 'ID de commande'
     }
 
