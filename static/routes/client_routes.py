@@ -157,7 +157,7 @@ def complete_order(client_info, client_info_string=None):
         'pickup_town': client_info['Ville'],
         'pickup_postal_code': client_info['Code Postal'],
         'price_delivery': '5.99',
-        'pose_type': 'Standar',
+        'pose_type': 'Standard',
         'cmd_id': 'ID de commande'
     }
 
