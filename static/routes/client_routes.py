@@ -1,9 +1,9 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
 from static.routes.config import API_KEY, BASE_ID_LEADS, CLIENT_TABLE, BASE_ID_ORDERS, ORDERS_TABLE, BASE_ID_PRODUCTS, PRODUCTS_TABLE, ORDERS_TEST_TABLE, SHOPIFY_API_KEY, SHOPIFY_PASSWORD, SHOPIFY_SHOP_NAME
 from airtable import Airtable
 from datetime import datetime
-import shopify
 import requests
+
 
 # Creating a Blueprint for client routes
 client_bp = Blueprint('client_bp', __name__)
@@ -20,15 +20,78 @@ def get_shopify_headers():
         "X-Shopify-Access-Token": SHOPIFY_API_KEY,
     }
 
-def search_shopify_customer(email):
+def search_shopify_customer(email, first_name, last_name, city, zip):
     url = f"https://goatt-tennis.myshopify.com/admin/api/2023-04/customers/search.json?query=email:{email}"
     response = requests.get(url, headers=get_shopify_headers())
     if response.status_code == 200:
         customers = response.json().get('customers', [])
-        print(customers)
-        return customers[0] if customers else None
+        if customers:
+            customer_id = customers[0].get('id') 
+            return customer_id
+        else:
+            print("Aucun client trouvé.")
+            new_customer = create_shopify_customer(email, first_name, last_name, city, zip)
+            return new_customer.get('id') if new_customer else None
     else:
         raise Exception(f"Failed to search customer: {response.text}")
+    
+def create_shopify_customer(email, first_name, last_name, city, zip):
+    url = f"https://goatt-tennis.myshopify.com/admin/api/2021-01/customers.json"
+    data = {
+        "customer": {
+            "email": email,
+            "first_name": first_name,
+            "last_name": last_name
+        },
+        "shipping_address": {
+            "last_name": last_name,
+            "first_name": first_name,
+            "city": city,
+            "country": "France",
+            "zip": zip
+        }
+    }
+    response = requests.post(url, json=data, headers=get_shopify_headers())
+    return response.json().get('customer')
+
+def create_draft_order(data):
+    url = f"https://goatt-shopify.onrender.com/create_draft_order"
+
+    lineItems = [{
+        "variant_id": data['variant_id'],
+        "requires_shipping": 'false',
+        "quantity": data['quantité']
+    }]
+
+    draft_order_data = {
+        "draft_order": {
+            "line_items": lineItems,
+            "customer": {
+                "id": data['shopify_customer_id']
+            },
+            "shipping_address": {
+                "address1": data['pickup_address'],
+                "phone": data['phone'],
+                "last_name": data['nom'],
+                "first_name": data['prenom'],
+                "city": data['pickup_town'],
+                "country": "France",
+                "zip": data['pickup_postal_code']
+            },
+            "shipping_line": {
+                "custom": True,
+                "price": data['price_delivery'],
+                "title": 'Récupération et Livraison - ' + data['pose_type']
+            },
+            "note": data['cmd_id']
+        }
+    }
+
+    response = requests.post(url, json=draft_order_data, headers=get_shopify_headers())
+    if response.status_code == 201:
+        return jsonify(response.json()), 201
+    else:
+        return jsonify({"error": response.text}), response.status_code
 
 def calculate_age(birthdate):
     today = datetime.today()
@@ -37,7 +100,7 @@ def calculate_age(birthdate):
 def complete_order(client_info, client_info_string=None):
     order_data = session.get('order_data', {})
 
-    search_shopify_customer(client_info['Email'])
+    customer_id = search_shopify_customer(client_info['Email'], client_info['Prénom'], client_info['Nom'], client_info['Ville'], client_info['Code Postal'])
     
     # Convert the birthdate into a datetime object to calculate age
     birthdate = datetime.strptime(client_info['Date de naissance'], '%Y-%m-%d')
@@ -78,8 +141,24 @@ def complete_order(client_info, client_info_string=None):
         'Sexe': client_info['Genre'],
     })
 
+    draft_order_info = {
+        'variant_id': order_data['ShopifyVariantId'],
+        'quantité': order_data['Quantité'],
+        'shopify_customer_id': customer_id , 
+        'pickup_address': order_data['Adresse de livraison'],
+        'phone': '0762188477',
+        'nom': client_info['Nom'],
+        'prenom': client_info['Prénom'],
+        'pickup_town': client_info['Ville'],
+        'pickup_postal_code': client_info['Code Postal'],
+        'price_delivery': '5',
+        'pose_type': 'Type de pose',
+        'cmd_id': 'ID de commande'
+    }
+
     print(order_data)
 
+    create_draft_order(draft_order_info)
 
     # Remove the 'ShopifyVariantId' key from order_data if it exists
     order_data.pop('ShopifyVariantId', None)
