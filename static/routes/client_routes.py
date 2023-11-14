@@ -88,15 +88,17 @@ def create_draft_order(data):
                 "price": data['price_delivery'],
                 "title": 'Récupération et Livraison - ' + data['pose_type']
             },
-            "note": data['cmd_id']
         }
     }
-
+    
     response = requests.post(url, json=draft_order_data, headers=get_shopify_headers())
-    if response.status_code == 201:
-        return jsonify(response.json()), 201
+    if response.status_code == 200:
+        response_data = response.json()
+        invoice_url = response_data['draft_order']['admin_graphql_api_id']
+        order_id = invoice_url.split('/')[-1]
+        return order_id
     else:
-        return jsonify({"error": response.text}), response.status_code
+        return None 
 
 def calculate_age(birthdate):
     today = datetime.today()
@@ -158,12 +160,12 @@ def complete_order(client_info, client_info_string=None):
         'pickup_postal_code': client_info['Code Postal'],
         'price_delivery': '5.99',
         'pose_type': 'Standard',
-        'cmd_id': 'ID de commande'
     }
 
-    print(order_data)
+    order_id = create_draft_order(draft_order_info)
 
-    create_draft_order(draft_order_info)
+    if order_id:
+        order_data['Order_Id'] = order_id
 
     # Remove the 'ShopifyVariantId' key from order_data if it exists
     order_data.pop('ShopifyVariantId', None)
