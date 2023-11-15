@@ -59,7 +59,7 @@ def submit_order():
 
     # Create a dictionary with the order data
     order_data = {
-        'Articles': f"{request.form['string_quantity']}x {request.form['string_id']}",
+        'Articles': f"{request.form['string_quantity']}x {request.form['searchInput']}",
         'Quantité': request.form['string_quantity'],
         'ShopifyVariantId': shopify_variant_id,
         'Date de récupération': request.form['deposit_date'],

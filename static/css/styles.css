@@ -56,3 +56,31 @@ input[type="submit"] {
 input[type="submit"]:hover {
     background-color: #0056b3; /* Couleur d'arrière-plan du bouton lors du survol */
 }
+
+input[type="radio"] {
+    width: auto; /* Réinitialiser la largeur à la valeur par défaut pour les boutons radio */
+    margin-right: 10px; /* Ajouter un peu d'espace entre le bouton radio et son label */
+    padding: 0; /* Réinitialiser le padding pour les boutons radio */
+    border: none; /* Supprimer la bordure pour les boutons radio */
+    border-radius: 0; /* Réinitialiser les coins arrondis pour les boutons radio */
+}
+
+.suggestions {
+    border: 1px solid #ddd;
+    border-top: none;
+}
+
+.suggestions div {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+.suggestions div:hover {
+    background-color: #f6f6f6;
+}
+
+.radio-label-container {
+    align-items: center; /* Centrer les éléments verticalement */
+    margin-bottom: 10px; /* Espacement entre chaque groupe de bouton radio et label */
+}

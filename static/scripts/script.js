@@ -1,35 +1,62 @@
     var cart = [];
 
     var availableSlots = {}; // To store available time slots
-
-    function updatePrice() {
-        var selectElement = document.getElementById('string_id');
-        var selectedOption = selectElement.options[selectElement.selectedIndex];
-        var unitPrice = selectedOption.getAttribute('data-prix');
-        var shopifyVariantId = selectedOption.getAttribute('data-shopify-variant-id');
-        var quantity = document.getElementById('string_quantity').value;
-        var totalPrice = unitPrice * quantity;
-        document.getElementById('string_price').textContent = 'Prix: ' + totalPrice.toFixed(2) + ' €';
-        document.getElementById('shopifyVariantId').value = shopifyVariantId;
+    
+    function searchRaquette() {
+        let input = document.getElementById('searchInput').value;
+        input = input.toLowerCase();
+        let suggestions = document.getElementById('suggestions');
+    
+        suggestions.innerHTML = '';  // Effacer les suggestions précédentes
+    
+        if (input.length > 0) {
+            for (let stringName in stringsInfo) {
+                if (stringName.toLowerCase().includes(input)) {
+                    let div = document.createElement('div');
+                    div.innerHTML = stringName;
+                    div.onclick = function() {
+                        document.getElementById('searchInput').value = stringName;
+                        suggestions.innerHTML = '';
+                    };
+                    suggestions.appendChild(div);
+                }
+            }
+        }
     }
 
+    function updatePrice() {
+        var searchString = document.getElementById('searchInput').value;
+        var info = stringsInfo[searchString];
+        if (info) {
+            var unitPrice = info.prix;
+            var shopifyVariantId = info.shopify_variant_id;
+            var quantity = document.getElementById('string_quantity').value;
+            var totalPrice = unitPrice * quantity;
+            document.getElementById('string_price').textContent = 'Prix: ' + totalPrice.toFixed(2) + ' €';
+            document.getElementById('shopifyVariantId').value = shopifyVariantId;
+        }
+    }
+    
     // Add an event listener to the quantity field
     document.getElementById('string_quantity').addEventListener('change', updatePrice);
-
+    
     // Update the initial price when the page loads
     document.addEventListener('DOMContentLoaded', function() {
         updatePrice();
     });
 
     function addToCart() {
-        var selectElement = document.getElementById('string_id');
-        var brand = selectElement.value;
-        var price = selectElement.options[selectElement.selectedIndex].getAttribute('data-prix');
-        var quantity = document.getElementById('string_quantity').value;
-        var totalItem = price * quantity;
-
-        cart.push({ brand: brand, quantity: quantity, price: price, totalItem: totalItem });
-        displayCart();
+        var searchString = document.getElementById('searchInput').value;
+        var info = stringsInfo[searchString];
+        if (info) {
+            var brand = searchString;
+            var price = info.prix;
+            var quantity = document.getElementById('string_quantity').value;
+            var totalItem = price * quantity;
+    
+            cart.push({ brand: brand, quantity: quantity, price: price, totalItem: totalItem });
+            displayCart();
+        }
     }
 
     function displayCart() {
@@ -156,6 +183,10 @@
     // Script to show/hide fields based on the chosen pickup option
     document.addEventListener('DOMContentLoaded', function() {
         var pickupOptions = document.querySelectorAll('input[name="pickup_option"]');
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); // Janvier est 0 !
+        var yyyy = today.getFullYear();
         pickupOptions.forEach(function(option) {
             option.addEventListener('change', function() {
                 if (this.value === 'address') {
@@ -166,6 +197,8 @@
                     document.getElementById('store_pickup_container').style.display = 'block';
                 }
             });
+        today = yyyy + '-' + mm + '-' + dd;
+        document.getElementById('deposit_date').value = today;
         });
 
         var deliveryOptions = document.querySelectorAll('input[name="delivery_option"]');

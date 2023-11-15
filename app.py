@@ -21,4 +21,4 @@ def index():
 
 # Run the application if this script is executed as the main program
 if __name__ == '__main__':
-    app.run
+    app.run(debug=True)

@@ -8,13 +8,13 @@
     <h1>Passer une Commande</h1>
     <form action="/order/submit_order" method="post" id="orderForm">
 
-        <!-- Choice of string brand -->
+        <script>
+            let stringsInfo = {{ strings_info | tojson }};
+        </script>
+
         <label for="string_brand">Marque du cordage :</label>
-        <select id="string_id" name="string_id" onchange="updatePrice()">
-            {% for marque, info in strings_info.items() %}
-                <option value="{{ marque }}" data-prix="{{ info.prix }}" data-shopify-variant-id="{{ info.shopify_variant_id }}">{{ marque }}</option>
-            {% endfor %}
-        </select>
+        <input type="text" id="searchInput" name="searchInput" onkeyup="searchRaquette()" onchange="updatePrice()" placeholder="Recherchez une raquette...">
+        <div id="suggestions" class="suggestions"></div>
 
         <!-- Hidden field to store the shopify variant id -->
         <input type="hidden" id="shopifyVariantId" name="shopifyVariantId">
@@ -42,11 +42,14 @@
         <!-- Pickup option -->
         <div>
             <p>Ou souhaitez-vous déposer votre raquette ? :</p>
-            <input type="radio" id="pickup_address" name="pickup_option" value="address" required>
-            <label for="pickup_address">À une adresse personnelle</label><br>
-            
-            <input type="radio" id="pickup_store" name="pickup_option" value="store" required>
-            <label for="pickup_store">Dans un magasin</label>
+            <div class="radio-label-container">
+                <label for="pickup_address">À une adresse personnelle</label>
+                <input type="radio" id="pickup_address" name="pickup_option" value="address" required>
+            </div>
+            <div class="radio-label-container">
+                <label for="pickup_store">Dans un magasin</label>
+                <input type="radio" id="pickup_store" name="pickup_option" value="store" required>
+            </div>
         </div>
 
         <!-- Pickup address -->
@@ -83,11 +86,14 @@
         <!-- Delivery option -->
         <div>
             <p>Ou souhaitez-vous récuperer votre raquette :</p>
-            <input type="radio" id="delivery_address" name="delivery_option" value="address" required>
-            <label for="delivery_address">À une adresse personnelle</label><br>
-            
-            <input type="radio" id="delivery_store" name="delivery_option" value="store" required>
-            <label for="delivery_store">Dans un magasin</label>
+            <div class="radio-label-container">
+                <label for="delivery_address">À une adresse personnelle</label>
+                <input type="radio" id="delivery_address" name="delivery_option" value="address" required>
+            </div>
+            <div class="radio-label-container">
+                <label for="delivery_store">Dans un magasin</label>
+                <input type="radio" id="delivery_store" name="delivery_option" value="store" required>
+            </div>
         </div>
 
         <!-- Delivery address -->
