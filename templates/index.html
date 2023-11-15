@@ -5,7 +5,7 @@
     <title>Nouvelle pose cordage</title>
 </head>
 <body>
-    <h1>Passer une Commande</h1>
+    <h1>Nouvelle pose cordage</h1>
     <form action="/order/stringing_order" method="post" id="orderForm">
 
         <script>
@@ -44,13 +44,14 @@
             <p>Récupération de la raquette : </p>
             <div class="radio-label-container">
                 <label for="pickup_address_radio">À une adresse personnelle</label>
-                <input type="radio" id="pickup_address_radio" name="pickup_option" value="address" required>
+                <input type="radio" id="pickup_address_radio" name="pickup_option" value="address">
             </div>
             <div class="radio-label-container">
                 <label for="pickup_store_radio">Dans ce magasin</label>
-                <input type="radio" id="pickup_store_radio" name="pickup_option" value="store" required>
+                <input type="radio" id="pickup_store_radio" name="pickup_option" value="store" checked required>
             </div>
         </div>
+
 
         <!-- Pickup address -->
         <div id="pickup_address_container" style="display:none;">
@@ -70,7 +71,7 @@
         <!-- Selection of racket pickup time in full hours -->
         <div id="pickup_time_container" style="display:none;">
             <label for="pickup_time">Heure de récupération (0-23) :</label>
-            <input type="number" id="pickup_time" name="pickup_time" min="0" max="23" step="1" placeholder="13" required>
+            <input type="number" id="pickup_time" name="pickup_time" min="0" max="23" step="1" placeholder="13">
         </div>
 
         <!-- Delivery option -->
@@ -78,11 +79,11 @@
             <p>Livraison de la raquette :</p>
             <div class="radio-label-container">
                 <label for="delivery_address_radio">À une adresse personnelle</label>
-                <input type="radio" id="delivery_address_radio" name="delivery_option" value="address" required>
+                <input type="radio" id="delivery_address_radio" name="delivery_option" value="address">
             </div>
             <div class="radio-label-container">
                 <label for="delivery_store_radio">Dans ce magasin</label>
-                <input type="radio" id="delivery_store_radio" name="delivery_option" value="store" required>
+                <input type="radio" id="delivery_store_radio" name="delivery_option" value="store" checked required>
             </div>
         </div>
 

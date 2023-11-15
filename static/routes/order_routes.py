@@ -44,10 +44,12 @@ def stringing_order():
     delivery_address = None
     store_pickup_address = None
     store_delivery_address = None
+    pickup_time = None
 
     # Prepare data for pickup
     if pickup_option == 'address':
         pickup_address = request.form['pickup_address']
+        pickup_time = request.form['pickup_time']
     elif pickup_option == 'store':
         store_pickup_address = request.form['store_pickup_address']  # Retrieve the address of the pickup store
     
@@ -63,7 +65,7 @@ def stringing_order():
         'Quantité': request.form['string_quantity'],
         'ShopifyVariantId': shopify_variant_id,
         'Date de récupération': request.form['deposit_date'],
-        'Heure de récupération': int(pickup_time),
+        'Heure de récupération': int(pickup_time) if pickup_time else None,
         'Adresse de récupération': pickup_address if pickup_option == 'adresse' else store_pickup_address,
         'Date de livraison': delivery_date,
         'Heure de livraison': int(delivery_time),

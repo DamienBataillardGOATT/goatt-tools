@@ -217,14 +217,17 @@
 
         pickupOptions.forEach(function(option) {
             option.addEventListener('change', function() {
+                var pickupTimeField = document.getElementById('pickup_time');
                 if (this.value === 'address') {
                     document.getElementById('pickup_address_container').style.display = 'block';
                     document.getElementById('store_pickup_address').value = '';
                     document.getElementById('pickup_time_container').style.display = 'block';
+                    pickupTimeField.required = true;
                 } else if (this.value === 'store') {
                     document.getElementById('pickup_address_container').style.display = 'none';
                     document.getElementById('store_pickup_address').value = storeAddress;
                     document.getElementById('pickup_time_container').style.display = 'none';
+                    pickupTimeField.required = false;
                 }
             });
         today = yyyy + '-' + mm + '-' + dd;
