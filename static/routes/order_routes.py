@@ -27,8 +27,8 @@ def order():
     
     return render_template('index.html', strings_info=strings_info_sorted)
 
-@order_bp.route('/submit_order', methods=['POST'])
-def submit_order():
+@order_bp.route('/stringing_order', methods=['POST'])
+def stringing_order():
 
     # Retrieve form data
     pickup_option = request.form['pickup_option']

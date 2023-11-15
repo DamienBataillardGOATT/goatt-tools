@@ -2,11 +2,11 @@
 <html>
 <head>
     <link rel="stylesheet" href="/static/css/styles.css">
-    <title>Commande</title>
+    <title>Nouvelle pose cordage</title>
 </head>
 <body>
     <h1>Passer une Commande</h1>
-    <form action="/order/submit_order" method="post" id="orderForm">
+    <form action="/order/stringing_order" method="post" id="orderForm">
 
         <script>
             let stringsInfo = JSON.parse('{{ strings_info | tojson | safe }}');
@@ -41,7 +41,7 @@
 
         <!-- Pickup option -->
         <div>
-            <p>Ou souhaitez-vous déposer votre raquette ? :</p>
+            <p>Récupération de la raquette : </p>
             <div class="radio-label-container">
                 <label for="pickup_address_radio">À une adresse personnelle</label>
                 <input type="radio" id="pickup_address_radio" name="pickup_option" value="address" required>
@@ -75,7 +75,7 @@
 
         <!-- Delivery option -->
         <div>
-            <p>Ou souhaitez-vous récuperer votre raquette :</p>
+            <p>Livraison de la raquette :</p>
             <div class="radio-label-container">
                 <label for="delivery_address_radio">À une adresse personnelle</label>
                 <input type="radio" id="delivery_address_radio" name="delivery_option" value="address" required>
