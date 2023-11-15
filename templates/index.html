@@ -43,12 +43,12 @@
         <div>
             <p>Ou souhaitez-vous déposer votre raquette ? :</p>
             <div class="radio-label-container">
-                <label for="pickup_address">À une adresse personnelle</label>
-                <input type="radio" id="pickup_address" name="pickup_option" value="address" required>
+                <label for="pickup_address_radio">À une adresse personnelle</label>
+                <input type="radio" id="pickup_address_radio" name="pickup_option" value="address" required>
             </div>
             <div class="radio-label-container">
-                <label for="pickup_store">Dans un magasin</label>
-                <input type="radio" id="pickup_store" name="pickup_option" value="store" required>
+                <label for="pickup_store_radio">Dans ce magasin</label>
+                <input type="radio" id="pickup_store_radio" name="pickup_option" value="store" required>
             </div>
         </div>
 
@@ -58,18 +58,8 @@
             <input type="text" id="pickup_address" name="pickup_address" placeholder="Ex: 15 Av de Clichy, 75017 Paris, France">
         </div>
 
-        <!-- Store selection for pickup -->
-        <div id="store_pickup_container" style="display:none;">
-            <label for="store_pickup">Sélectionnez un magasin :</label>
-            <select id="store_pickup" name="store_pickup">
-                <!-- Insert store options here -->
-                <option value="store1" data-address="174 Quai de Jemmapes, 75010 Paris, France">Magasin 1</option>
-                <option value="store2" data-address="174 Quai de Jemmapes, 75010 Paris, France">Magasin 2</option>
-            </select>
-        </div>
-
         <!-- Hidden field to store the selected store's address -->
-        <input type="hidden" id="store_address" name="store_address">
+        <input type="hidden" id="store_pickup_address" name="store_pickup_address">
 
         <!-- Selection of racket drop-off date -->
         <div>
@@ -87,12 +77,12 @@
         <div>
             <p>Ou souhaitez-vous récuperer votre raquette :</p>
             <div class="radio-label-container">
-                <label for="delivery_address">À une adresse personnelle</label>
-                <input type="radio" id="delivery_address" name="delivery_option" value="address" required>
+                <label for="delivery_address_radio">À une adresse personnelle</label>
+                <input type="radio" id="delivery_address_radio" name="delivery_option" value="address" required>
             </div>
             <div class="radio-label-container">
-                <label for="delivery_store">Dans un magasin</label>
-                <input type="radio" id="delivery_store" name="delivery_option" value="store" required>
+                <label for="delivery_store_radio">Dans ce magasin</label>
+                <input type="radio" id="delivery_store_radio" name="delivery_option" value="store" required>
             </div>
         </div>
 
@@ -100,16 +90,6 @@
         <div id="delivery_address_container" style="display:none;">
             <label for="delivery_address">Adresse de livraison :</label>
             <input type="text" id="delivery_address" name="delivery_address" placeholder="Ex: 15 Av de Clichy, 75017 Paris, France">
-        </div>
-
-        <!-- Store selection for delivery -->
-        <div id="store_delivery_container" style="display:none;">
-            <label for="store_delivery">Sélectionnez un magasin pour la livraison :</label>
-            <select id="store_delivery" name="store_delivery">
-                <!-- Insert store options here -->
-                <option value="store1" data-address="174 Quai de Jemmapes, 75010 Paris, France">Magasin 1</option>
-                <option value="store2" data-address="174 Quai de Jemmapes, 75010 Paris, France">Magasin 2</option>
-            </select>
         </div>
 
         <!-- Hidden field to store the selected delivery store's address -->

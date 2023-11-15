@@ -49,13 +49,13 @@ def submit_order():
     if pickup_option == 'address':
         pickup_address = request.form['pickup_address']
     elif pickup_option == 'store':
-        store_pickup_address = request.form['store_address']  # Retrieve the address of the pickup store
+        store_pickup_address = request.form['store_pickup_address']  # Retrieve the address of the pickup store
     
     # Prepare data for delivery
     if delivery_option == 'address':
         delivery_address = request.form['delivery_address']
     elif delivery_option == 'store':
-        store_delivery_address = request.form['store_address']  # Retrieve the address of the delivery store
+        store_delivery_address = request.form['store_delivery_address']  # Retrieve the address of the delivery store
 
     # Create a dictionary with the order data
     order_data = {

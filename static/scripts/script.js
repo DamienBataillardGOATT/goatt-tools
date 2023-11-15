@@ -170,46 +170,38 @@
         document.getElementById('selected_slot').value = hourWithoutDate;
     }
 
-    document.getElementById('store_pickup').addEventListener('change', function() {
-        var storeAddress = this.options[this.selectedIndex].getAttribute('data-address');
-        document.getElementById('store_address').value = storeAddress;
-    });
-
-    document.getElementById('store_delivery').addEventListener('change', function() {
-        var storeAddress = this.options[this.selectedIndex].getAttribute('data-address');
-        document.getElementById('store_delivery_address').value = storeAddress;
-    });
-
     // Script to show/hide fields based on the chosen pickup option
     document.addEventListener('DOMContentLoaded', function() {
         var pickupOptions = document.querySelectorAll('input[name="pickup_option"]');
+        var deliveryOptions = document.querySelectorAll('input[name="delivery_option"]');
+        var storeAddress = "174 Quai de Jemmapes, 75010 Paris, France"; 
         var today = new Date();
         var dd = String(today.getDate()).padStart(2, '0');
         var mm = String(today.getMonth() + 1).padStart(2, '0'); // Janvier est 0 !
         var yyyy = today.getFullYear();
+
         pickupOptions.forEach(function(option) {
             option.addEventListener('change', function() {
                 if (this.value === 'address') {
                     document.getElementById('pickup_address_container').style.display = 'block';
-                    document.getElementById('store_pickup_container').style.display = 'none';
+                    document.getElementById('store_pickup_address').value = '';
                 } else if (this.value === 'store') {
                     document.getElementById('pickup_address_container').style.display = 'none';
-                    document.getElementById('store_pickup_container').style.display = 'block';
+                    document.getElementById('store_pickup_address').value = storeAddress;
                 }
             });
         today = yyyy + '-' + mm + '-' + dd;
         document.getElementById('deposit_date').value = today;
         });
 
-        var deliveryOptions = document.querySelectorAll('input[name="delivery_option"]');
         deliveryOptions.forEach(function(option) {
             option.addEventListener('change', function() {
                 if (this.value === 'address') {
                     document.getElementById('delivery_address_container').style.display = 'block';
-                    document.getElementById('store_delivery_container').style.display = 'none';
+                    document.getElementById('store_delivery_address').value = '';
                 } else if (this.value === 'store') {
                     document.getElementById('delivery_address_container').style.display = 'none';
-                    document.getElementById('store_delivery_container').style.display = 'block';
+                    document.getElementById('store_delivery_address').value = storeAddress;
                 }
             });
         });
@@ -221,4 +213,5 @@
             const slotsForDate = availableSlots[selectedDate] || [];
             displaySlotsForDate(selectedDate, slotsForDate);
         });
+
     });
