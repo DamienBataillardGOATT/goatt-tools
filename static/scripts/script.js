@@ -1,13 +1,19 @@
     var cart = [];
 
     var availableSlots = {}; // To store available time slots
+
+    var poseCordage = {
+        brand: "Pose cordage",
+        price: 14.99,
+        quantity: 0, 
+    };
     
     function searchRaquette() {
         let input = document.getElementById('searchInput').value;
         input = input.toLowerCase();
         let suggestions = document.getElementById('suggestions');
     
-        suggestions.innerHTML = '';  // Effacer les suggestions précédentes
+        suggestions.innerHTML = '';
     
         if (input.length > 0) {
             for (let stringName in stringsInfo) {
@@ -51,14 +57,27 @@
         if (info) {
             var brand = searchString;
             var price = info.prix;
-            var quantity = document.getElementById('string_quantity').value;
+            var quantity = parseInt(document.getElementById('string_quantity').value);
             var totalItem = price * quantity;
     
             cart.push({ brand: brand, quantity: quantity, price: price, totalItem: totalItem });
+    
+            // Find "Pose cordage" in the cart
+            var poseCordageIndex = cart.findIndex(item => item.brand === "Pose cordage");
+    
+            if (poseCordageIndex !== -1) {
+                // Update the quantity and the total if "Pose cordage" is in the cart
+                cart[poseCordageIndex].quantity += quantity;
+                cart[poseCordageIndex].totalItem = cart[poseCordageIndex].price * cart[poseCordageIndex].quantity;
+            } else {
+                // Add "Pose cordage" in cart with the good quantity
+                cart.push({ ...poseCordage, quantity: quantity, totalItem: poseCordage.price * quantity });
+            }
+    
             displayCart();
         }
     }
-
+    
     function displayCart() {
         var cartList = document.getElementById('cartList');
         var cartTotal = document.getElementById('cartTotal');
@@ -87,8 +106,24 @@
     }
 
     function removeFromCart(index) {
-        cart.splice(index, 1); // Remove the item from the array
-        displayCart(); // Update the cart display
+        var itemToRemove = cart[index];
+        cart.splice(index, 1); // Delete
+    
+        // Check if the delement element is a cordage
+        if (itemToRemove && itemToRemove.brand !== "Pose cordage") {
+            // Find et delete "Pose cordage"
+            var poseCordageIndex = cart.findIndex(item => item.brand === "Pose cordage");
+            if (poseCordageIndex !== -1) {
+                cart[poseCordageIndex].quantity -= itemToRemove.quantity;
+                if (cart[poseCordageIndex].quantity <= 0) {
+                    cart.splice(poseCordageIndex, 1);
+                } else {
+                    cart[poseCordageIndex].totalItem = cart[poseCordageIndex].price * cart[poseCordageIndex].quantity;
+                }
+            }
+        }
+    
+        displayCart();
     }
 
     // Function to retrieve available slots and display them in the dropdown menu
@@ -185,9 +220,11 @@
                 if (this.value === 'address') {
                     document.getElementById('pickup_address_container').style.display = 'block';
                     document.getElementById('store_pickup_address').value = '';
+                    document.getElementById('pickup_time_container').style.display = 'block';
                 } else if (this.value === 'store') {
                     document.getElementById('pickup_address_container').style.display = 'none';
                     document.getElementById('store_pickup_address').value = storeAddress;
+                    document.getElementById('pickup_time_container').style.display = 'none';
                 }
             });
         today = yyyy + '-' + mm + '-' + dd;
