@@ -134,17 +134,23 @@
                 availableSlots = data; // Store the data
                 const selectElement = document.getElementById('pickup_delivery_date');
                 selectElement.innerHTML = ''; // Clear existing options
-
+    
+                let firstDate = null;
+    
                 // Loop through the data to add date options
                 for (const date in data) {
+                    if (!firstDate) firstDate = date; // Store the first date
+    
                     const option = document.createElement('option');
                     option.value = date;
                     option.textContent = date;
                     selectElement.appendChild(option);
                 }
-
-                // Display slots for the first available date
-                displaySlotsForDate();
+    
+                // Display slots for the first available date, if available
+                if (firstDate) {
+                    displaySlotsForDate(firstDate, data[firstDate]);
+                }
             })
             .catch(error => {
                 console.error('Error retrieving available slots', error);
@@ -177,11 +183,12 @@
     function displaySlotsForDate(selectedDate, slotsForDate) {
         const container = document.getElementById('timeSlotsContainer');
         container.innerHTML = '';
-
-        // Create a button for each time slot and break it down into hours
-        slotsForDate.forEach(slot => {
-            displayHoursForSlot(slot.trim(), selectedDate);
-        });
+    
+        if (slotsForDate) {
+            slotsForDate.forEach(slot => {
+                displayHoursForSlot(slot.trim(), selectedDate);
+            });
+        }
     }
 
     function extractHour(slot) {
@@ -203,6 +210,28 @@
         const hourWithoutDate = extractHour(hour);
         // Update the hidden field with the value of the selected hour
         document.getElementById('selected_slot').value = hourWithoutDate;
+    }
+
+    function searchAddress(inputId, suggestionsId) {
+        var input = document.getElementById(inputId).value;
+
+        if (input.length > 2) {
+            fetch('https://api-adresse.data.gouv.fr/search/?q=' + encodeURIComponent(input))
+            .then(response => response.json())
+            .then(data => {
+                var suggestions = document.getElementById(suggestionsId);
+                suggestions.innerHTML = '';
+                data.features.forEach(function(feature) {
+                    var div = document.createElement('div');
+                    div.innerHTML = feature.properties.label;
+                    div.onclick = function() {
+                        document.getElementById(inputId).value = feature.properties.label;
+                        suggestions.innerHTML = '';
+                    };
+                    suggestions.appendChild(div);
+                });
+            });
+        }
     }
 
     // Script to show/hide fields based on the chosen pickup option
@@ -248,10 +277,12 @@
         
         // Retrieve and display available slots
         retrieveAndDisplaySlots();
-        document.getElementById('pickup_delivery_date').addEventListener('change', function() {
-            const selectedDate = this.value;
-            const slotsForDate = availableSlots[selectedDate] || [];
-            displaySlotsForDate(selectedDate, slotsForDate);
-        });
 
+        document.getElementById('pickup_delivery_date').onchange = function() {
+            const selectedDate = this.value;
+            const slotsForDate = availableSlots[selectedDate];
+            if (slotsForDate) {
+                displaySlotsForDate(selectedDate, slotsForDate);
+            }
+        };
     });

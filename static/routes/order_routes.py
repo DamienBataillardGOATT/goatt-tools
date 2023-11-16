@@ -66,10 +66,10 @@ def stringing_order():
         'ShopifyVariantId': shopify_variant_id,
         'Date de récupération': request.form['deposit_date'],
         'Heure de récupération': int(pickup_time) if pickup_time else None,
-        'Adresse de récupération': pickup_address if pickup_option == 'adresse' else store_pickup_address,
+        'Adresse de récupération': pickup_address if pickup_option == 'address' else store_pickup_address,
         'Date de livraison': delivery_date,
         'Heure de livraison': int(delivery_time),
-        'Adresse de livraison': delivery_address if delivery_option == 'adresse' else store_delivery_address,
+        'Adresse de livraison': delivery_address if delivery_option == 'address' else store_delivery_address,
         'Prix': float(total_cart_price),
     }
 

@@ -13,7 +13,7 @@
         </script>
 
         <label for="string_brand">Marque du cordage :</label>
-        <input type="text" id="searchInput" name="searchInput" onkeyup="searchRaquette()" onchange="updatePrice()" placeholder="Recherchez une raquette...">
+        <input type="text" id="searchInput" name="searchInput" onkeyup="searchRaquette()" onchange="updatePrice()" placeholder="Recherchez un cordage...">
         <div id="suggestions" class="suggestions"></div>
 
         <!-- Hidden field to store the shopify variant id -->
@@ -56,7 +56,8 @@
         <!-- Pickup address -->
         <div id="pickup_address_container" style="display:none;">
             <label for="pickup_address">Adresse de récupération :</label>
-            <input type="text" id="pickup_address" name="pickup_address" placeholder="Ex: 15 Av de Clichy, 75017 Paris, France">
+            <input type="text" id="pickup_address" name="pickup_address" placeholder="Ex: 15 Av de Clichy, 75017 Paris, France" onkeyup="searchAddress('pickup_address', 'pickup_suggestions')">
+            <div id="pickup_suggestions" class="suggestions"></div>
         </div>
 
         <!-- Hidden field to store the selected store's address -->
@@ -90,7 +91,8 @@
         <!-- Delivery address -->
         <div id="delivery_address_container" style="display:none;">
             <label for="delivery_address">Adresse de livraison :</label>
-            <input type="text" id="delivery_address" name="delivery_address" placeholder="Ex: 15 Av de Clichy, 75017 Paris, France">
+            <input type="text" id="delivery_address" name="delivery_address" placeholder="Ex: 15 Av de Clichy, 75017 Paris, France" onkeyup="searchAddress('delivery_address', 'delivery_suggestions')">
+            <div id="delivery_suggestions" class="suggestions"></div>
         </div>
 
         <!-- Hidden field to store the selected delivery store's address -->
