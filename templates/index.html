@@ -23,6 +23,18 @@
         <label for="string_quantity">Quantité: </label>
         <input type="number" id="string_quantity" name="string_quantity" min="0" placeholder="1,2,3,..." required>
 
+        <div>
+           <p>Tension :</p> 
+           <div class="Montant">
+                <label for="Montant">Montant :</label>
+                <input type="text" id="Montant" name="Montant" placeholder="Ex : 22, Recommandation expert">
+           </div>
+           <div class="Travers">
+                <label for="Travers">Travers :</label>
+                <input type="text" id="Travers" name="Travers" placeholder="Ex : 24">         
+            </div>
+        </div>
+
         <div class="price-container">
             <p class="price-label">Prix (avec la pose cordage) :</p>
             <p id="string_price" class="price-value"></p>
@@ -53,17 +65,22 @@
         <!-- Hidden field to store the selected store's address -->
         <input type="hidden" id="store_pickup_address" name="store_pickup_address" value="174 Quai de Jemmapes, 75010 Paris, France">
 
-        <!-- Selection of racket drop-off date -->
-        <div>
-            <label for="deposit_date">Date de dépôt de la raquette :</label>
-            <input type="date" id="deposit_date" name="deposit_date" required>
+        <!-- Selection of pickup/delivery date -->
+        <label for="pickup_deposit_date">Date de récupération :</label>
+        <select id="pickup_deposit_date" name="pickup_deposit_date" onchange="updateTimeSlotsDeposit()">
+             <!-- Date options will be added here by JavaScript -->
+        </select>
+
+        <!-- Selection of racket pickup time -->
+        <div id="pickup_time_container" style="display:none;">
+            <label for="pickup_time_dropdown">Horaire de récupération :</label>
+            <select id="pickup_time_dropdown" name="pickup_time">
+                <!-- The hour will be added here by Javascript -->
+            </select>
         </div>
 
-        <!-- Selection of racket pickup time in full hours -->
-        <div id="pickup_time_container" style="display:none;">
-            <label for="pickup_time">Heure de récupération (0-23) :</label>
-            <input type="number" id="pickup_time" name="pickup_time" min="0" max="23" step="1" placeholder="13">
-        </div>
+        <!-- Hidden field to store the selected deposit time slot -->
+        <input type="hidden" id="selected_slot_deposit" name="selected_slot_deposit">
 
         <!-- Delivery option -->
         <div>
@@ -89,18 +106,20 @@
         <input type="hidden" id="store_delivery_address" name="store_delivery_address" value="174 Quai de Jemmapes, 75010 Paris, France">
 
         <!-- Selection of pickup/delivery date -->
-        <label for="pickup_delivery_date">Date de récupération/livraison :</label>
-        <select id="pickup_delivery_date" name="pickup_delivery_date" onchange="displaySlotsForDate()">
-        <!-- Date options will be added here by JavaScript -->
+        <label for="pickup_delivery_date">Date de livraison :</label>
+        <select id="pickup_delivery_date" name="pickup_delivery_date" onchange="updateTimeSlotsDelivery()">
+             <!-- Date options will be added here by JavaScript -->
         </select>
 
-        <!-- Container for time slot buttons -->
-        <div id="timeSlotsContainer">
-            <!-- Time slot buttons will be added here by JavaScript -->
+        <div id="delevery_time_container" style="display:none;">
+            <label for="delevery_time_dropdown">Horaire de livraison:</label>
+            <select id="delevery_time_dropdown" name="delevery_time">
+                <!-- The hour for the delevry will be added here by Javascript -->
+            </select>
         </div>
-
+ 
         <!-- Hidden field to store the selected pickup/delivery time slot -->
-        <input type="hidden" id="selected_slot" name="selected_slot">
+        <input type="hidden" id="selected_slot_delivery" name="selected_slot_delivery">
 
         <input type="submit" value="Passer la commande">
     </form>

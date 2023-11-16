@@ -4,7 +4,6 @@ from airtable import Airtable
 from datetime import datetime
 import requests
 
-
 # Creating a Blueprint for client routes
 client_bp = Blueprint('client_bp', __name__)
 
