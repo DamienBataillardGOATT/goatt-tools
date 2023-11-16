@@ -84,3 +84,16 @@ input[type="radio"] {
     align-items: center; /* Centrer les éléments verticalement */
     margin-bottom: 10px; /* Espacement entre chaque groupe de bouton radio et label */
 }
+
+.price-container {
+    display: flex;
+    align-items: center;
+}
+
+.price-label {
+    margin-right: 10px; /* Ajustez selon vos besoins */
+}
+
+.price-value {
+    font-weight: bold; /* Pour mettre en évidence le prix */
+}

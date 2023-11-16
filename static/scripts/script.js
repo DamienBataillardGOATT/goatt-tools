@@ -38,93 +38,18 @@
             var shopifyVariantId = info.shopify_variant_id;
             var quantity = document.getElementById('string_quantity').value;
             var totalPrice = unitPrice * quantity;
-            document.getElementById('string_price').textContent = 'Prix: ' + totalPrice.toFixed(2) + ' €';
+    
+            var poseCordagePrice = 14.99; 
+            totalPrice += poseCordagePrice;
+    
+            document.getElementById('string_price').textContent = totalPrice.toFixed(2) + ' €';
             document.getElementById('shopifyVariantId').value = shopifyVariantId;
+            document.getElementById('totalPrice').value = totalPrice.toFixed(2);
         }
     }
     
     // Add an event listener to the quantity field
     document.getElementById('string_quantity').addEventListener('change', updatePrice);
-    
-    // Update the initial price when the page loads
-    document.addEventListener('DOMContentLoaded', function() {
-        updatePrice();
-    });
-
-    function addToCart() {
-        var searchString = document.getElementById('searchInput').value;
-        var info = stringsInfo[searchString];
-        if (info) {
-            var brand = searchString;
-            var price = info.prix;
-            var quantity = parseInt(document.getElementById('string_quantity').value);
-            var totalItem = price * quantity;
-    
-            cart.push({ brand: brand, quantity: quantity, price: price, totalItem: totalItem });
-    
-            // Find "Pose cordage" in the cart
-            var poseCordageIndex = cart.findIndex(item => item.brand === "Pose cordage");
-    
-            if (poseCordageIndex !== -1) {
-                // Update the quantity and the total if "Pose cordage" is in the cart
-                cart[poseCordageIndex].quantity += quantity;
-                cart[poseCordageIndex].totalItem = cart[poseCordageIndex].price * cart[poseCordageIndex].quantity;
-            } else {
-                // Add "Pose cordage" in cart with the good quantity
-                cart.push({ ...poseCordage, quantity: quantity, totalItem: poseCordage.price * quantity });
-            }
-    
-            displayCart();
-        }
-    }
-    
-    function displayCart() {
-        var cartList = document.getElementById('cartList');
-        var cartTotal = document.getElementById('cartTotal');
-        var inputTotalCartPrice = document.getElementById('totalCartPrice');
-        var total = 0;
-
-        cartList.innerHTML = '';
-
-        cart.forEach(function(item, index) {
-            var li = document.createElement('li');
-            li.textContent = item.brand + ' x ' + item.quantity + ' : ' + item.totalItem + ' €';
-            
-            // Create a delete button
-            var deleteButton = document.createElement('button');
-            deleteButton.textContent = 'Supprimer';
-            deleteButton.onclick = function() { removeFromCart(index); }; // Delete function
-            li.appendChild(deleteButton);
-
-            cartList.appendChild(li);
-
-            total += parseFloat(item.totalItem);
-        });
-
-        cartTotal.textContent = total.toFixed(2);
-        inputTotalCartPrice.value = total.toFixed(2);
-    }
-
-    function removeFromCart(index) {
-        var itemToRemove = cart[index];
-        cart.splice(index, 1); // Delete
-    
-        // Check if the delement element is a cordage
-        if (itemToRemove && itemToRemove.brand !== "Pose cordage") {
-            // Find et delete "Pose cordage"
-            var poseCordageIndex = cart.findIndex(item => item.brand === "Pose cordage");
-            if (poseCordageIndex !== -1) {
-                cart[poseCordageIndex].quantity -= itemToRemove.quantity;
-                if (cart[poseCordageIndex].quantity <= 0) {
-                    cart.splice(poseCordageIndex, 1);
-                } else {
-                    cart[poseCordageIndex].totalItem = cart[poseCordageIndex].price * cart[poseCordageIndex].quantity;
-                }
-            }
-        }
-    
-        displayCart();
-    }
 
     // Function to retrieve available slots and display them in the dropdown menu
     function retrieveAndDisplaySlots() {
@@ -244,6 +169,8 @@
         var mm = String(today.getMonth() + 1).padStart(2, '0'); // Janvier est 0 !
         var yyyy = today.getFullYear();
 
+        updatePrice();
+
         pickupOptions.forEach(function(option) {
             option.addEventListener('change', function() {
                 var pickupTimeField = document.getElementById('pickup_time');
@@ -254,7 +181,6 @@
                     pickupTimeField.required = true;
                 } else if (this.value === 'store') {
                     document.getElementById('pickup_address_container').style.display = 'none';
-                    document.getElementById('store_pickup_address').value = storeAddress;
                     document.getElementById('pickup_time_container').style.display = 'none';
                     pickupTimeField.required = false;
                 }
@@ -270,7 +196,6 @@
                     document.getElementById('store_delivery_address').value = '';
                 } else if (this.value === 'store') {
                     document.getElementById('delivery_address_container').style.display = 'none';
-                    document.getElementById('store_delivery_address').value = storeAddress;
                 }
             });
         });

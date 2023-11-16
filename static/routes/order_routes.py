@@ -36,7 +36,7 @@ def stringing_order():
     pickup_time = request.form['pickup_time']
     delivery_date = request.form['pickup_delivery_date']
     delivery_time = request.form['selected_slot']
-    total_cart_price = request.form['totalCartPrice']
+    total_price = request.form['totalPrice']
     shopify_variant_id = request.form['shopifyVariantId']
     
     # Initialize variables for addresses
@@ -52,7 +52,7 @@ def stringing_order():
         pickup_time = request.form['pickup_time']
     elif pickup_option == 'store':
         store_pickup_address = request.form['store_pickup_address']  # Retrieve the address of the pickup store
-    
+
     # Prepare data for delivery
     if delivery_option == 'address':
         delivery_address = request.form['delivery_address']
@@ -70,7 +70,7 @@ def stringing_order():
         'Date de livraison': delivery_date,
         'Heure de livraison': int(delivery_time),
         'Adresse de livraison': delivery_address if delivery_option == 'address' else store_delivery_address,
-        'Prix': float(total_cart_price),
+        'Prix': float(total_price),
     }
 
     # Store the order data in the session to use after creating or retrieving the client

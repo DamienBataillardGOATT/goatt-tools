@@ -19,26 +19,17 @@
         <!-- Hidden field to store the shopify variant id -->
         <input type="hidden" id="shopifyVariantId" name="shopifyVariantId">
         
-        <p id="string_price"></p>
-        
         <!-- Quantity of string -->
         <label for="string_quantity">Quantité: </label>
         <input type="number" id="string_quantity" name="string_quantity" min="0" placeholder="1,2,3,..." required>
 
-        <!-- Button to add to cart -->
-        <button type="button" onclick="addToCart()">Ajouter au panier</button>
-
-        <!-- Cart -->
-        <div id="cart">
-            <h2>Votre panier :</h2>
-            <ul id="cartList">
-                <!-- Cart items will be added here -->
-            </ul>
-            <p>Total: <span id="cartTotal">0</span> €</p>
-            <!-- Hidden field to store the total cart price -->
-            <input type="hidden" id="totalCartPrice" name="totalCartPrice" value="0">
+        <div class="price-container">
+            <p class="price-label">Prix (avec la pose cordage) :</p>
+            <p id="string_price" class="price-value"></p>
         </div>
 
+        <input type="hidden" id="totalPrice" name="totalPrice">
+        
         <!-- Pickup option -->
         <div>
             <p>Récupération de la raquette : </p>
@@ -52,7 +43,6 @@
             </div>
         </div>
 
-
         <!-- Pickup address -->
         <div id="pickup_address_container" style="display:none;">
             <label for="pickup_address">Adresse de récupération :</label>
@@ -61,7 +51,7 @@
         </div>
 
         <!-- Hidden field to store the selected store's address -->
-        <input type="hidden" id="store_pickup_address" name="store_pickup_address">
+        <input type="hidden" id="store_pickup_address" name="store_pickup_address" value="174 Quai de Jemmapes, 75010 Paris, France">
 
         <!-- Selection of racket drop-off date -->
         <div>
@@ -96,7 +86,7 @@
         </div>
 
         <!-- Hidden field to store the selected delivery store's address -->
-        <input type="hidden" id="store_delivery_address" name="store_delivery_address">
+        <input type="hidden" id="store_delivery_address" name="store_delivery_address" value="174 Quai de Jemmapes, 75010 Paris, France">
 
         <!-- Selection of pickup/delivery date -->
         <label for="pickup_delivery_date">Date de récupération/livraison :</label>
