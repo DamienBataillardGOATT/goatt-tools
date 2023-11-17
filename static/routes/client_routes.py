@@ -11,7 +11,6 @@ client_bp = Blueprint('client_bp', __name__)
 airtable_clients = Airtable(BASE_ID_LEADS, CLIENT_TABLE, API_KEY)
 airtables_orders = Airtable(BASE_ID_ORDERS, ORDERS_TABLE, API_KEY)
 airtable_strings = Airtable(BASE_ID_PRODUCTS, PRODUCTS_TABLE, API_KEY)
-airtable_test_orders = Airtable(BASE_ID_ORDERS, ORDERS_TEST_TABLE, API_KEY)
 
 def get_shopify_headers():
     return {
@@ -174,7 +173,7 @@ def complete_order(client_info, client_info_string=None):
     order_data.pop('Quantité', None)
     
     # Insert the complete order into the Airtable database
-    airtable_test_orders.insert(order_data)
+    airtables_orders.insert(order_data)
 
     # Clean up the session
     session.pop('order_data', None)
