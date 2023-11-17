@@ -1,12 +1,182 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from static.routes.config import API_KEY, BASE_ID_PRODUCTS, PRODUCTS_TABLE
+from flask import Blueprint, render_template, request, redirect, url_for, session
+from static.routes.config import API_KEY, BASE_ID_LEADS, CLIENT_TABLE, BASE_ID_ORDERS, ORDERS_TABLE, BASE_ID_PRODUCTS, PRODUCTS_TABLE, SHOPIFY_API_KEY
 from airtable import Airtable
+import requests
+import re
 
 # Creating a Blueprint for order routes
 order_bp = Blueprint('order_bp', __name__)
 
 # Initializing Airtable connection for products
 airtable_strings = Airtable(BASE_ID_PRODUCTS, PRODUCTS_TABLE, API_KEY)
+airtables_orders = Airtable(BASE_ID_ORDERS, ORDERS_TABLE, API_KEY)
+airtable_clients = Airtable(BASE_ID_LEADS, CLIENT_TABLE, API_KEY)
+
+def extract_postal_code_and_city(address):
+    match = re.search(r'(\d{5})\s([A-Za-zÀ-ÿ\s-]+)$', address)
+    if match:
+        postal_code = match.group(1)
+        city = match.group(2).strip()
+        return postal_code, city
+    else:
+        return None, None
+
+def get_shopify_headers():
+    return {
+        "Content-Type": "application/json",
+        "X-Shopify-Access-Token": SHOPIFY_API_KEY,
+    }
+
+def search_shopify_customer(email, first_name, last_name):
+    url = f"https://goatt-tennis.myshopify.com/admin/api/2023-04/customers/search.json?query=email:{email}"
+    response = requests.get(url, headers=get_shopify_headers())
+    if response.status_code == 200:
+        customers = response.json().get('customers', [])
+        if customers:
+            customer_id = customers[0].get('id') 
+            return customer_id
+        else:
+            print("Aucun client trouvé.")
+            new_customer = create_shopify_customer(email, first_name, last_name)
+            return new_customer.get('id') if new_customer else None
+    else:
+        raise Exception(f"Failed to search customer: {response.text}")
+    
+def create_shopify_customer(email, first_name, last_name):
+    url = f"https://goatt-tennis.myshopify.com/admin/api/2021-01/customers.json"
+    data = {
+        "customer": {
+            "email": email,
+            "first_name": first_name,
+            "last_name": last_name
+        }
+    }
+    response = requests.post(url, json=data, headers=get_shopify_headers())
+    return response.json().get('customer')
+
+def create_draft_order(data):
+    url = f"https://goatt-shopify.onrender.com/create_draft_order"
+
+    lineItems = [{
+        "variant_id": data['variant_id'],
+        "requires_shipping": 'false',
+        "quantity": data['quantité']
+    },
+     {
+        "variant_id": '48665394905414',
+        "requires_shipping": 'false',
+        "quantity": data['quantité']
+    },]
+
+    draft_order_data = {
+        "draft_order": {
+            "line_items": lineItems,
+            "customer": {
+                "id": data['shopify_customer_id']
+            },
+            "shipping_address": {
+                "address1": data['pickup_address'],
+                "phone": data['phone'],
+                "last_name": data['nom'],
+                "first_name": data['prenom'],
+                "city": data['pickup_town'],
+                "country": "France",
+                "zip": data['pickup_postal_code']
+            },
+            "shipping_line": {
+                "custom": True,
+                "price": data['price_delivery'],
+                "title": 'Récupération et Livraison - ' + data['pose_type']
+            },
+        }
+    }
+    
+    response = requests.post(url, json=draft_order_data, headers=get_shopify_headers())
+    if response.status_code == 200:
+        response_data = response.json()
+        invoice_url = response_data['draft_order']['admin_graphql_api_id']
+        order_id = invoice_url.split('/')[-1]
+        return order_id
+    else:
+        return None 
+
+def complete_order(order_data):
+    client_info = session.get('client_info', {})
+    client_info_string = session.get('client_info_string', {})
+
+    customer_id = search_shopify_customer(client_info['Email'], client_info['Prénom'], client_info['Nom'])
+
+    # Using the informations from the last sale
+    if client_info_string:
+        # Retrieve the specific string price
+        string_info = airtable_strings.search('String', client_info_string['Cordage'])
+        if string_info:
+            string_price = string_info[0]['fields']['price']
+        else:
+            string_price = 0  # or a default value if the string is not found
+        
+        # Calculate the total price
+        quantity = int(order_data.get('Quantity', 1))
+        total_price = string_price * quantity
+        
+        cordage = client_info_string['Cordage']
+        tension = client_info_string['Tension']
+        quantity = int(client_info_string.get('Quantité', 1))
+        total_price = string_price * quantity
+
+        # Update order_data with the informations from the last sale
+        order_data.update({
+            'Cordage': cordage,
+            'Tension': tension,
+            'Articles': f"{quantity}x {cordage}",
+            'Prix': total_price,
+        })
+
+    # Add client information to order_data
+    order_data.update({
+        'Email': client_info['Email'],
+        'Nom complet': f"{client_info['Prénom']} {client_info['Nom']}",
+        'Téléphone': client_info['Téléphone'],
+    })
+
+    draft_order_info = {
+        'variant_id': order_data['ShopifyVariantId'],
+        'quantité': order_data['Quantité'],
+        'shopify_customer_id': customer_id , 
+        'pickup_address': order_data['Adresse de livraison'],
+        'phone': client_info['Téléphone'],
+        'nom': client_info['Nom'],
+        'prenom': client_info['Prénom'],
+        'pickup_town': order_data['Ville'],
+        'pickup_postal_code': order_data['Code Postal'],
+        'price_delivery': '5.99',
+        'pose_type': 'Standard',
+    }
+
+    """order_id = create_draft_order(draft_order_info)
+
+    if order_id:
+        order_data['Order_Id'] = order_id"""
+
+    # Remove the 'ShopifyVariantId' key from order_data if it exists
+    order_data.pop('ShopifyVariantId', None)
+
+    # Remove the 'Quantité' key from order_data if it exists
+    order_data.pop('Quantité', None)
+
+    # Remove the 'Quantité' key from order_data if it exists
+    order_data.pop('Ville', None)
+
+    # Remove the 'Quantité' key from order_data if it exists
+    order_data.pop('Code Postal', None)
+    
+    # Insert the complete order into the Airtable database
+    airtables_orders.insert(order_data)
+
+    # Clean up the session
+    session.pop('order_data', None)
+    return redirect(url_for('order_bp.order_confirmation'))
+
 
 @order_bp.route('/')
 def order():
@@ -67,12 +237,10 @@ def stringing_order():
         delivery_time = request.form['selected_slot_delivery']
         longitudeDelivery = request.form['longitudeDelivery']
         latitudeDelivery = request.form['latitudeDelivery']
+        zip, city = extract_postal_code_and_city(delivery_address)
     elif delivery_option == 'store':
         store_delivery_address = request.form['store_delivery_address']  # Retrieve the address of the delivery store
 
-
-    print(pickup_time)
-    print(delivery_time)
     # Create a dictionary with the order data
     order_data = {
         'Articles': f"{request.form['string_quantity']}x {request.form['searchInput']}",
@@ -89,13 +257,17 @@ def stringing_order():
         'Date de livraison': delivery_date,
         'Heure de livraison': int(delivery_time) if delivery_time else None,
         'Adresse de livraison': delivery_address if delivery_option == 'address' else store_delivery_address,
+        'Ville': city,
+        'Code Postal': zip,
         'Latitude Delivery Address': float(latitudeDelivery) if latitudeDelivery else None,
         'Longitude Delivery Address': float(longitudeDelivery) if longitudeDelivery else None,
         'Prix': float(total_price),
     }
 
-    # Store the order data in the session to use after creating or retrieving the client
-    session['order_data'] = order_data
+    complete_order(order_data)
 
-    # Redirect to the client page to check if it's a new order or not
-    return redirect(url_for('client_bp.client'))
+    return redirect(url_for('order_bp.order_confirmation'))
+
+@order_bp.route('/order_confirmation')
+def order_confirmation():
+    return "Merci pour votre commande!"
