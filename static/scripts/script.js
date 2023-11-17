@@ -51,6 +51,10 @@
     // Add an event listener to the quantity field
     document.getElementById('string_quantity').addEventListener('change', updatePrice);
 
+    function extractFirstTwoCharacters(timeSlot) {
+        return timeSlot.substring(0, 2);
+    }
+
     // Function to retrieve available slots and display them in the dropdown menu
     function retrieveAndDisplaySlots() {
         fetch('https://goatt-db.onrender.com/get_available_slots')
@@ -104,29 +108,37 @@
         
         selectElementDeposit.innerHTML = ''; 
     
-        if (slotsForDate) {
+        if (slotsForDate && slotsForDate.length > 0) {
             slotsForDate.forEach(slot => {
                 const option = document.createElement('option');
-                option.value = `${selectedDate} ${slot}`;
+                option.value = `${slot}`;
                 option.textContent = slot;
                 selectElementDeposit.appendChild(option);
             });
+    
+            var firstSlot = slotsForDate[0];
+            var firstTwoChars = extractFirstTwoCharacters(firstSlot);
+            document.getElementById('selected_slot_deposit').value = firstTwoChars;
         }
     }
 
     // Function to display time slot buttons for the selected date
     function displaySlotsForDateDelivery(selectedDate, slotsForDate) {
-        const selectElementDelivery = document.getElementById('delevery_time_dropdown');
+        const selectElementDelivery = document.getElementById('delivery_time_dropdown');
 
         selectElementDelivery.innerHTML = '';
     
-        if (slotsForDate) {
+        if (slotsForDate && slotsForDate.length > 0) {
             slotsForDate.forEach(slot => {
                 const option = document.createElement('option');
-                option.value = `${selectedDate} ${slot}`;
+                option.value = `${slot}`;
                 option.textContent = slot;
                 selectElementDelivery.appendChild(option);
             });
+
+            var firstSlot = slotsForDate[0];
+            var firstTwoChars = extractFirstTwoCharacters(firstSlot);
+            document.getElementById('selected_slot_delivery').value = firstTwoChars;
         }
     }
 
@@ -152,7 +164,7 @@
         return `${day}/${month}/${year}`;
     }
 
-    function searchAddress(inputId, suggestionsId) {
+    function searchAddressDeposit(inputId, suggestionsId) {
         var input = document.getElementById(inputId).value;
 
         if (input.length > 2) {
@@ -167,6 +179,12 @@
                     div.onclick = function() {
                         document.getElementById(inputId).value = feature.properties.label;
                         suggestions.innerHTML = '';
+
+                        var longitudeDeposit = feature.geometry.coordinates[0];
+                        var latitudeDeposit = feature.geometry.coordinates[1];
+
+                        document.getElementById('longitudeDeposit').value = longitudeDeposit;
+                        document.getElementById('latitudeDeposit').value = latitudeDeposit;
                     };
                     suggestions.appendChild(div);
                 });
@@ -174,31 +192,52 @@
         }
     }
 
+    function searchAddressDelivery(inputId, suggestionsId) {
+        var input = document.getElementById(inputId).value;
+
+        if (input.length > 2) {
+            fetch('https://api-adresse.data.gouv.fr/search/?q=' + encodeURIComponent(input))
+            .then(response => response.json())
+            .then(data => {
+                var suggestions = document.getElementById(suggestionsId);
+                suggestions.innerHTML = '';
+                data.features.forEach(function(feature) {
+                    var div = document.createElement('div');
+                    div.innerHTML = feature.properties.label;
+                    div.onclick = function() {
+                        document.getElementById(inputId).value = feature.properties.label;
+                        suggestions.innerHTML = '';
+
+                        var longitudeDelivery = feature.geometry.coordinates[0];
+                        var latitudeDelivery = feature.geometry.coordinates[1];
+
+                        document.getElementById('longitudeDelivery').value = longitudeDelivery;
+                        document.getElementById('latitudeDelivery').value = latitudeDelivery;
+                    };
+                    suggestions.appendChild(div);
+                });
+            });
+        }
+    }
+
+    function updateTensionValue() {
+        let tensionInput = document.getElementById('Tension');
+        let tensionValue = tensionInput.value.trim();
+    
+        if (tensionValue.toLowerCase() === "recommandation expert") {
+            tensionInput.value = "recommandation expert";
+        } else {
+            let tensions = tensionValue.split(',').map(t => t.trim());
+            if (tensions.length === 2 && tensions[0] !== tensions[1]) {
+                tensionInput.value = `${tensions[0]}-${tensions[1]}`;
+            }
+        }
+    }
+
     // Script to show/hide fields based on the chosen pickup option
     document.addEventListener('DOMContentLoaded', function() {
         var pickupOptions = document.querySelectorAll('input[name="pickup_option"]');
         var deliveryOptions = document.querySelectorAll('input[name="delivery_option"]');
-        const montantInput = document.getElementById('Montant');
-        const traversInput = document.getElementById('Travers');
-        const tensionInput = document.createElement('input');
-
-        tensionInput.type = 'hidden';
-        tensionInput.id = 'Tension';
-        tensionInput.name = 'Tension';
-        document.getElementById('orderForm').appendChild(tensionInput);
-
-        function updateTensionValue() {
-            let montant = montantInput.value.trim();
-            let travers = traversInput.value.trim();
-    
-            if (montant === "recommandation expert" || travers === "recommandation expert") {
-                tensionInput.value = "recommandation expert";
-            } else if (montant === travers) {
-                tensionInput.value = montant;
-            } else {
-                tensionInput.value = `${montant}-${travers}`;
-            }
-        }
 
         updatePrice();
 
@@ -216,8 +255,6 @@
                     pickupTimeField.required = false;
                 }
             });
-
-
         });
 
         deliveryOptions.forEach(function(option) {
@@ -233,12 +270,22 @@
             });
         });
         
-        // Retrieve and display available slots
         retrieveAndDisplaySlots();
 
         document.getElementById('pickup_deposit_date').addEventListener('change', updateTimeSlotsDeposit);
-        document.getElementById('pickup_delivery_date').addEventListener('change', updateTimeSlotsDelivery);
+        document.getElementById('pickup_time_dropdown').addEventListener('change', function() {
+            var selectedSlot = this.value;
+            var firstTwoChars = extractFirstTwoCharacters(selectedSlot);
+            document.getElementById('selected_slot_deposit').value = firstTwoChars;
+        });
 
-        montantInput.addEventListener('change', updateTensionValue);
-        traversInput.addEventListener('change', updateTensionValue);
+        document.getElementById('pickup_delivery_date').addEventListener('change', updateTimeSlotsDelivery);
+        document.getElementById('delivery_time_dropdown').addEventListener('change', function() {
+            var selectedSlot = this.value;
+            var firstTwoChars = extractFirstTwoCharacters(selectedSlot);
+            document.getElementById('selected_slot_delivery').value = firstTwoChars;
+        });
+
+        document.getElementById('Tension').addEventListener('change', updateTensionValue);
+
     });

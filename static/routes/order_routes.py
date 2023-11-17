@@ -38,8 +38,7 @@ def stringing_order():
     total_price = request.form['totalPrice']
     shopify_variant_id = request.form['shopifyVariantId']
     tension = request.form['Tension']
-
-    print(tension)
+    quantity = request.form['string_quantity']
     
     # Initialize variables for addresses
     pickup_address = None
@@ -48,11 +47,17 @@ def stringing_order():
     store_delivery_address = None
     pickup_time = None
     delivery_time = None
+    longitudeDeposit = None
+    latitudeDeposit = None
+    longitudeDelivery = None
+    latitudeDelivery = None
 
     # Prepare data for pickup
     if pickup_option == 'address':
         pickup_address = request.form['pickup_address']
         pickup_time = request.form['selected_slot_deposit']
+        longitudeDeposit = request.form['longitudeDeposit']
+        latitudeDeposit = request.form['latitudeDeposit']
     elif pickup_option == 'store':
         store_pickup_address = request.form['store_pickup_address']  # Retrieve the address of the pickup store
 
@@ -60,22 +65,32 @@ def stringing_order():
     if delivery_option == 'address':
         delivery_address = request.form['delivery_address']
         delivery_time = request.form['selected_slot_delivery']
+        longitudeDelivery = request.form['longitudeDelivery']
+        latitudeDelivery = request.form['latitudeDelivery']
     elif delivery_option == 'store':
         store_delivery_address = request.form['store_delivery_address']  # Retrieve the address of the delivery store
 
+
+    print(pickup_time)
+    print(delivery_time)
     # Create a dictionary with the order data
     order_data = {
         'Articles': f"{request.form['string_quantity']}x {request.form['searchInput']}",
         'Cordage': request.form['searchInput'],
-        'Quantité': request.form['string_quantity'],
+        'Quantité': quantity,
+        '# raquettes': int(quantity),
         'Tension': tension,
         'ShopifyVariantId': shopify_variant_id,
         'Date de récupération': pickup_date,
         'Heure de récupération': int(pickup_time) if pickup_time else None,
         'Adresse de récupération': pickup_address if pickup_option == 'address' else store_pickup_address,
+        'Latitude Pickup Address': float(latitudeDeposit) if latitudeDeposit else None,
+        'Longitude Pickup Address': float(longitudeDeposit) if longitudeDeposit else None,
         'Date de livraison': delivery_date,
         'Heure de livraison': int(delivery_time) if delivery_time else None,
         'Adresse de livraison': delivery_address if delivery_option == 'address' else store_delivery_address,
+        'Latitude Delivery Address': float(latitudeDelivery) if latitudeDelivery else None,
+        'Longitude Delivery Address': float(longitudeDelivery) if longitudeDelivery else None,
         'Prix': float(total_price),
     }
 

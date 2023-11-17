@@ -145,6 +145,7 @@ def complete_order(client_info, client_info_string=None):
         'Date de naissance': client_info['Date de naissance'],
         'Age': age,
         'Sexe': client_info['Genre'],
+        'Téléphone': client_info['Téléphone'],
     })
 
     draft_order_info = {
@@ -152,7 +153,7 @@ def complete_order(client_info, client_info_string=None):
         'quantité': order_data['Quantité'],
         'shopify_customer_id': customer_id , 
         'pickup_address': order_data['Adresse de livraison'],
-        'phone': '0762188477',
+        'phone': client_info['Téléphone'],
         'nom': client_info['Nom'],
         'prenom': client_info['Prénom'],
         'pickup_town': client_info['Ville'],
@@ -223,6 +224,7 @@ def add_client():
     # Create data to add to the database
     client_info = {
         'Nom': request.form['name'],
+        'Téléphone': request.form['phonenumber'],
         'Prénom' : request.form['firstname'],
         'Email': request.form['email'],
         'Ville': request.form['city'],
