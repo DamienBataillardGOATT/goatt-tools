@@ -17,7 +17,7 @@ app.register_blueprint(order_bp, url_prefix='/order')
 @app.route('/')
 def index():
     # Redirect to the 'order' route defined in the 'order_bp' Blueprint
-    return redirect(url_for('client_bp.client')) 
+    return redirect(url_for('order_bp.order')) 
 
 # Run the application if this script is executed as the main program
 if __name__ == '__main__':

@@ -28,6 +28,30 @@ body {
     flex-wrap: wrap; /* Permet aux éléments de passer à la ligne suivante si nécessaire */
 }
 
+.popup-container {
+    display: none; /* Masqué par défaut */
+}
+
+.popup-form {
+    background-color: #ffffff; /* Couleur d'arrière-plan */
+    padding: 20px; /* Espacement intérieur */
+    border-radius: 5px; /* Coins arrondis */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre douce */
+    margin: 0 auto; /* Centrer dans le popupContainer */
+    width: calc(50% - 40px); /* Utiliser toute la largeur disponible */
+    max-width: 800px; /* Largeur maximale */
+}
+
+.popup-info {
+    width: calc(100% - 40px); /* Utilisez 100% si vous voulez qu'il prenne toute la largeur du conteneur */
+    max-width: 800px; /* Assurez-vous que cela correspond à la largeur maximale de vos autres éléments */
+    background-color: #ffffff; /* Couleur d'arrière-plan */
+    padding: 30px; /* Espacement intérieur */
+    border-radius: 5px; /* Coins arrondis */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre douce */
+    margin: 20px auto; /* Centrer dans le conteneur */
+}
+
 form {
     background-color: #ffffff; /* Couleur d'arrière-plan du formulaire */
     padding: 30px; /* Espacement à l'intérieur du formulaire */
@@ -91,9 +115,15 @@ input[type="radio"] {
 }
 
 .price-label {
-    margin-right: 10px; /* Ajustez selon vos besoins */
+    margin-right: 10px;
 }
 
 .price-value {
     font-weight: bold; /* Pour mettre en évidence le prix */
+}
+
+.confirm-form {
+    width: calc(80% - 40px); /* Assurez-vous que chaque formulaire prend toute la largeur */
+    max-width: 800px; /* Largeur maximale pour chaque formulaire */
+    margin-bottom: 20px; /* Espacement entre les formulaires */
 }

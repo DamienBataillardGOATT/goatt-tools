@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
 from static.routes.config import API_KEY, BASE_ID_LEADS, CLIENT_TABLE, BASE_ID_ORDERS, ORDERS_TABLE, BASE_ID_PRODUCTS, PRODUCTS_TABLE, SHOPIFY_API_KEY
 from airtable import Airtable
 
@@ -23,21 +23,19 @@ def search_client():
 
     # Search for string information by email in the strings table
     client_info_string = airtables_orders.search('Email', search_email)
-    
     if client_info:
         client_info = client_info[0]['fields']
         if client_info_string:
             client_info_string = client_info_string[0]['fields']
             session['client_info'] = client_info
             session['client_info_string'] = client_info_string
-            return redirect(url_for('order_bp.order'))
+            return jsonify({'found': True, 'client': client_info, 'cordage': client_info_string['Cordage'], 'tension': client_info_string['Tension']})
         else:
             session['client_info'] = client_info
-            return redirect(url_for('order_bp.order'))
+            return jsonify({'found': True, 'client': client_info})
     else:
-        flash('Aucun utilisateur trouvé avec cet email.', 'danger')
-        return redirect(url_for('client_bp.client'))
-
+        return jsonify({'found': False, 'message': 'Aucun utilisateur trouvé avec cet email.'})
+    
 @client_bp.route('/add_client', methods=['POST'])
 def add_client():
 

@@ -10,26 +10,42 @@
         <form action="/client/search_client" method="post">
             <h2>Rechercher un client</h2>
             
-            <label for="search_email">Quel est ton adresse email ?</label>
-            <input type="email" id="search_email" name="search_email" placeholder="Entrez votre email" required>
+            <label for="search_email">Email :</label>
+            <input type="email" id="search_email" name="search_email" placeholder="Entrez votre email">
             
             <input type="submit" value="Rechercher">
         </form>
+
+        {% if client_info %}
+            <div class="client-info">
+                <h2>Confirmer le Client</h2>
+                <p>Nom: {{ client_info['Nom'] }}</p>
+                <p>Prénom: {{ client_info['Prénom'] }}</p>
+                <p>Email: {{ client_info['Email'] }}</p>
+                <p>Téléphone: {{ client_info['Téléphone'] }}</p>
+                <p>Ville: {{ client_info['Ville'] }}</p>
+                <p>Code Postal: {{ client_info['Code Postal'] }}</p>
+                <form action="/client/confirm_client" method="post">
+                    <input type="submit" value="Confirmer">
+                </form>
+            </div>
+        {% endif %}
+
 
         <form action="/client/add_client" method="post">
 
             <h2>Ajouter un nouveau client</h2>
             
-            <label for="email">Quel est ton adresse email ?</label>
+            <label for="email">Email :</label>
             <input type="email" id="email" name="email" placeholder="Ex: andréngn@gmail.com" required>
 
-            <label for="phonenumber">Quel est ton numéro de telephone</label>
+            <label for="phonenumber">Numéro de téléphone :</label>
             <input type="phonenumber" id="phonenumber" name="phonenumber" placeholder="07.62.18.84.77" required>
 
-            <label for="name">Nom</label>
+            <label for="name">Nom :</label>
             <input type="text" id="name" name="name" placeholder="Ex: Nguyen" required>
             
-            <label for="firstname">Prénom</label>
+            <label for="firstname">Prénom :</label>
             <input type="text" id="firstname" name="firstname" placeholder="Ex: Christophe" required>
            
             <input type="submit" value="Ajouter">

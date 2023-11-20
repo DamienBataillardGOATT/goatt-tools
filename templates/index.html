@@ -5,125 +5,139 @@
     <title>Nouvelle pose cordage</title>
 </head>
 <body>
-    <h1>Nouvelle pose cordage</h1>
-    <form action="/order/stringing_order" method="post" id="orderForm">
+    <div class="container">
+        <form action="/client/search_client" method="post" id="searchClientForm">
+            <h2>Rechercher un client</h2>
+            
+            <label for="search_email">Email :</label>
+            <input type="email" id="search_email" name="search_email" placeholder="Entrez votre email">
+            
+            <input type="submit" value="Rechercher">
+        </form>
+    </div>
 
-        <script>
-            let stringsInfo = JSON.parse('{{ strings_info | tojson | safe }}');
-        </script>
-
-        <label for="string_brand">Marque du cordage :</label>
-        <input type="text" id="searchInput" name="searchInput" onkeyup="searchRaquette()" onchange="updatePrice()" placeholder="Recherchez un cordage..." required>
-        <div id="suggestions" class="suggestions"></div>
-
-        <!-- Hidden field to store the shopify variant id -->
-        <input type="hidden" id="shopifyVariantId" name="shopifyVariantId">
+        <div id="popupContainer" class="popup-container"></div>
         
-        <!-- Quantity of string -->
-        <label for="string_quantity">Quantité: </label>
-        <input type="number" id="string_quantity" name="string_quantity" min="0" placeholder="1,2,3,..." required>
+    <div class="container">
+        <form action="/order/stringing_order" method="post" id="orderForm">
+            <h2>Nouvelle pose cordage</h2>
+            <script>
+                let stringsInfo = JSON.parse('{{ strings_info | tojson | safe }}');
+            </script>
 
-        <div>
-            <div class="Tension">
-                 <label for="Tension">Tension (Montant, Travers) :</label>
-                 <input type="text" id="Tension" name="Tension" placeholder="Montant, Travers : 22, 24 , recommandation expert" required>
+            <label for="string_brand">Marque du cordage :</label>
+            <input type="text" id="searchInput" name="searchInput" onkeyup="searchRaquette()" onchange="updatePrice()" placeholder="Recherchez un cordage..." required>
+            <div id="suggestions" class="suggestions"></div>
+
+            <!-- Hidden field to store the shopify variant id -->
+            <input type="hidden" id="shopifyVariantId" name="shopifyVariantId">
+            
+            <!-- Quantity of string -->
+            <label for="string_quantity">Quantité: </label>
+            <input type="number" id="string_quantity" name="string_quantity" min="0" placeholder="1,2,3,..." required>
+
+            <div>
+                <div class="Tension">
+                    <label for="Tension">Tension (Montant, Travers) :</label>
+                    <input type="text" id="Tension" name="Tension" placeholder="Montant, Travers : 22, 24 , recommandation expert" required>
+                </div>
             </div>
-        </div>
 
-        <div class="price-container">
-            <p class="price-label">Prix (avec la pose cordage) :</p>
-            <p id="string_price" class="price-value"></p>
-        </div>
-
-        <input type="hidden" id="totalPrice" name="totalPrice">
-        
-        <!-- Pickup option -->
-        <div>
-            <p>Récupération de la raquette : </p>
-            <div class="radio-label-container">
-                <label for="pickup_address_radio">À une adresse personnelle</label>
-                <input type="radio" id="pickup_address_radio" name="pickup_option" value="address">
+            <div class="price-container">
+                <p class="price-label">Prix (avec la pose cordage) :</p>
+                <p id="string_price" class="price-value"></p>
             </div>
-            <div class="radio-label-container">
-                <label for="pickup_store_radio">Dans ce magasin</label>
-                <input type="radio" id="pickup_store_radio" name="pickup_option" value="store" checked required>
+
+            <input type="hidden" id="totalPrice" name="totalPrice">
+            
+            <!-- Pickup option -->
+            <div>
+                <p>Récupération de la raquette : </p>
+                <div class="radio-label-container">
+                    <label for="pickup_address_radio">À une adresse personnelle</label>
+                    <input type="radio" id="pickup_address_radio" name="pickup_option" value="address">
+                </div>
+                <div class="radio-label-container">
+                    <label for="pickup_store_radio">Dans ce magasin</label>
+                    <input type="radio" id="pickup_store_radio" name="pickup_option" value="store" checked required>
+                </div>
             </div>
-        </div>
 
-        <!-- Pickup address -->
-        <div id="pickup_address_container" style="display:none;">
-            <label for="pickup_address">Adresse de récupération :</label>
-            <input type="text" id="pickup_address" name="pickup_address" placeholder="Ex: 15 Avenue de Clichy 75017 Paris" onkeyup="searchAddressDeposit('pickup_address', 'pickup_suggestions')">
-            <div id="pickup_suggestions" class="suggestions"></div>
-        </div>
+            <!-- Pickup address -->
+            <div id="pickup_address_container" style="display:none;">
+                <label for="pickup_address">Adresse de récupération :</label>
+                <input type="text" id="pickup_address" name="pickup_address" placeholder="Ex: 15 Avenue de Clichy 75017 Paris" onkeyup="searchAddressDeposit('pickup_address', 'pickup_suggestions')">
+                <div id="pickup_suggestions" class="suggestions"></div>
+            </div>
 
-        <input type="hidden" id="longitudeDeposit" name="longitudeDeposit">
-        <input type="hidden" id="latitudeDeposit" name="latitudeDeposit">
+            <input type="hidden" id="longitudeDeposit" name="longitudeDeposit">
+            <input type="hidden" id="latitudeDeposit" name="latitudeDeposit">
 
-        <!-- Hidden field to store the selected store's address -->
-        <input type="hidden" id="store_pickup_address" name="store_pickup_address" value="174 Quai de Jemmapes, 75010 Paris, France">
+            <!-- Hidden field to store the selected store's address -->
+            <input type="hidden" id="store_pickup_address" name="store_pickup_address" value="174 Quai de Jemmapes, 75010 Paris, France">
 
-        <!-- Selection of pickup/delivery date -->
-        <label for="pickup_deposit_date">Date de récupération :</label>
-        <select id="pickup_deposit_date" name="pickup_deposit_date" onchange="updateTimeSlotsDeposit()">
-             <!-- Date options will be added here by JavaScript -->
-        </select>
-
-        <!-- Selection of racket pickup time -->
-        <div id="pickup_time_container" style="display:none;">
-            <label for="pickup_time_dropdown">Horaire de récupération :</label>
-            <select id="pickup_time_dropdown" name="pickup_time">
-                <!-- The hour will be added here by Javascript -->
+            <!-- Selection of pickup/delivery date -->
+            <label for="pickup_deposit_date">Date de récupération :</label>
+            <select id="pickup_deposit_date" name="pickup_deposit_date" onchange="updateTimeSlotsDeposit()">
+                <!-- Date options will be added here by JavaScript -->
             </select>
-        </div>
 
-        <!-- Hidden field to store the selected deposit time slot -->
-        <input type="hidden" id="selected_slot_deposit" name="selected_slot_deposit">
-
-        <!-- Delivery option -->
-        <div>
-            <p>Livraison de la raquette :</p>
-            <div class="radio-label-container">
-                <label for="delivery_address_radio">À une adresse personnelle</label>
-                <input type="radio" id="delivery_address_radio" name="delivery_option" value="address">
+            <!-- Selection of racket pickup time -->
+            <div id="pickup_time_container" style="display:none;">
+                <label for="pickup_time_dropdown">Horaire de récupération :</label>
+                <select id="pickup_time_dropdown" name="pickup_time">
+                    <!-- The hour will be added here by Javascript -->
+                </select>
             </div>
-            <div class="radio-label-container">
-                <label for="delivery_store_radio">Dans ce magasin</label>
-                <input type="radio" id="delivery_store_radio" name="delivery_option" value="store" checked required>
+
+            <!-- Hidden field to store the selected deposit time slot -->
+            <input type="hidden" id="selected_slot_deposit" name="selected_slot_deposit">
+
+            <!-- Delivery option -->
+            <div>
+                <p>Livraison de la raquette :</p>
+                <div class="radio-label-container">
+                    <label for="delivery_address_radio">À une adresse personnelle</label>
+                    <input type="radio" id="delivery_address_radio" name="delivery_option" value="address">
+                </div>
+                <div class="radio-label-container">
+                    <label for="delivery_store_radio">Dans ce magasin</label>
+                    <input type="radio" id="delivery_store_radio" name="delivery_option" value="store" checked required>
+                </div>
             </div>
-        </div>
 
-        <!-- Delivery address -->
-        <div id="delivery_address_container" style="display:none;">
-            <label for="delivery_address">Adresse de livraison :</label>
-            <input type="text" id="delivery_address" name="delivery_address" placeholder="Ex: 15 Av de Clichy, 75017 Paris, France" onkeyup="searchAddressDelivery('delivery_address', 'delivery_suggestions')">
-            <div id="delivery_suggestions" class="suggestions"></div>
-        </div>
+            <!-- Delivery address -->
+            <div id="delivery_address_container" style="display:none;">
+                <label for="delivery_address">Adresse de livraison :</label>
+                <input type="text" id="delivery_address" name="delivery_address" placeholder="Ex: 15 Av de Clichy, 75017 Paris, France" onkeyup="searchAddressDelivery('delivery_address', 'delivery_suggestions')">
+                <div id="delivery_suggestions" class="suggestions"></div>
+            </div>
 
-        <input type="hidden" id="longitudeDelivery" name="longitudeDelivery">
-        <input type="hidden" id="latitudeDelivery" name="latitudeDelivery">
+            <input type="hidden" id="longitudeDelivery" name="longitudeDelivery">
+            <input type="hidden" id="latitudeDelivery" name="latitudeDelivery">
 
-        <!-- Hidden field to store the selected delivery store's address -->
-        <input type="hidden" id="store_delivery_address" name="store_delivery_address" value="174 Quai de Jemmapes, 75010 Paris, France">
+            <!-- Hidden field to store the selected delivery store's address -->
+            <input type="hidden" id="store_delivery_address" name="store_delivery_address" value="174 Quai de Jemmapes, 75010 Paris, France">
 
-        <!-- Selection of pickup/delivery date -->
-        <label for="pickup_delivery_date">Date de livraison :</label>
-        <select id="pickup_delivery_date" name="pickup_delivery_date" onchange="updateTimeSlotsDelivery()">
-             <!-- Date options will be added here by JavaScript -->
-        </select>
-
-        <div id="delevery_time_container" style="display:none;">
-            <label for="delivery_time_dropdown">Horaire de livraison:</label>
-            <select id="delivery_time_dropdown" name="delivery_time">
-                <!-- The hour for the delevry will be added here by Javascript -->
+            <!-- Selection of pickup/delivery date -->
+            <label for="pickup_delivery_date">Date de livraison :</label>
+            <select id="pickup_delivery_date" name="pickup_delivery_date" onchange="updateTimeSlotsDelivery()">
+                <!-- Date options will be added here by JavaScript -->
             </select>
-        </div>
- 
-        <!-- Hidden field to store the selected pickup/delivery time slot -->
-        <input type="hidden" id="selected_slot_delivery" name="selected_slot_delivery">
 
-        <input type="submit" value="Passer la commande">
-    </form>
+            <div id="delevery_time_container" style="display:none;">
+                <label for="delivery_time_dropdown">Horaire de livraison:</label>
+                <select id="delivery_time_dropdown" name="delivery_time">
+                    <!-- The hour for the delevry will be added here by Javascript -->
+                </select>
+            </div>
+    
+            <!-- Hidden field to store the selected pickup/delivery time slot -->
+            <input type="hidden" id="selected_slot_delivery" name="selected_slot_delivery">
+
+            <input type="submit" value="Passer la commande">
+        </form>
+    </div>
     <script src="/static/scripts/script.js"></script>
 </body>
 </html>

@@ -102,35 +102,8 @@ def create_draft_order(data):
 
 def complete_order(order_data):
     client_info = session.get('client_info', {})
-    client_info_string = session.get('client_info_string', {})
 
     customer_id = search_shopify_customer(client_info['Email'], client_info['Prénom'], client_info['Nom'])
-
-    # Using the informations from the last sale
-    if client_info_string:
-        # Retrieve the specific string price
-        string_info = airtable_strings.search('String', client_info_string['Cordage'])
-        if string_info:
-            string_price = string_info[0]['fields']['price']
-        else:
-            string_price = 0  # or a default value if the string is not found
-        
-        # Calculate the total price
-        quantity = int(order_data.get('Quantity', 1))
-        total_price = string_price * quantity
-        
-        cordage = client_info_string['Cordage']
-        tension = client_info_string['Tension']
-        quantity = int(client_info_string.get('Quantité', 1))
-        total_price = string_price * quantity
-
-        # Update order_data with the informations from the last sale
-        order_data.update({
-            'Cordage': cordage,
-            'Tension': tension,
-            'Articles': f"{quantity}x {cordage}",
-            'Prix': total_price,
-        })
 
     # Add client information to order_data
     order_data.update({
@@ -153,10 +126,10 @@ def complete_order(order_data):
         'pose_type': 'Standard',
     }
 
-    """order_id = create_draft_order(draft_order_info)
+    order_id = create_draft_order(draft_order_info)
 
     if order_id:
-        order_data['Order_Id'] = order_id"""
+        order_data['Order_Id'] = order_id
 
     # Remove the 'ShopifyVariantId' key from order_data if it exists
     order_data.pop('ShopifyVariantId', None)
@@ -257,8 +230,8 @@ def stringing_order():
         'Date de livraison': delivery_date,
         'Heure de livraison': int(delivery_time) if delivery_time else None,
         'Adresse de livraison': delivery_address if delivery_option == 'address' else store_delivery_address,
-        'Ville': city,
-        'Code Postal': zip,
+        'Ville': city if delivery_option == 'address' else None,
+        'Code Postal': zip if delivery_option == 'address' else None,
         'Latitude Delivery Address': float(latitudeDelivery) if latitudeDelivery else None,
         'Longitude Delivery Address': float(longitudeDelivery) if longitudeDelivery else None,
         'Prix': float(total_price),
