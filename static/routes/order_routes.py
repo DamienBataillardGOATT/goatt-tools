@@ -176,7 +176,7 @@ def order():
     # Sort strings by brand in alphabetical order
     strings_info_sorted = dict(sorted(strings_info.items()))
     
-    return render_template('index.html', strings_info=strings_info_sorted, emails=emails)
+    return render_template('order.html', strings_info=strings_info_sorted, emails=emails)
 
 @order_bp.route('/stringing_order', methods=['POST'])
 def stringing_order():

@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for
+from flask import Flask, render_template
 from static.routes.order_routes import order_bp
 from static.routes.client_routes import client_bp
 import os
@@ -17,7 +17,7 @@ app.register_blueprint(order_bp, url_prefix='/order')
 @app.route('/')
 def index():
     # Redirect to the 'order' route defined in the 'order_bp' Blueprint
-    return redirect(url_for('order_bp.order')) 
+    return render_template('index.html')
 
 # Run the application if this script is executed as the main program
 if __name__ == '__main__':
