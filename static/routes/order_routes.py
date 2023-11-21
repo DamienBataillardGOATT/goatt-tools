@@ -155,6 +155,7 @@ def complete_order(order_data):
 def order():
     # Extract data from the database
     strings_raw = airtable_strings.get_all()
+    leads_raw = airtable_clients.get_all()
 
     # Filter to keep only strings in stock and extract necessary info
     strings_info = {}
@@ -165,10 +166,17 @@ def order():
             shopify_variant_id = string['fields'].get('Shopify variant id', '')
             strings_info[string_name] = {'prix': prix, 'shopify_variant_id': shopify_variant_id}
 
+
+    emails = []
+    for lead in leads_raw:
+        email = lead['fields'].get('Email', '')
+        if email:
+            emails.append(email)
+
     # Sort strings by brand in alphabetical order
     strings_info_sorted = dict(sorted(strings_info.items()))
     
-    return render_template('index.html', strings_info=strings_info_sorted)
+    return render_template('index.html', strings_info=strings_info_sorted, emails=emails)
 
 @order_bp.route('/stringing_order', methods=['POST'])
 def stringing_order():

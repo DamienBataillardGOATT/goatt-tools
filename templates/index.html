@@ -9,8 +9,14 @@
         <form action="/client/search_client" method="post" id="searchClientForm">
             <h2>Rechercher un client</h2>
             
+            <script>
+                let emailsInfo = JSON.parse('{{ emails | tojson | safe }}');
+            </script>
+
             <label for="search_email">Email :</label>
-            <input type="email" id="search_email" name="search_email" placeholder="Entrez votre email">
+            <input type="email" id="search_email" name="search_email" placeholder="Entrez votre email" onkeyup="searchEmail()">
+            <div id="emailSuggestions" class="suggestions"></div>
+
             
             <input type="submit" value="Rechercher">
         </form>
@@ -21,6 +27,7 @@
     <div class="container">
         <form action="/order/stringing_order" method="post" id="orderForm">
             <h2>Nouvelle pose cordage</h2>
+            
             <script>
                 let stringsInfo = JSON.parse('{{ strings_info | tojson | safe }}');
             </script>

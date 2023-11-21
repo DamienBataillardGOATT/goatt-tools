@@ -1,5 +1,3 @@
-    var cart = [];
-
     var availableSlots = {}; // To store available time slots
 
     var poseCordage = {
@@ -7,6 +5,28 @@
         price: 14.99,
         quantity: 0, 
     };
+
+    function searchEmail() {
+        let input = document.getElementById('search_email').value;
+        input = input.toLowerCase();
+        let suggestions = document.getElementById('emailSuggestions');
+    
+        suggestions.innerHTML = '';
+    
+        if (input.length > 0) {
+            emailsInfo.forEach(email => {
+                if (email.toLowerCase().includes(input)) {
+                    let div = document.createElement('div');
+                    div.innerHTML = email;
+                    div.onclick = function() {
+                        document.getElementById('search_email').value = email;
+                        suggestions.innerHTML = '';
+                    };
+                    suggestions.appendChild(div);
+                }
+            });
+        }
+    }
     
     function searchRaquette() {
         let input = document.getElementById('searchInput').value;
@@ -122,7 +142,6 @@
         }
     }
 
-    // Function to display time slot buttons for the selected date
     function displaySlotsForDateDelivery(selectedDate, slotsForDate) {
         const selectElementDelivery = document.getElementById('delivery_time_dropdown');
 

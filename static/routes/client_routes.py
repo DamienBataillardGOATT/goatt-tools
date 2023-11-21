@@ -11,8 +11,16 @@ airtable_clients = Airtable(BASE_ID_LEADS, CLIENT_TABLE, API_KEY)
 airtables_orders = Airtable(BASE_ID_ORDERS, ORDERS_TABLE, API_KEY)
 
 @client_bp.route('/')
-def client():    
-    return render_template('client.html')
+def client():
+    leads_raw = airtable_clients.get_all()
+
+    emails = []
+    for lead in leads_raw:
+        email = lead['fields'].get('Email', '')
+        if email:
+            emails.append(email)
+
+    return render_template('client.html', emails=emails)
 
 @client_bp.route('/search_client', methods=['POST'])
 def search_client():
