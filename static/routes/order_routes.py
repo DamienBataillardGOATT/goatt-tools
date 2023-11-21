@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
-from static.routes.config import API_KEY, BASE_ID_LEADS, CLIENT_TABLE, BASE_ID_ORDERS, ORDERS_TABLE, BASE_ID_PRODUCTS, PRODUCTS_TABLE, SHOPIFY_API_KEY
+from static.routes.config import API_KEY, BASE_ID_LEADS, CLIENT_TABLE, BASE_ID_ORDERS, ORDERS_TABLE, BASE_ID_PRODUCTS, PRODUCTS_TABLE, SHOPIFY_API_KEY, ORDERS_TABLE_2
 from airtable import Airtable
 import requests
 import re
@@ -11,6 +11,7 @@ order_bp = Blueprint('order_bp', __name__)
 airtable_strings = Airtable(BASE_ID_PRODUCTS, PRODUCTS_TABLE, API_KEY)
 airtables_orders = Airtable(BASE_ID_ORDERS, ORDERS_TABLE, API_KEY)
 airtable_clients = Airtable(BASE_ID_LEADS, CLIENT_TABLE, API_KEY)
+airtable_cordarge = Airtable(BASE_ID_ORDERS, ORDERS_TABLE_2, API_KEY)
 
 def extract_postal_code_and_city(address):
     match = re.search(r'(\d{5})\s([A-Za-zÀ-ÿ\s-]+)$', address)
@@ -155,7 +156,7 @@ def complete_order(order_data):
 def order():
     # Extract data from the database
     strings_raw = airtable_strings.get_all()
-    leads_raw = airtable_clients.get_all()
+    leads_raw = airtable_cordarge.get_all()
 
     # Filter to keep only strings in stock and extract necessary info
     strings_info = {}
