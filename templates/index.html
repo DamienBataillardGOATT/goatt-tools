@@ -6,7 +6,7 @@
 </head>
 <body>
     <div class="container">
-        <form action="/client/search_client" method="post" id="searchClientForm">
+        <form action="/client/search_client" method="post" id="searchClientForm" onsubmit="searchClient(event)">
             <h2>Rechercher un client</h2>
             
             <script>
@@ -20,11 +20,26 @@
             
             <input type="submit" value="Rechercher">
         </form>
-    </div>
 
-        <div id="popupContainer" class="popup-container"></div>
+        <form action="/client/add_client" method="post" id="addform">
+            <h2>Information client</h2>
+
+            <label for="email">Email :</label>
+            <input type="email" id="email" name="email" placeholder="Ex: andréngn@gmail.com" required>
+
+            <label for="phonenumber">Numéro de téléphone :</label>
+            <input type="phonenumber" id="phonenumber" name="phonenumber" placeholder="07.62.18.84.77" required>
+
+            <label for="name">Nom :</label>
+            <input type="text" id="name" name="name" placeholder="Ex: Nguyen" required>
+
+            <label for="firstname">Prénom :</label>
+            <input type="text" id="firstname" name="firstname" placeholder="Ex: Christophe" required>
+
+            <input type="submit" value="Ajouter">
+            
+        </form>
         
-    <div class="container">
         <form action="/order/stringing_order" method="post" id="orderForm">
             <h2>Nouvelle pose cordage</h2>
             

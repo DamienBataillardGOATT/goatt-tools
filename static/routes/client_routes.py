@@ -2,25 +2,12 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from static.routes.config import API_KEY, BASE_ID_LEADS, CLIENT_TABLE, BASE_ID_ORDERS, ORDERS_TABLE, BASE_ID_PRODUCTS, PRODUCTS_TABLE, SHOPIFY_API_KEY
 from airtable import Airtable
 
-
 # Creating a Blueprint for client routes
 client_bp = Blueprint('client_bp', __name__)
 
 # Initializing Airtable connection for clients
 airtable_clients = Airtable(BASE_ID_LEADS, CLIENT_TABLE, API_KEY)
 airtables_orders = Airtable(BASE_ID_ORDERS, ORDERS_TABLE, API_KEY)
-
-@client_bp.route('/')
-def client():
-    leads_raw = airtable_clients.get_all()
-
-    emails = []
-    for lead in leads_raw:
-        email = lead['fields'].get('Email', '')
-        if email:
-            emails.append(email)
-
-    return render_template('client.html', emails=emails)
 
 @client_bp.route('/search_client', methods=['POST'])
 def search_client():

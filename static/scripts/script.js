@@ -50,6 +50,30 @@
         }
     }
 
+    function searchClient(event) {
+        event.preventDefault();
+    
+        let email = document.getElementById('search_email').value;
+        fetch('/client/search_client', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'search_email=' + encodeURIComponent(email)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.found) {
+                let clientData = data.client;
+
+                document.getElementById('email').value = clientData.Email || '';
+                document.getElementById('phonenumber').value = clientData['Formatted phone'] || '';
+                document.getElementById('name').value = clientData.Nom || '';
+                document.getElementById('firstname').value = clientData.Prénom || '';
+            }
+        });
+    }
+
     function updatePrice() {
         var searchString = document.getElementById('searchInput').value;
         var info = stringsInfo[searchString];
@@ -253,43 +277,6 @@
         }
     }
 
-    function showClientInfoPopup(client) {
-        var htmlContent = `
-            <div class="popup-info">
-                <h2>Information Client</h2>
-                <p>Nom: ${client.Nom}</p>
-                <p>Prénom: ${client.Prénom}</p>
-                <p>Email: ${client.Email}</p>
-                <p>Téléphone: ${client.Téléphone}</p>
-                <p>Ville: ${client.Ville}</p>
-                <p>Code Postal: ${client['Code Postal']}</p>
-            </div>
-        `;
-        var popupContainer = document.getElementById('popupContainer');
-        popupContainer.innerHTML = htmlContent;
-        popupContainer.style.display = 'block';
-    }
-    
-    function showAddClientPopup() {
-        var htmlContent = `
-            <form action="/client/add_client" method="post" class="popup-form">
-                <h2>Ajouter un nouveau client</h2>
-                <label for="email">Email :</label>
-                <input type="email" id="email" name="email" placeholder="Ex: andréngn@gmail.com" required>
-                <label for="phonenumber">Numéro de téléphone :</label>
-                <input type="phonenumber" id="phonenumber" name="phonenumber" placeholder="07.62.18.84.77" required>
-                <label for="name">Nom :</label>
-                <input type="text" id="name" name="name" placeholder="Ex: Nguyen" required>
-                <label for="firstname">Prénom :</label>
-                <input type="text" id="firstname" name="firstname" placeholder="Ex: Christophe" required>
-                <input type="submit" value="Ajouter">
-            </form>
-        `;
-        var popupContainer = document.getElementById('popupContainer');
-        popupContainer.innerHTML = htmlContent;
-        popupContainer.style.display = 'block';
-    }
-
     document.getElementById('searchClientForm').addEventListener('submit', function(event) {
         event.preventDefault();
         var email = document.getElementById('search_email').value;
@@ -308,7 +295,6 @@
         })
         .then(data => {
             if (data.found) {
-                showClientInfoPopup(data.client);
                 if (data.cordage) {
                     document.getElementById('searchInput').value = data.cordage;
                 }
@@ -316,7 +302,6 @@
                     document.getElementById('Tension').value = data.tension;
                 }
             } else {
-                showAddClientPopup();
             }
         })
         .catch(error => {
