@@ -63,6 +63,13 @@
         .then(data => {
             if (data.found) {
                 let clientData = data.client;
+
+                if (data.cordage) {
+                    document.getElementById('searchInput').value = data.cordage;
+                }
+                if (data.tension) {
+                    document.getElementById('Tension').value = data.tension;
+                }
     
                 document.getElementById('email').value = clientData.Email || '';
                 document.getElementById('phonenumber').value = clientData['Formatted phone'] || '';
@@ -71,7 +78,6 @@
             }
         });
     }
-    
 
     function updatePrice() {
         var searchString = document.getElementById('searchInput').value;
@@ -276,37 +282,6 @@
         }
     }
 
-    document.getElementById('searchClientForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        var email = document.getElementById('search_email').value;
-        fetch('/client/search_client', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: 'search_email=' + encodeURIComponent(email)
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erreur serveur');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.found) {
-                if (data.cordage) {
-                    document.getElementById('searchInput').value = data.cordage;
-                }
-                if (data.tension) {
-                    document.getElementById('Tension').value = data.tension;
-                }
-            } else {
-            }
-        })
-        .catch(error => {
-            console.error('Erreur lors de la recherche du client:', error);
-        });
-    });
 
     // Script to show/hide fields based on the chosen pickup option
     document.addEventListener('DOMContentLoaded', function() {

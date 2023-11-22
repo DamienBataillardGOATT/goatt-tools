@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
-from static.routes.config import API_KEY, BASE_ID_LEADS, CLIENT_TABLE, BASE_ID_ORDERS, ORDERS_TABLE
+from static.routes.config import API_KEY, BASE_ID_LEADS, CLIENT_TABLE, BASE_ID_ORDERS, ORDERS_TABLE, ORDERS_TABLE_2
 from airtable import Airtable
 
 # Creating a Blueprint for client routes
@@ -8,6 +8,7 @@ client_bp = Blueprint('client_bp', __name__)
 # Initializing Airtable connection for clients
 airtable_clients = Airtable(BASE_ID_LEADS, CLIENT_TABLE, API_KEY)
 airtables_orders = Airtable(BASE_ID_ORDERS, ORDERS_TABLE, API_KEY)
+airtables_cordages = Airtable(BASE_ID_ORDERS, ORDERS_TABLE_2, API_KEY)
 
 @client_bp.route('/search_client', methods=['POST'])
 def search_client():
@@ -17,7 +18,7 @@ def search_client():
     client_info = airtable_clients.search('Email', search_email)
 
     # Search for string information by email in the strings table
-    client_info_string = airtables_orders.search('Email', search_email)
+    client_info_string = airtables_cordages.search('Email', search_email)
     if client_info:
         client_info = client_info[0]['fields']
         if client_info_string:
