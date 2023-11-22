@@ -72,7 +72,7 @@
                 }
     
                 document.getElementById('email').value = clientData.Email || '';
-                document.getElementById('phonenumber').value = clientData['Formatted phone'] || '';
+                document.getElementById('phonenumber').value = data.phonenumber || '';
                 document.getElementById('name').value = clientData.Nom || '';
                 document.getElementById('firstname').value = clientData.Prénom || '';
             }

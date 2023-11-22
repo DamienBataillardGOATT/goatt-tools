@@ -19,13 +19,14 @@ def search_client():
 
     # Search for string information by email in the strings table
     client_info_string = airtables_cordages.search('Email', search_email)
+
     if client_info:
         client_info = client_info[0]['fields']
         if client_info_string:
             client_info_string = client_info_string[0]['fields']
             session['client_info'] = client_info
             session['client_info_string'] = client_info_string
-            return jsonify({'found': True, 'client': client_info, 'cordage': client_info_string['Cordage'], 'tension': client_info_string['Tension']})
+            return jsonify({'found': True, 'client': client_info, 'cordage': client_info_string['Cordage'], 'tension': client_info_string['Tension'], 'phonenumber' : client_info_string['Téléphone']})
         else:
             session['client_info'] = client_info
             return jsonify({'found': True, 'client': client_info})

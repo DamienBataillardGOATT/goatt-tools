@@ -104,6 +104,7 @@ def create_draft_order(data):
 def complete_order(order_data):
     client_info = session.get('client_info', {})
 
+
     customer_id = search_shopify_customer(client_info['Email'], client_info['Prénom'], client_info['Nom'])
 
     # Add client information to order_data
