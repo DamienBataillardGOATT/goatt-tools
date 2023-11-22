@@ -6,7 +6,7 @@
 </head>
 <body>
     <div class="container">
-        <form action="/client/search_client" method="post" id="searchClientForm" onsubmit="searchClient(event)">
+        <form action="/client/search_client" method="post" id="searchClientForm">
             <h2>Rechercher un client</h2>
             
             <script>
@@ -17,8 +17,6 @@
             <input type="email" id="search_email" name="search_email" placeholder="Entrez votre email" onkeyup="searchEmail()">
             <div id="emailSuggestions" class="suggestions"></div>
 
-            
-            <input type="submit" value="Rechercher">
         </form>
 
         <form action="/client/add_client" method="post" id="addform">

@@ -5,28 +5,6 @@
         price: 14.99,
         quantity: 0, 
     };
-
-    function searchEmail() {
-        let input = document.getElementById('search_email').value;
-        input = input.toLowerCase();
-        let suggestions = document.getElementById('emailSuggestions');
-    
-        suggestions.innerHTML = '';
-    
-        if (input.length > 0) {
-            emailsInfo.forEach(email => {
-                if (email.toLowerCase().includes(input)) {
-                    let div = document.createElement('div');
-                    div.innerHTML = email;
-                    div.onclick = function() {
-                        document.getElementById('search_email').value = email;
-                        suggestions.innerHTML = '';
-                    };
-                    suggestions.appendChild(div);
-                }
-            });
-        }
-    }
     
     function searchRaquette() {
         let input = document.getElementById('searchInput').value;
@@ -50,10 +28,30 @@
         }
     }
 
-    function searchClient(event) {
-        event.preventDefault();
+    function searchEmail() {
+        let input = document.getElementById('search_email').value;
+        input = input.toLowerCase();
+        let suggestions = document.getElementById('emailSuggestions');
     
-        let email = document.getElementById('search_email').value;
+        suggestions.innerHTML = '';
+    
+        if (input.length > 0) {
+            emailsInfo.forEach(email => {
+                if (email.toLowerCase().includes(input)) {
+                    let div = document.createElement('div');
+                    div.innerHTML = email;
+                    div.onclick = function() {
+                        document.getElementById('search_email').value = email;
+                        suggestions.innerHTML = '';
+                        searchClientWithEmail(email);
+                    };
+                    suggestions.appendChild(div);
+                }
+            });
+        }
+    }
+    
+    function searchClientWithEmail(email) {
         fetch('/client/search_client', {
             method: 'POST',
             headers: {
@@ -65,7 +63,7 @@
         .then(data => {
             if (data.found) {
                 let clientData = data.client;
-
+    
                 document.getElementById('email').value = clientData.Email || '';
                 document.getElementById('phonenumber').value = clientData['Formatted phone'] || '';
                 document.getElementById('name').value = clientData.Nom || '';
@@ -73,6 +71,7 @@
             }
         });
     }
+    
 
     function updatePrice() {
         var searchString = document.getElementById('searchInput').value;
