@@ -10,6 +10,10 @@ airtable_clients = Airtable(BASE_ID_LEADS, CLIENT_TABLE, API_KEY)
 airtables_orders = Airtable(BASE_ID_ORDERS, ORDERS_TABLE, API_KEY)
 airtables_cordages = Airtable(BASE_ID_ORDERS, ORDERS_TABLE_2, API_KEY)
 
+@client_bp.route('/')
+def client():
+    return render_template('client.html')
+
 @client_bp.route('/search_client', methods=['POST'])
 def search_client():
     search_email = request.form['search_email']
@@ -37,7 +41,7 @@ def search_client():
 def add_client():
 
     # Retrieve the email entered in the form
-    email = request.form['email']
+    email = request.form['search_email']
     
     # Check if the user is already in the database
     existing_client = airtable_clients.search('Email', email)
@@ -51,7 +55,7 @@ def add_client():
     client_info = {
         'Nom': request.form['name'],
         'Prénom' : request.form['firstname'],
-        'Email': request.form['email'],
+        'Email': request.form['search_email'],
         'Téléphone': request.form['phonenumber'],
     }
 
