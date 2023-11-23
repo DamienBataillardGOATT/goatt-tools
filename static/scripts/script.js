@@ -70,8 +70,7 @@
                 if (data.tension) {
                     document.getElementById('Tension').value = data.tension;
                 }
-    
-                document.getElementById('email').value = clientData.Email || '';
+
                 document.getElementById('phonenumber').value = data.phonenumber || '';
                 document.getElementById('name').value = clientData.Nom || '';
                 document.getElementById('firstname').value = clientData.Prénom || '';

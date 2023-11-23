@@ -5,8 +5,9 @@
     <title>Nouvelle pose cordage</title>
 </head>
 <body>
-    <div class="container">
-        <form action="/client/add_client" method="post" id="addform">
+    <div class="container">        
+        <form action="/order/stringing_order" method="post" id="orderForm">
+
             <h2>Client :</h2>
             
             <script>
@@ -26,11 +27,6 @@
             <label for="firstname">Prénom :</label>
             <input type="text" id="firstname" name="firstname" placeholder="Ex: Christophe" required>
 
-            <input type="submit" value="Ajouter">
-            
-        </form>
-        
-        <form action="/order/stringing_order" method="post" id="orderForm">
             <h2>Nouvelle pose cordage</h2>
             
             <script>

@@ -18,23 +18,19 @@ def client():
 def search_client():
     search_email = request.form['search_email']
 
-    # Search for the user by email in the clients table
-    client_info = airtable_clients.search('Email', search_email)
-
     # Search for string information by email in the strings table
     client_info_string = airtables_cordages.search('Email', search_email)
 
-    if client_info:
-        client_info = client_info[0]['fields']
-        if client_info_string:
-            client_info_string = client_info_string[0]['fields']
-            session['client_info'] = client_info
-            session['client_info_string'] = client_info_string
-            return jsonify({'found': True, 'client': client_info, 'cordage': client_info_string['Cordage'], 'tension': client_info_string['Tension'], 'phonenumber' : client_info_string['Téléphone']})
-        else:
+    if client_info_string:
+        client_info_string = client_info_string[0]['fields']
+        session['client_info'] = client_info_string
+        return jsonify({'found': True, 'client': client_info_string, 'cordage': client_info_string['Cordage'], 'tension': client_info_string['Tension'], 'phonenumber' : client_info_string['Téléphone']})
+    else:
+        client_info = airtable_clients.search('Email', search_email)
+        if client_info:
+            client_info = client_info[0]['fields']
             session['client_info'] = client_info
             return jsonify({'found': True, 'client': client_info})
-    else:
         return jsonify({'found': False, 'message': 'Aucun utilisateur trouvé avec cet email.'})
     
 @client_bp.route('/add_client', methods=['POST'])

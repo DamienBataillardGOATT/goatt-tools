@@ -104,14 +104,28 @@ def create_draft_order(data):
 def complete_order(order_data):
     client_info = session.get('client_info', {})
 
+    if client_info :
+        customer_id = search_shopify_customer(client_info['Email'], client_info['Prénom'], client_info['Nom'])
 
-    customer_id = search_shopify_customer(client_info['Email'], client_info['Prénom'], client_info['Nom'])
+        email = client_info['Email']
+        prenom = client_info['Prénom']
+        nom = client_info['Nom']
+        nom_complet = f"{client_info['Prénom']} {client_info['Nom']}"
+        telephone = client_info['Téléphone']
+    else :
+        customer_id = search_shopify_customer(request.form['search_email'], request.form['firstname'], request.form['name'])
+        email = request.form['search_email']
+        prenom = request.form['firstname']
+        nom = request.form['name']
+        nom_complet = f"{request.form['firstname']} {request.form['name']}"
+        telephone = request.form['phonenumber']
+        
 
     # Add client information to order_data
     order_data.update({
-        'Email': client_info['Email'],
-        'Nom complet': f"{client_info['Prénom']} {client_info['Nom']}",
-        'Téléphone': client_info['Téléphone'],
+        'Email': email,
+        'Nom complet': nom_complet,
+        'Téléphone': telephone,
     })
 
     draft_order_info = {
@@ -119,9 +133,9 @@ def complete_order(order_data):
         'quantité': order_data['Quantité'],
         'shopify_customer_id': customer_id , 
         'pickup_address': order_data['Adresse de livraison'],
-        'phone': client_info['Téléphone'],
-        'nom': client_info['Nom'],
-        'prenom': client_info['Prénom'],
+        'phone': telephone,
+        'nom': nom,
+        'prenom': prenom,
         'pickup_town': order_data['Ville'],
         'pickup_postal_code': order_data['Code Postal'],
         'price_delivery': '5.99',
