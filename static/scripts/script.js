@@ -103,23 +103,35 @@
         return timeSlot.substring(0, 2);
     }
 
-    // Function to retrieve available slots and display them in the dropdown menu
+    // Fonction pour ajouter des jours à une date
+    function addDaysToDate(date, days) {
+        var result = new Date(date);
+        result.setDate(result.getDate() + days);
+        return result;
+    }
+
+    // Fonction pour convertir une date en format européen
+    function convertToEuropeanDate(date) {
+        return date.split('-').reverse().join('/');
+    }
+
+    // Fonction pour récupérer et afficher les créneaux disponibles
     function retrieveAndDisplaySlots() {
         fetch('https://goatt-db.onrender.com/get_available_slots')
             .then(response => response.json())
             .then(data => {
-                availableSlots = data; // Store the data
+                availableSlots = data; // Stocker les données
                 const selectElementDeposit = document.getElementById('pickup_deposit_date');
                 const selectElementDelivery = document.getElementById('pickup_delivery_date');
                 
                 selectElementDeposit.innerHTML = '';
                 selectElementDelivery.innerHTML = '';
-    
+        
                 let firstDate = null;
-    
-                // Loop through the data to add date options
+        
+                // Boucle pour ajouter des options de date de dépôt
                 for (const date in data) {
-                    if (!firstDate) firstDate = date; // Store the first date
+                    if (!firstDate) firstDate = date; // Stocker la première date
             
                     const europeanDate = convertToEuropeanDate(date);
                     const option = document.createElement('option');
@@ -128,25 +140,30 @@
                     selectElementDeposit.appendChild(option);
                 }
 
-                // Loop through the data to add date options
-                for (const date in data) {
-                    if (!firstDate) firstDate = date; // Store the first date
-            
-                    const europeanDate = convertToEuropeanDate(date);
-                    const option = document.createElement('option');
-                    option.value = date;
-                    option.textContent = europeanDate;
-                    selectElementDelivery.appendChild(option);
-                }
-    
-                // Display slots for the first available date, if available
+                // Calculer la première date de livraison (2 jours après la première date de dépôt)
                 if (firstDate) {
+                    let firstDeliveryDate = addDaysToDate(new Date(firstDate), 2);
+
+                    // Boucle pour ajouter des options de date de livraison
+                    for (const date in data) {
+                        let currentDate = new Date(date);
+                        if (currentDate >= firstDeliveryDate) {
+                            let europeanDate = convertToEuropeanDate(date);
+                            const option = document.createElement('option');
+                            option.value = date;
+                            option.textContent = europeanDate;
+                            selectElementDelivery.appendChild(option);
+                        }
+                    }
+
                     displaySlotsForDateDeposit(firstDate, data[firstDate]);
-                    displaySlotsForDateDelivery(firstDate, data[firstDate])
+                    // Afficher les créneaux pour la première date de livraison disponible
+                    let firstDeliveryDateFormatted = firstDeliveryDate.toISOString().split('T')[0];
+                    displaySlotsForDateDelivery(firstDeliveryDateFormatted, data[firstDeliveryDateFormatted]);
                 }
             })
             .catch(error => {
-                console.error('Error retrieving available slots', error);
+                console.error('Erreur lors de la récupération des créneaux disponibles', error);
             });
     }
 
@@ -190,20 +207,33 @@
     }
 
     function updateTimeSlotsDeposit() {
-        const selectedDate_deposit = document.getElementById('pickup_deposit_date').value;
-        const slotsForDate = availableSlots[selectedDate_deposit];
+        const selectedDateDeposit = document.getElementById('pickup_deposit_date').value;
+        const slotsForDate = availableSlots[selectedDateDeposit];
         if (slotsForDate) {
-            displaySlotsForDateDeposit(selectedDate_deposit, slotsForDate);
+            displaySlotsForDateDeposit(selectedDateDeposit, slotsForDate);
         }
+
+        let newDeliveryDate = addDaysToDate(new Date(selectedDateDeposit), 2);
+        updateDeliveryDates(newDeliveryDate);
     }
 
-
-    function updateTimeSlotsDelivery() {
-        const selectedDate_delivery = document.getElementById('pickup_delivery_date').value;
-        const slotsForDate = availableSlots[selectedDate_delivery];
-        if (slotsForDate) {
-            displaySlotsForDateDelivery(selectedDate_delivery, slotsForDate);
+    function updateDeliveryDates(newDeliveryDate) {
+        const selectElementDelivery = document.getElementById('pickup_delivery_date');
+        selectElementDelivery.innerHTML = '';
+    
+        for (const date in availableSlots) {
+            let currentDate = new Date(date);
+            if (currentDate >= newDeliveryDate) {
+                let europeanDate = convertToEuropeanDate(date);
+                const option = document.createElement('option');
+                option.value = date;
+                option.textContent = europeanDate;
+                selectElementDelivery.appendChild(option);
+            }
         }
+    
+        let firstDeliveryDateFormatted = newDeliveryDate.toISOString().split('T')[0];
+        displaySlotsForDateDelivery(firstDeliveryDateFormatted, availableSlots[firstDeliveryDateFormatted]);
     }
 
     function convertToEuropeanDate(date) {
@@ -286,8 +316,18 @@
     document.addEventListener('DOMContentLoaded', function() {
         var pickupOptions = document.querySelectorAll('input[name="pickup_option"]');
         var deliveryOptions = document.querySelectorAll('input[name="delivery_option"]');
+        var inputs = document.getElementsByTagName('input');
 
         updatePrice();
+
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].onkeydown = function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    return false;
+                }
+            }
+        }
 
         pickupOptions.forEach(function(option) {
             option.addEventListener('change', function() {

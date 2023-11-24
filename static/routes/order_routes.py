@@ -21,6 +21,17 @@ def extract_postal_code_and_city(address):
         return postal_code, city
     else:
         return None, None
+    
+def extract_adress_street(adress):
+    # Séparer les éléments de l'adresse
+    elements = adress.split()
+
+    # Extraire le numéro et le nom de la rue (en supposant que le code postal et la ville sont les deux derniers éléments)
+    rue_et_numero = elements[:-2]
+
+    # Joindre les éléments extraits pour former l'adresse raccourcie
+    adresse_raccourcie = ' '.join(rue_et_numero)
+    return adresse_raccourcie
 
 def get_shopify_headers():
     return {
@@ -137,7 +148,7 @@ def complete_order(order_data):
         'nom': nom,
         'prenom': prenom,
         'pickup_town': order_data['Ville'],
-        'pickup_postal_code': order_data['Code Postal'],
+        'pickup_postal_code': order_data['Postcode'],
         'price_delivery': '5.99',
         'pose_type': 'Standard',
     }
@@ -145,7 +156,7 @@ def complete_order(order_data):
     order_id = create_draft_order(draft_order_info)
 
     if order_id:
-        order_data['Order_Id'] = order_id
+        order_data['draft shopify id'] = order_id
 
     # Remove the 'ShopifyVariantId' key from order_data if it exists
     order_data.pop('ShopifyVariantId', None)
@@ -155,9 +166,6 @@ def complete_order(order_data):
 
     # Remove the 'Quantité' key from order_data if it exists
     order_data.pop('Ville', None)
-
-    # Remove the 'Quantité' key from order_data if it exists
-    order_data.pop('Code Postal', None)
     
     # Insert the complete order into the Airtable database
     airtables_orders.insert(order_data)
@@ -210,8 +218,6 @@ def stringing_order():
     # Initialize variables for addresses
     pickup_address = None
     delivery_address = None
-    store_pickup_address = None
-    store_delivery_address = None
     pickup_time = None
     delivery_time = None
     longitudeDeposit = None
@@ -225,8 +231,10 @@ def stringing_order():
         pickup_time = request.form['selected_slot_deposit']
         longitudeDeposit = request.form['longitudeDeposit']
         latitudeDeposit = request.form['latitudeDeposit']
+        short_adress_pickup = extract_adress_street(pickup_address)
+        statut_recup = 'To Do'
     elif pickup_option == 'store':
-        store_pickup_address = request.form['store_pickup_address']  # Retrieve the address of the pickup store
+        statut_recup = 'No Recup'
 
     # Prepare data for delivery
     if delivery_option == 'address':
@@ -235,30 +243,41 @@ def stringing_order():
         longitudeDelivery = request.form['longitudeDelivery']
         latitudeDelivery = request.form['latitudeDelivery']
         zip, city = extract_postal_code_and_city(delivery_address)
+        short_adress_delivery = extract_adress_street(delivery_address)
+        statut_livraison = 'To Do'
     elif delivery_option == 'store':
-        store_delivery_address = request.form['store_delivery_address']  # Retrieve the address of the delivery store
+        statut_livraison =  'No Delivery'
+
 
     # Create a dictionary with the order data
     order_data = {
-        'Articles': f"{request.form['string_quantity']}x {request.form['searchInput']}",
-        'Cordage': request.form['searchInput'],
+        'Type de commande': ['Cordage'],
+        'Articles': request.form['searchInput'],
+        'Quantities': request.form['string_quantity'],
         'Quantité': quantity,
-        '# raquettes': int(quantity),
+        'Articles + Quantities': f"{request.form['string_quantity']}x {request.form['searchInput']}",
         'Tension': tension,
-        'ShopifyVariantId': shopify_variant_id,
+        'Cordage': request.form['searchInput'],
+        '# raquettes': int(quantity),
         'Date de récupération': pickup_date,
         'Heure de récupération': int(pickup_time) if pickup_time else None,
-        'Adresse de récupération': pickup_address if pickup_option == 'address' else store_pickup_address,
-        'Latitude Pickup Address': float(latitudeDeposit) if latitudeDeposit else None,
-        'Longitude Pickup Address': float(longitudeDeposit) if longitudeDeposit else None,
+        'Adresse de récupération': pickup_address if pickup_option == 'address' else None,
         'Date de livraison': delivery_date,
         'Heure de livraison': int(delivery_time) if delivery_time else None,
-        'Adresse de livraison': delivery_address if delivery_option == 'address' else store_delivery_address,
-        'Ville': city if delivery_option == 'address' else None,
-        'Code Postal': zip if delivery_option == 'address' else None,
+        'Adresse de livraison': delivery_address if delivery_option == 'address' else None,
+        'Prix': float(total_price),
+        'Statut récup' : statut_recup,
+        'Statut livraison' : statut_livraison,
+        'ShopifyVariantId': shopify_variant_id,
+        'short pickup address': short_adress_pickup if short_adress_pickup else None,
+        'Postcode': zip if delivery_option == 'address' else None,
+        'Latitude Pickup Address': float(latitudeDeposit) if latitudeDeposit else None,
+        'Longitude Pickup Address': float(longitudeDeposit) if longitudeDeposit else None,
         'Latitude Delivery Address': float(latitudeDelivery) if latitudeDelivery else None,
         'Longitude Delivery Address': float(longitudeDelivery) if longitudeDelivery else None,
-        'Prix': float(total_price),
+        'short delivery address': short_adress_delivery if short_adress_delivery else None,
+        'Ville': city if delivery_option == 'address' else None,
+        'Notes': request.form['client_notes']
     }
 
     complete_order(order_data)
