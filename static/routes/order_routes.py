@@ -222,8 +222,10 @@ def stringing_order():
     delivery_time = None
     longitudeDeposit = None
     latitudeDeposit = None
+    short_adress_pickup = None
     longitudeDelivery = None
     latitudeDelivery = None
+    short_adress_delivery = None
 
     # Prepare data for pickup
     if pickup_option == 'address':
