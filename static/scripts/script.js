@@ -367,7 +367,6 @@
             document.getElementById('selected_slot_deposit').value = firstTwoChars;
         });
 
-        document.getElementById('pickup_delivery_date').addEventListener('change', updateTimeSlotsDelivery);
         document.getElementById('delivery_time_dropdown').addEventListener('change', function() {
             var selectedSlot = this.value;
             var firstTwoChars = extractFirstTwoCharacters(selectedSlot);
