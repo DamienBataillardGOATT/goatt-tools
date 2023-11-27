@@ -226,6 +226,7 @@ def stringing_order():
     longitudeDelivery = None
     latitudeDelivery = None
     short_adress_delivery = None
+    notes = request.form['client_notes']
 
     # Prepare data for pickup
     if pickup_option == 'address':
@@ -279,7 +280,7 @@ def stringing_order():
         'Longitude Delivery Address': float(longitudeDelivery) if longitudeDelivery else None,
         'short delivery address': short_adress_delivery if short_adress_delivery else None,
         'Ville': city if delivery_option == 'address' else None,
-        'Notes': request.form['client_notes']
+        'Notes': notes if notes else None 
     }
 
     complete_order(order_data)
