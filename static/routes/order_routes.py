@@ -129,8 +129,6 @@ def complete_order(order_data):
         nom_complet = f"{request.form['firstname']} {request.form['name']}"
         telephone = request.form['phonenumber']
         
-
-    # Add client information to order_data
     order_data.update({
         'Email': email,
         'Nom complet': nom_complet,
@@ -163,7 +161,7 @@ def complete_order(order_data):
     # Remove the 'Quantité' key from order_data if it exists
     order_data.pop('Quantité', None)
 
-    # Remove the 'Quantité' key from order_data if it exists
+    # Remove the 'Ville' key from order_data if it exists
     order_data.pop('Ville', None)
     
     # Insert the complete order into the Airtable database
@@ -289,8 +287,6 @@ def stringing_order():
 @order_bp.route('/order_confirmation', methods=['GET'])
 def order_confirmation():
     draft_order_url = session.get('draft_order_url', None)
-
-    print(draft_order_url)
 
     session.pop('draft_order_url', None)
 

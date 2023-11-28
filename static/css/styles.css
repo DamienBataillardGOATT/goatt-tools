@@ -1,92 +1,92 @@
-body, html {
+body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    height: 100%; /* Assurez-vous que le body prend toute la hauteur */
+    height: 100%; 
 }
 
 body {
     display: flex;
-    flex-direction: column; /* Organise les éléments enfants en colonne */
-    justify-content: flex-start; /* Aligner les éléments au début verticalement */
-    align-items: center; /* Centrer les éléments horizontalement */
-    background-color: #f4f4f4; /* Couleur d'arrière-plan pour un contraste doux */
+    flex-direction: column; 
+    justify-content: flex-start; 
+    align-items: center; 
+    background-color: #f4f4f4; 
 }
 
 .main-title {
-    text-align: center; /* Centrer le texte du titre */
-    width: 100%; /* Assurez-vous que le titre prend toute la largeur */
-    margin-top: 20px; /* Ajouter un peu d'espace au-dessus du titre */
-    margin-bottom: 20px; /* Ajouter un peu d'espace en dessous du titre avant les formulaires */
+    text-align: center;
+    width: 100%; 
+    margin-top: 20px; 
+    margin-bottom: 20px;
 }
 
 .container {
     display: flex;
-    justify-content: space-around; /* Espacer uniformément les formulaires */
-    width: 100%; /* Prendre toute la largeur */
-    max-width: 800px; /* Largeur maximale du conteneur */
-    flex-wrap: wrap; /* Permet aux éléments de passer à la ligne suivante si nécessaire */
+    justify-content: space-around; 
+    width: 100%;
+    max-width: 800px; 
+    flex-wrap: wrap;
 }
 
 .popup-container {
-    display: none; /* Masqué par défaut */
+    display: none;
 }
 
 .popup-form {
-    background-color: #ffffff; /* Couleur d'arrière-plan */
-    padding: 20px; /* Espacement intérieur */
-    border-radius: 5px; /* Coins arrondis */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre douce */
-    margin: 0 auto; /* Centrer dans le popupContainer */
-    width: calc(50% - 40px); /* Utiliser toute la largeur disponible */
-    max-width: 800px; /* Largeur maximale */
+    background-color: #ffffff; 
+    padding: 20px; 
+    border-radius: 5px; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+    margin: 0 auto; 
+    width: calc(50% - 40px); 
+    max-width: 800px; 
 }
 
 .popup-info {
-    width: calc(100% - 40px); /* Utilisez 100% si vous voulez qu'il prenne toute la largeur du conteneur */
-    max-width: 800px; /* Assurez-vous que cela correspond à la largeur maximale de vos autres éléments */
-    background-color: #ffffff; /* Couleur d'arrière-plan */
-    padding: 30px; /* Espacement intérieur */
-    border-radius: 5px; /* Coins arrondis */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre douce */
-    margin: 20px auto; /* Centrer dans le conteneur */
+    width: calc(100% - 40px); 
+    max-width: 800px;
+    background-color: #ffffff; 
+    padding: 30px; 
+    border-radius: 5px; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 20px auto; 
 }
 
 form {
-    background-color: #ffffff; /* Couleur d'arrière-plan du formulaire */
-    padding: 30px; /* Espacement à l'intérieur du formulaire */
-    border-radius: 5px; /* Coins arrondis */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre douce autour du formulaire */
-    width: calc(50% - 40px); /* Calculez la largeur pour inclure la marge */
-    margin: 20px; /* Marge autour des formulaires */
+    background-color: #ffffff; 
+    padding: 30px; 
+    border-radius: 5px; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: calc(50% - 40px); 
+    margin: 20px; 
 }
 
 input, select {
-    width: 100%; /* Utiliser toute la largeur disponible */
-    padding: 10px; /* Espacement à l'intérieur des champs */
-    margin-bottom: 10px; /* Espacement entre les champs */
-    border: 1px solid #ccc; /* Bordure des champs */
-    border-radius: 4px; /* Coins arrondis pour les champs */
+    width: 100%; 
+    padding: 10px; 
+    margin-bottom: 10px; 
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
 }
 
 input[type="submit"] {
-    background-color: #007BFF; /* Couleur d'arrière-plan du bouton */
-    color: #ffffff; /* Couleur du texte du bouton */
-    border: none; /* Supprimer la bordure du bouton */
-    cursor: pointer; /* Changer le curseur en main lors du survol du bouton */
-    transition: background-color 0.3s; /* Transition douce lors du survol du bouton */
+    background-color: #007BFF; 
+    color: #ffffff; 
+    border: none; 
+    cursor: pointer; 
+    transition: background-color 0.3s; 
 }
 
 input[type="submit"]:hover {
-    background-color: #0056b3; /* Couleur d'arrière-plan du bouton lors du survol */
+    background-color: #0056b3; 
 }
 
 input[type="radio"] {
-    width: auto; /* Réinitialiser la largeur à la valeur par défaut pour les boutons radio */
-    margin-right: 10px; /* Ajouter un peu d'espace entre le bouton radio et son label */
-    padding: 0; /* Réinitialiser le padding pour les boutons radio */
-    border: none; /* Supprimer la bordure pour les boutons radio */
-    border-radius: 0; /* Réinitialiser les coins arrondis pour les boutons radio */
+    width: auto; 
+    margin-right: 10px; 
+    padding: 0; 
+    border: none; 
+    border-radius: 0; 
 }
 
 .suggestions {
@@ -105,8 +105,8 @@ input[type="radio"] {
 }
 
 .radio-label-container {
-    align-items: center; /* Centrer les éléments verticalement */
-    margin-bottom: 10px; /* Espacement entre chaque groupe de bouton radio et label */
+    align-items: center; 
+    margin-bottom: 10px; 
 }
 
 .price-container {
@@ -119,11 +119,66 @@ input[type="radio"] {
 }
 
 .price-value {
-    font-weight: bold; /* Pour mettre en évidence le prix */
+    font-weight: bold;
 }
 
 .confirm-form {
-    width: calc(80% - 40px); /* Assurez-vous que chaque formulaire prend toute la largeur */
-    max-width: 800px; /* Largeur maximale pour chaque formulaire */
-    margin-bottom: 20px; /* Espacement entre les formulaires */
+    width: calc(80% - 40px); 
+    max-width: 800px; 
+    margin-bottom: 20px; 
+}
+
+.menu {
+    text-align: center;
+    background-color: #fff; /* Couleur de fond du menu */
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre du menu */
+}
+
+.menu a {
+    display: block;
+    margin: 10px 0;
+    text-decoration: none;
+    color: #333; /* Couleur du texte des liens */
+    font-size: 18px; /* Taille du texte */
+    padding: 8px 0;
+}
+
+.menu a:hover {
+    color: #007bff; /* Couleur du texte au survol */
+}
+
+.menu h1 {
+    margin-bottom: 30px;
+    color: #333; /* Couleur du titre */
+}
+
+.confirmation-box {
+    text-align: center;
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 500px; /* Ajustez la largeur maximale selon vos besoins */
+}
+
+.confirmation-box h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.confirmation-box p {
+    color: #666;
+    line-height: 1.6;
+}
+
+.confirmation-box a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.confirmation-box a:hover {
+    text-decoration: underline;
 }
