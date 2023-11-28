@@ -66,6 +66,7 @@
 
                 if (data.cordage) {
                     document.getElementById('searchInput').value = data.cordage;
+                    updatePrice();
                 }
                 if (data.tension) {
                     document.getElementById('Tension').value = data.tension;

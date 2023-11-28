@@ -28,6 +28,7 @@ body {
     flex-wrap: wrap;
 }
 
+
 .popup-container {
     display: none;
 }
@@ -68,17 +69,30 @@ input, select {
     border: 1px solid #ccc; 
     border-radius: 4px; 
 }
+ 
+input[type="text"], input[type="email"], input[type="number"], select, textarea {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
 
 input[type="submit"] {
-    background-color: #007BFF; 
-    color: #ffffff; 
-    border: none; 
-    cursor: pointer; 
-    transition: background-color 0.3s; 
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 input[type="submit"]:hover {
-    background-color: #0056b3; 
+    background-color: #45a049;
 }
 
 input[type="radio"] {
@@ -92,6 +106,8 @@ input[type="radio"] {
 .suggestions {
     border: 1px solid #ddd;
     border-top: none;
+    width: 100%;
+    background-color: white;
 }
 
 .suggestions div {
@@ -130,28 +146,28 @@ input[type="radio"] {
 
 .menu {
     text-align: center;
-    background-color: #fff; /* Couleur de fond du menu */
+    background-color: #fff;
     padding: 40px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre du menu */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
 }
 
 .menu a {
     display: block;
     margin: 10px 0;
     text-decoration: none;
-    color: #333; /* Couleur du texte des liens */
-    font-size: 18px; /* Taille du texte */
+    color: #333; 
+    font-size: 18px; 
     padding: 8px 0;
 }
 
 .menu a:hover {
-    color: #007bff; /* Couleur du texte au survol */
+    color: #007bff; 
 }
 
 .menu h1 {
     margin-bottom: 30px;
-    color: #333; /* Couleur du titre */
+    color: #333;
 }
 
 .confirmation-box {
@@ -161,7 +177,7 @@ input[type="radio"] {
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 80%;
-    max-width: 500px; /* Ajustez la largeur maximale selon vos besoins */
+    max-width: 500px; 
 }
 
 .confirmation-box h1 {
@@ -181,4 +197,10 @@ input[type="radio"] {
 
 .confirmation-box a:hover {
     text-decoration: underline;
+}
+
+@media screen and (max-width: 600px) {
+    .container .form-group {
+        flex-basis: 100%;
+    }
 }
