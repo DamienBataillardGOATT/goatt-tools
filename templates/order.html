@@ -22,7 +22,7 @@
             <input type="phonenumber" id="phonenumber" name="phonenumber" placeholder="0789674125" required>
 
             <label for="name">Nom :</label>
-            <input type="text" id="name" name="name" placeholder="Ex: Nguyen" required>
+            <input type="text" id="name" name="name" placeholder="Ex: Nguyen" autocomplete="given-name" required>
 
             <label for="firstname">Prénom :</label>
             <input type="text" id="firstname" name="firstname" placeholder="Ex: Christophe" required>
@@ -31,7 +31,7 @@
                 let stringsInfo = JSON.parse('{{ strings_info | tojson | safe }}');
             </script>
 
-            <label for="string_brand">Marque du cordage :</label>
+            <label for="searchInput">Marque du cordage :</label>
             <input type="text" id="searchInput" name="searchInput" onkeyup="searchRaquette()" onchange="updatePrice()" placeholder="Recherchez un cordage..." required>
             <div id="suggestions" class="suggestions"></div>
 

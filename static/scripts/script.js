@@ -331,29 +331,30 @@
 
         pickupOptions.forEach(function(option) {
             option.addEventListener('change', function() {
-                var pickupTimeField = document.getElementById('pickup_time');
+                var pickupField = document.getElementById('pickup_address');
                 if (this.value === 'address') {
                     document.getElementById('pickup_address_container').style.display = 'block';
-                    document.getElementById('store_pickup_address').value = '';
                     document.getElementById('pickup_time_container').style.display = 'block';
-                    pickupTimeField.required = true;
+                    pickupField.required = true;
                 } else if (this.value === 'store') {
                     document.getElementById('pickup_address_container').style.display = 'none';
                     document.getElementById('pickup_time_container').style.display = 'none';
-                    pickupTimeField.required = false;
+                    pickupField.required = false;
                 }
             });
         });
 
         deliveryOptions.forEach(function(option) {
             option.addEventListener('change', function() {
+                var deliveryField = document.getElementById('delivery_address');
                 if (this.value === 'address') {
                     document.getElementById('delivery_address_container').style.display = 'block';
-                    document.getElementById('store_delivery_address').value = '';
                     document.getElementById('delevery_time_container').style.display = 'block';
+                    deliveryField.required = true;
                 } else if (this.value === 'store') {
                     document.getElementById('delivery_address_container').style.display = 'none';
                     document.getElementById('delevery_time_container').style.display = 'none'
+                    deliveryField.required = false;
                 }
             });
         });
