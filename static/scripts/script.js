@@ -103,24 +103,24 @@
         return timeSlot.substring(0, 2);
     }
 
-    // Fonction pour ajouter des jours à une date
+
     function addDaysToDate(date, days) {
         var result = new Date(date);
         result.setDate(result.getDate() + days);
         return result;
     }
 
-    // Fonction pour convertir une date en format européen
+
     function convertToEuropeanDate(date) {
         return date.split('-').reverse().join('/');
     }
 
-    // Fonction pour récupérer et afficher les créneaux disponibles
+
     function retrieveAndDisplaySlots() {
         fetch('https://goatt-db.onrender.com/get_available_slots')
             .then(response => response.json())
             .then(data => {
-                availableSlots = data; // Stocker les données
+                availableSlots = data;
                 const selectElementDeposit = document.getElementById('pickup_deposit_date');
                 const selectElementDelivery = document.getElementById('pickup_delivery_date');
                 
@@ -129,9 +129,9 @@
         
                 let firstDate = null;
         
-                // Boucle pour ajouter des options de date de dépôt
+
                 for (const date in data) {
-                    if (!firstDate) firstDate = date; // Stocker la première date
+                    if (!firstDate) firstDate = date;
             
                     const europeanDate = convertToEuropeanDate(date);
                     const option = document.createElement('option');
@@ -140,11 +140,9 @@
                     selectElementDeposit.appendChild(option);
                 }
 
-                // Calculer la première date de livraison (2 jours après la première date de dépôt)
                 if (firstDate) {
                     let firstDeliveryDate = addDaysToDate(new Date(firstDate), 2);
 
-                    // Boucle pour ajouter des options de date de livraison
                     for (const date in data) {
                         let currentDate = new Date(date);
                         if (currentDate >= firstDeliveryDate) {
@@ -157,7 +155,6 @@
                     }
 
                     displaySlotsForDateDeposit(firstDate, data[firstDate]);
-                    // Afficher les créneaux pour la première date de livraison disponible
                     let firstDeliveryDateFormatted = firstDeliveryDate.toISOString().split('T')[0];
                     displaySlotsForDateDelivery(firstDeliveryDateFormatted, data[firstDeliveryDateFormatted]);
                 }
