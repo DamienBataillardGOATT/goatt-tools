@@ -23,13 +23,10 @@ def extract_postal_code_and_city(address):
         return None, None
     
 def extract_adress_street(adress):
-    # Séparer les éléments de l'adresse
     elements = adress.split()
 
-    # Extraire le numéro et le nom de la rue (en supposant que le code postal et la ville sont les deux derniers éléments)
     rue_et_numero = elements[:-2]
 
-    # Joindre les éléments extraits pour former l'adresse raccourcie
     adresse_raccourcie = ' '.join(rue_et_numero)
     return adresse_raccourcie
 
@@ -108,7 +105,8 @@ def create_draft_order(data):
         response_data = response.json()
         invoice_url = response_data['draft_order']['admin_graphql_api_id']
         order_id = invoice_url.split('/')[-1]
-        return order_id
+        order_url = f"https://admin.shopify.com/store/goatt-tennis/draft_orders/{order_id}"
+        return order_id, order_url
     else:
         return None 
 
@@ -153,10 +151,11 @@ def complete_order(order_data):
         'pose_type': 'Standard',
     }
 
-    order_id = create_draft_order(draft_order_info)
+    order_id, order_url = create_draft_order(draft_order_info)
 
     if order_id:
         order_data['draft shopify id'] = order_id
+        session['draft_order_url'] = order_url
 
     # Remove the 'ShopifyVariantId' key from order_data if it exists
     order_data.pop('ShopifyVariantId', None)
@@ -287,6 +286,12 @@ def stringing_order():
 
     return redirect(url_for('order_bp.order_confirmation'))
 
-@order_bp.route('/order_confirmation')
+@order_bp.route('/order_confirmation', methods=['GET'])
 def order_confirmation():
-    return "Merci pour votre commande!"
+    draft_order_url = session.get('draft_order_url', None)
+
+    print(draft_order_url)
+
+    session.pop('draft_order_url', None)
+
+    return render_template('order_confirmation.html', draft_order_url=draft_order_url)

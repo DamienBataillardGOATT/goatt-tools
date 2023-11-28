@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmation de Commande</title>
+</head>
+<body>
+    <div class="confirmation-box">
+        <h1>Confirmation de Commande</h1>
+        {% if draft_order_url %}
+            <p>Merci pour votre commande ! Vous pouvez consulter les détails de votre commande <a href="{{ draft_order_url }}" target="_blank">ici</a>.</p>
+        {% else %}
+            <p>Merci pour votre commande !</p>
+        {% endif %}
+        <p><a href="/">Retour à l'accueil</a></p>
+    </div>
+</body>
+</html>
