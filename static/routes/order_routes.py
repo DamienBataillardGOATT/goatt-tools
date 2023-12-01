@@ -115,7 +115,6 @@ def complete_order(order_data):
 
     if client_info :
         customer_id = search_shopify_customer(client_info['Email'], client_info['Prénom'], client_info['Nom'])
-
         email = client_info['Email']
         prenom = client_info['Prénom']
         nom = client_info['Nom']

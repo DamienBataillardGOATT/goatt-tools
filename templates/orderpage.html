@@ -13,8 +13,10 @@
             <p><strong>Date de Livraison:</strong> {{ details.date_livraison }}</p>
             <p><strong>Cordage:</strong> {{ details.Cordage }}</p>
             <p><strong>Tension:</strong> {{ details.Tension }}</p>
+            <button onclick="terminerCommande('{{ details.id }}', this)">Terminer</button>
         </div>
         {% endfor %}
     </div>
+    <script src="/static/scripts/script.js"></script>
 </body>
 </html>
