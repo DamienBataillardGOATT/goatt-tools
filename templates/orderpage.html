@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <title>Commandes de Cordage de Tennis</title>
+</head>
+<body>
+    <div class="commandes-container">
+        {% for client, details in commandes_info.items() %}
+        <div class="commande">
+            <h3>{{ client }}</h3>
+            <p><strong>Date de Livraison:</strong> {{ details.date_livraison }}</p>
+            <p><strong>Cordage:</strong> {{ details.Cordage }}</p>
+            <p><strong>Tension:</strong> {{ details.Tension }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

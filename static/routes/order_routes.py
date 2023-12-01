@@ -171,7 +171,6 @@ def complete_order(order_data):
     session.pop('order_data', None)
     return redirect(url_for('order_bp.order_confirmation'))
 
-
 @order_bp.route('/')
 def order():
     # Extract data from the database
