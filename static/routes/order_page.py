@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, jsonify
+from flask import Blueprint, render_template, jsonify, request
 from static.routes.config import API_KEY, BASE_ID_ORDERS, ORDERS_TABLE_2
 from airtable import Airtable
 from datetime import datetime
@@ -26,14 +26,28 @@ def orderpage():
 
         tension = commande['fields'].get('Tension', '')
 
+        note = commande['fields'].get('Notes', '')
+
         commandes_info[client] = {
             'id': commande_id,
             'date_livraison': date_livraison, 
             'Cordage': cordage_formatte, 
-            'Tension': tension
+            'Tension': tension,
+            'Note': note,
         }
 
     return render_template('orderpage.html', commandes_info=commandes_info)
+
+@orderpage_bp.route('/enregistrer-note/<commandeId>', methods=['POST'])
+def enregistrer_note(commandeId):
+    data = request.json
+    note = data.get('note', '')
+    print(note)
+    try:
+        airtable_cordarge.update(commandeId, {'Notes': note})
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @orderpage_bp.route('/terminer-commande/<commandeId>', methods=['POST'])
 def terminer_commande(commandeId):

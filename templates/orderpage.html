@@ -13,6 +13,7 @@
             <p><strong>Date de Livraison:</strong> {{ details.date_livraison }}</p>
             <p><strong>Cordage:</strong> {{ details.Cordage }}</p>
             <p><strong>Tension:</strong> {{ details.Tension }}</p>
+            <textarea id="note-{{ details.id }}" onblur="enregistrerNote('{{ details.id }}')" placeholder="Ajoutez une note ici...">{{ details.Note }}</textarea>
             <button onclick="terminerCommande('{{ details.id }}', this)">Terminer</button>
         </div>
         {% endfor %}
