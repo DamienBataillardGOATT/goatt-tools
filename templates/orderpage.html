@@ -7,13 +7,22 @@
 </head>
 <body>
     <div class="commandes-container">
-        {% for client, details in commandes_info.items() %}
+        {% for details in toutes_commandes %}
         <div class="commande">
-            <h3>{{ client }}</h3>
-            <p><strong>Date de Livraison:</strong> {{ details.date_livraison }}</p>
+            {% if details.type == 'B2C' %}
+                <h3>{{ details.client }}</h3> 
+            {% else %}
+                <h3>ID Client: {{ details.id_client }}</h3> 
+            {% endif %}
+    
+            <p><strong>Date de Livraison:</strong> {{ details.date_livraison.strftime('%d/%m/%Y') if details.date_livraison else 'Non spécifiée' }}</p>
+            <p><strong>Type de commande:</strong> {{ details.type }}</p>
             <p><strong>Cordage:</strong> {{ details.Cordage }}</p>
             <p><strong>Tension:</strong> {{ details.Tension }}</p>
-            <textarea id="note-{{ details.id }}" onblur="enregistrerNote('{{ details.id }}')" placeholder="Ajoutez une note ici...">{{ details.Note }}</textarea>
+            
+            <textarea id="note-{{ details.id }}" onblur="enregistrerNote('{{ details.id }}')" placeholder="Ajoutez une note ici...">
+                {{ details.Note }}
+            </textarea>
             <button onclick="terminerCommande('{{ details.id }}', this)">Terminer</button>
         </div>
         {% endfor %}
