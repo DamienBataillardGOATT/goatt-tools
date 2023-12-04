@@ -72,7 +72,7 @@ def create_draft_order(data):
         "quantity": data['quantité']
     },
      {
-        "variant_id": '48665394905414',
+        "variant_id": '42066577457335',
         "requires_shipping": 'false',
         "quantity": data['quantité']
     },]
