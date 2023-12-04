@@ -15,7 +15,7 @@
                 <h3>ID Client: {{ details.id_client }}</h3> 
             {% endif %}
     
-            <p><strong>Date de Livraison:</strong> {{ details.date_livraison.strftime('%d/%m/%Y') if details.date_livraison else 'Non spécifiée' }}</p>
+            <p class="{{ details.priority_class }}"><strong>Date de Livraison:</strong> {{ details.date_livraison.strftime('%d/%m/%Y') if details.date_livraison else 'Non spécifiée' }}</p>
             <p><strong>Type de commande:</strong> {{ details.type }}</p>
             <p><strong>Cordage:</strong> {{ details.Cordage }}</p>
             <p><strong>Tension:</strong> {{ details.Tension }}</p>

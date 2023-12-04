@@ -1,12 +1,27 @@
 from flask import Blueprint, render_template, jsonify, request
 from static.routes.config import API_KEY, BASE_ID_ORDERS, ORDERS_TABLE_2, BASE_ID_DECATHLON, DECATHLON_TABLE
 from airtable import Airtable
-from datetime import datetime
+from datetime import datetime, timedelta
 
 orderpage_bp = Blueprint('orderpage_bp', __name__)
 
 airtable_cordarge = Airtable(BASE_ID_ORDERS, ORDERS_TABLE_2, API_KEY)
 airtable_decathlon = Airtable(BASE_ID_DECATHLON, DECATHLON_TABLE, API_KEY)
+
+def determine_priority_color(date_livraison):
+    if not date_livraison:
+        return 'date-grey'
+    
+    date_livraison = date_livraison.date()
+    today = datetime.today().date()
+    three_days_from_now = today + timedelta(days=3)
+
+    if date_livraison == today:
+        return 'date-red'
+    elif today < date_livraison <= three_days_from_now:
+        return 'date-orange'
+    else:
+        return 'date-green' 
 
 @orderpage_bp.route('/')
 def orderpage():
@@ -72,6 +87,7 @@ def orderpage():
     for commande in toutes_commandes:
         try:
             commande['date_livraison'] = datetime.strptime(commande['date_livraison'], '%d/%m/%Y')
+            commande['priority_class'] = determine_priority_color(commande.get('date_livraison'))
         except ValueError:
             commande['date_livraison'] = None
 

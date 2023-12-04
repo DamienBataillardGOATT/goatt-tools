@@ -220,3 +220,19 @@ input[type="radio"] {
         flex-basis: 100%;
     }
 }
+
+.date-red {
+    color: red;
+}
+
+.date-orange {
+    color: orange;
+}
+
+.date-green {
+    color: green;
+}
+
+.date-grey {
+    color: grey;
+}
