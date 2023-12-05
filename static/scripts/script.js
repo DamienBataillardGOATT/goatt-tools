@@ -328,20 +328,24 @@
         });
     }
 
-    function terminerCommande(commandeId, bouton) {
-        fetch('/orderpage/terminer-commande/' + commandeId, {  
-            method: 'POST'
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.success) {
-                const commandeElement = bouton.closest('.commande');
-                commandeElement.style.display = 'none'; 
-            } else {
-                alert('Erreur lors de la mise à jour de la commande');
-            }
-        });
+    function terminerCommande(commandeId, slider) {
+        if (slider.value == '1') { 
+            fetch('/orderpage/terminer-commande/' + commandeId, {  
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    const commandeElement = slider.closest('.commande');
+                    commandeElement.style.display = 'none'; 
+                } else {
+                    slider.value = '0';
+                    alert('Erreur lors de la mise à jour de la commande');
+                }
+            });
+        }
     }
+    
 
     // Script to show/hide fields based on the chosen pickup option
     document.addEventListener('DOMContentLoaded', function() {

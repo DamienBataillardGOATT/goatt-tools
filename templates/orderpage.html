@@ -19,12 +19,15 @@
             <p><strong>Type de commande:</strong> {{ details.type }}</p>
             <p><strong>Cordage:</strong> {{ details.Cordage }}</p>
             <p><strong>Tension:</strong> {{ details.Tension }}</p>
-            <p><strong>Articles:</strong> {{ details.Articles}}</p>
-            
-            <textarea id="note-{{ details.id }}" onblur="enregistrerNote('{{ details.id }}')" placeholder="Ajoutez une note ici...">
-                {{ details.Note }}
-            </textarea>
-            <button onclick="terminerCommande('{{ details.id }}', this)">Terminer</button>
+            <strong>Articles:</strong> 
+            <div>
+                {% for article in details.Articles %}
+                    <div class="article">{{ article }}</div>
+                {% endfor %}
+            </div>
+                            
+            <textarea id="note-{{ details.id }}" onblur="enregistrerNote('{{ details.id }}')" placeholder="Ajoutez une note ici...">{{ details.Note }}</textarea>
+            <input type="range" min="0" max="1" value="0" class="slider" id="slider-{{ details.id }}" onchange="terminerCommande('{{ details.id }}', this)">
         </div>
         {% endfor %}
     </div>

@@ -43,7 +43,8 @@ def orderpage():
 
         tension = commande['fields'].get('Tension', '')
 
-        articles = commande['fields'].get('Articles', '')
+        articles_str = commande['fields'].get('Articles', '')
+        articles= articles_str.split('\n')
 
         note = commande['fields'].get('Notes', '')
 
