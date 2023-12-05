@@ -19,6 +19,7 @@
             <p><strong>Type de commande:</strong> {{ details.type }}</p>
             <p><strong>Cordage:</strong> {{ details.Cordage }}</p>
             <p><strong>Tension:</strong> {{ details.Tension }}</p>
+            <p><strong>Articles:</strong> {{ details.Articles}}</p>
             
             <textarea id="note-{{ details.id }}" onblur="enregistrerNote('{{ details.id }}')" placeholder="Ajoutez une note ici...">
                 {{ details.Note }}

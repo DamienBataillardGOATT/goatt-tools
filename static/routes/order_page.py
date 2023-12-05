@@ -43,6 +43,8 @@ def orderpage():
 
         tension = commande['fields'].get('Tension', '')
 
+        articles = commande['fields'].get('Articles', '')
+
         note = commande['fields'].get('Notes', '')
 
         commandes_info[commande_id] = {
@@ -52,6 +54,7 @@ def orderpage():
             'Cordage': cordage_formatte, 
             'Tension': tension,
             'Note': note,
+            'Articles': articles,
             'type': 'B2C'
         }
 
