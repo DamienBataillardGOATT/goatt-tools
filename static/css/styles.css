@@ -262,3 +262,27 @@ input[type="radio"] {
     cursor: pointer;
     border-radius: 50%;
 }
+
+.livraisons-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 20px;
+}
+
+.livraison {
+    border: 2px solid ;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #f8f9fa;
+}
+
+.livraison p {
+    margin: 5px 0;
+}
+
+@media screen and (max-width: 600px) {
+    .livraison .form-group {
+        flex-basis: 100%;
+    }
+}
