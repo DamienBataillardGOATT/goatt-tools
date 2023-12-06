@@ -35,7 +35,13 @@ def orderpage():
         client = commande['fields'].get('Nom complet', '')
         
         date_iso = commande['fields'].get('Delivery Date Time', '').rstrip('Z')
-        date_livraison = datetime.fromisoformat(date_iso).strftime('%d/%m/%Y') if date_iso else ''
+        if date_iso:
+            datetime_livraison = datetime.fromisoformat(date_iso)
+            date_livraison = datetime_livraison.strftime('%d/%m/%Y')
+            heure_livraison = datetime_livraison.strftime('%H:%M') 
+        else:
+            date_livraison = ''
+            heure_livraison = ''
 
         cordage = commande['fields'].get('Cordage', '')
         quantité = commande['fields'].get('# raquettes','')
@@ -52,6 +58,7 @@ def orderpage():
             'id': commande_id,
             'client': client,
             'date_livraison': date_livraison, 
+            'heure_livraison': heure_livraison,
             'Cordage': cordage_formatte, 
             'Tension': tension,
             'Note': note,
