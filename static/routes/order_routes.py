@@ -37,10 +37,11 @@ def get_shopify_headers():
     }
 
 def search_shopify_customer(email, first_name, last_name):
-    url = f"https://goatt-tennis.myshopify.com/admin/api/2023-04/customers/search.json?query=email:{email}"
+    url = f"https://goatt-prod.myshopify.com/admin/api/2023-04/customers/search.json?query=email:{email}"
     response = requests.get(url, headers=get_shopify_headers())
     if response.status_code == 200:
         customers = response.json().get('customers', [])
+        print(customers)
         if customers:
             customer_id = customers[0].get('id') 
             return customer_id
@@ -64,7 +65,7 @@ def create_shopify_customer(email, first_name, last_name):
     return response.json().get('customer')
 
 def create_draft_order(data):
-    url = f"https://goatt-shopify.onrender.com/create_draft_order"
+    url = f"https://goatt-shopify.onrender.com/create_draft_order_v2"
 
     lineItems = [{
         "variant_id": data['variant_id'],
@@ -103,9 +104,10 @@ def create_draft_order(data):
     response = requests.post(url, json=draft_order_data, headers=get_shopify_headers())
     if response.status_code == 200:
         response_data = response.json()
+        print(response_data)
         invoice_url = response_data['draft_order']['admin_graphql_api_id']
         order_id = invoice_url.split('/')[-1]
-        order_url = f"https://admin.shopify.com/store/goatt-tennis/draft_orders/{order_id}"
+        order_url = f"https://goatt-prod.myshopify.com/store/goatt-tennis/draft_orders/{order_id}"
         return order_id, order_url
     else:
         return None 
