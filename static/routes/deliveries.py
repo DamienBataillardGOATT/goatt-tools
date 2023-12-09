@@ -3,12 +3,12 @@ from static.routes.config import API_KEY, BASE_ID_ORDERS, ORDERS_TABLE_2
 from airtable import Airtable
 from datetime import datetime
 
-livraison_bp = Blueprint('livraison_bp', __name__)
+deliveries_bp = Blueprint('deliveries_bp', __name__)
 
 airtable_cordage = Airtable(BASE_ID_ORDERS, ORDERS_TABLE_2, API_KEY)
 
-@livraison_bp.route('/')
-def livraisonpage():
+@deliveries_bp.route('/')
+def deliveries():
     livraisons_raw = airtable_cordage.get_all(view='Livraison')
     print(livraisons_raw)
     livraisons = []
@@ -46,7 +46,7 @@ def livraisonpage():
 
     return render_template('livraisonpage.html', livraisons=livraisons)
 
-@livraison_bp.route('/enregistrer-note/<commandeId>', methods=['POST'])
+@deliveries_bp.route('/enregistrer-note/<commandeId>', methods=['POST'])
 def enregistrer_note(commandeId):
     data = request.json
     note = data.get('note', '')

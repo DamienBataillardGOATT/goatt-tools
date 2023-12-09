@@ -311,7 +311,7 @@
 
     function enregistrerNote(commandeId) {
         var note = document.getElementById('note-' + commandeId).value;
-        fetch('/orderpage/enregistrer-note/' + commandeId, {  
+        fetch('/orders/enregistrer-note/' + commandeId, {  
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -330,7 +330,7 @@
 
     function terminerCommande(commandeId, slider) {
         if (slider.value == '1') { 
-            fetch('/orderpage/terminer-commande/' + commandeId, {  
+            fetch('/orders/terminer-commande/' + commandeId, {  
                 method: 'POST'
             })
             .then(response => response.json())

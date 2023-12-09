@@ -3,7 +3,7 @@ from static.routes.config import API_KEY, BASE_ID_ORDERS, ORDERS_TABLE_2, BASE_I
 from airtable import Airtable
 from datetime import datetime, timedelta
 
-orderpage_bp = Blueprint('orderpage_bp', __name__)
+orders_bp = Blueprint('orders_bp', __name__)
 
 airtable_cordarge = Airtable(BASE_ID_ORDERS, ORDERS_TABLE_2, API_KEY)
 airtable_decathlon = Airtable(BASE_ID_DECATHLON, DECATHLON_TABLE, API_KEY)
@@ -23,8 +23,8 @@ def determine_priority_color(date_livraison):
     else:
         return 'date-green' 
 
-@orderpage_bp.route('/')
-def orderpage():
+@orders_bp.route('/')
+def orders():
     commandes_raw = airtable_cordarge.get_all(view='Atelier')
     commandes_decathlon_raw = airtable_decathlon.get_all(view='Vue atelier')
 
@@ -106,18 +106,18 @@ def orderpage():
 
     return render_template('orderpage.html', toutes_commandes=toutes_commandes)
 
-@orderpage_bp.route('/enregistrer-note/<commandeId>', methods=['POST'])
+@orders_bp.route('/enregistrer-note/<commandeId>', methods=['POST'])
 def enregistrer_note(commandeId):
     data = request.json
     note = data.get('note', '')
-    print(note)
+
     try:
         airtable_cordarge.update(commandeId, {'Notes': note})
         return jsonify({'success': True})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
-@orderpage_bp.route('/terminer-commande/<commandeId>', methods=['POST'])
+@orders_bp.route('/terminer-commande/<commandeId>', methods=['POST'])
 def terminer_commande(commandeId):
     try:
         airtable_cordarge.update(commandeId, {'Statut pose': 'Done'})
