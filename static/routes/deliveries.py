@@ -43,24 +43,39 @@ def deliveries():
 
         note = livraison['fields'].get('Notes', '')
 
-        livraisons.append({
-            'id': livraison_id,
-            'client': client,
-            'date_livraison': date_livraison, 
-            'heure_livraison': heure_livraison,
-            'adresse_de_livraison': adresse_livraison,
-            'téléphone': téléphone,
-            'Articles': articles,
-            'Note': note
-        })
-    
         if date_livraison == aujourd_hui:
-            livraisons_aujourd_hui.append(livraisons)
+            livraisons_aujourd_hui.append({
+                'id': livraison_id,
+                'client': client,
+                'date_livraison': date_livraison, 
+                'heure_livraison': heure_livraison,
+                'adresse_de_livraison': adresse_livraison,
+                'téléphone': téléphone,
+                'Articles': articles,
+                'Note': note
+            })
         elif date_livraison == demain:
-            livraisons_demain.append(livraisons)
+            livraisons_demain.append({
+                'id': livraison_id,
+                'client': client,
+                'date_livraison': date_livraison, 
+                'heure_livraison': heure_livraison,
+                'adresse_de_livraison': adresse_livraison,
+                'téléphone': téléphone,
+                'Articles': articles,
+                'Note': note
+            })
         elif date_livraison and date_livraison > demain:
-            livraisons_a_venir.append(livraisons)
-
+            livraisons_a_venir.append({
+                'id': livraison_id,
+                'client': client,
+                'date_livraison': date_livraison, 
+                'heure_livraison': heure_livraison,
+                'adresse_de_livraison': adresse_livraison,
+                'téléphone': téléphone,
+                'Articles': articles,
+                'Note': note
+            })
 
     return render_template('deliveries.html', livraisons_aujourd_hui=livraisons_aujourd_hui, livraisons_demain=livraisons_demain, livraisons_a_venir=livraisons_a_venir)
 
