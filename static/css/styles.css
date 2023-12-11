@@ -198,10 +198,14 @@ input[type="radio"] {
 }
 
 .commandes-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.colonne {
+    flex: 1;
+    margin: 10px;
+    padding: 10px;
 }
 
 .commande {
@@ -264,10 +268,8 @@ input[type="radio"] {
 }
 
 .livraisons-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    padding: 20px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .livraison {

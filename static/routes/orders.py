@@ -95,16 +95,24 @@ def orders():
 
     toutes_commandes = list(commandes_info.values()) + list(decathlon_commandes_info.values())
 
+    commandes_aujourd_hui = []
+    commandes_demain = []
+    commandes_a_venir = []
+
+    aujourd_hui = datetime.today().date()
+    demain = aujourd_hui + timedelta(days=1)
+
     for commande in toutes_commandes:
-        try:
-            commande['date_livraison'] = datetime.strptime(commande['date_livraison'], '%d/%m/%Y')
-            commande['priority_class'] = determine_priority_color(commande.get('date_livraison'))
-        except ValueError:
-            commande['date_livraison'] = None
+        date_livraison = datetime.strptime(commande['date_livraison'], '%d/%m/%Y').date() if commande['date_livraison'] else None
 
-    toutes_commandes.sort(key=lambda x: x['date_livraison'] if x['date_livraison'] else datetime.max)
+        if date_livraison == aujourd_hui:
+            commandes_aujourd_hui.append(commande)
+        elif date_livraison == demain:
+            commandes_demain.append(commande)
+        elif date_livraison and date_livraison > demain:
+            commandes_a_venir.append(commande)
 
-    return render_template('orderpage.html', toutes_commandes=toutes_commandes)
+    return render_template('orders.html', commandes_aujourd_hui=commandes_aujourd_hui, commandes_demain=commandes_demain, commandes_a_venir=commandes_a_venir)
 
 @orders_bp.route('/enregistrer-note/<commandeId>', methods=['POST'])
 def enregistrer_note(commandeId):

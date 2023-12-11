@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, jsonify, request
 from static.routes.config import API_KEY, BASE_ID_ORDERS, ORDERS_TABLE_2
 from airtable import Airtable
-from datetime import datetime
+from datetime import datetime, timedelta
 
 deliveries_bp = Blueprint('deliveries_bp', __name__)
 
@@ -9,8 +9,16 @@ airtable_cordage = Airtable(BASE_ID_ORDERS, ORDERS_TABLE_2, API_KEY)
 
 @deliveries_bp.route('/')
 def deliveries():
+
     livraisons_raw = airtable_cordage.get_all(view='Livraison')
-    print(livraisons_raw)
+
+    livraisons_aujourd_hui = []
+    livraisons_demain = []
+    livraisons_a_venir = []
+
+    aujourd_hui = datetime.today().date()
+    demain = aujourd_hui + timedelta(days=1)
+
     livraisons = []
     for livraison in livraisons_raw:
         livraison_id = livraison['id']
@@ -20,15 +28,18 @@ def deliveries():
         date_iso = livraison['fields'].get('Delivery Date Time', '').rstrip('Z')
         if date_iso:
             datetime_livraison = datetime.fromisoformat(date_iso)
-            date_livraison = datetime_livraison.strftime('%d/%m/%Y')
-            heure_livraison = datetime_livraison.strftime('%H:%M') 
+            date_livraison = datetime_livraison.date()
+            heure_livraison = datetime_livraison.time()  
         else:
-            date_livraison = ''
-            heure_livraison = ''
+            date_livraison = None
+            heure_livraison = None
 
         adresse_livraison = livraison['fields'].get('Adresse de livraison', '')
 
         téléphone = livraison['fields'].get('Téléphone', '')
+
+        articles_str = livraison['fields'].get('Articles', '')
+        articles= articles_str.split('\n')
 
         note = livraison['fields'].get('Notes', '')
 
@@ -39,12 +50,18 @@ def deliveries():
             'heure_livraison': heure_livraison,
             'adresse_de_livraison': adresse_livraison,
             'téléphone': téléphone,
+            'Articles': articles,
             'Note': note
         })
+    
+        if date_livraison == aujourd_hui:
+            livraisons_aujourd_hui.append(livraisons)
+        elif date_livraison == demain:
+            livraisons_demain.append(livraisons)
+        elif date_livraison and date_livraison > demain:
+            livraisons_a_venir.append(livraisons)
 
-        livraisons.sort(key=lambda x: x['date_livraison'] if x['date_livraison'] else datetime.max)
-
-    return render_template('livraisonpage.html', livraisons=livraisons)
+    return render_template('deliveries.html', livraisons_aujourd_hui=livraisons_aujourd_hui, livraisons_demain=livraisons_demain, livraisons_a_venir=livraisons_a_venir)
 
 @deliveries_bp.route('/enregistrer-note/<commandeId>', methods=['POST'])
 def enregistrer_note(commandeId):

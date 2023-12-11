@@ -79,26 +79,6 @@
         });
     }
 
-    function updatePrice() {
-        var searchString = document.getElementById('searchInput').value;
-        var info = stringsInfo[searchString];
-        if (info) {
-            var unitPrice = info.prix;
-            var shopifyVariantId = info.shopify_variant_id;
-            var quantity = document.getElementById('string_quantity').value;
-            var totalPrice = unitPrice * quantity;
-    
-            var poseCordagePrice = 14.99; 
-            totalPrice += poseCordagePrice;
-    
-            document.getElementById('string_price').textContent = totalPrice.toFixed(2) + ' €';
-            document.getElementById('shopifyVariantId').value = shopifyVariantId;
-            document.getElementById('totalPrice').value = totalPrice.toFixed(2);
-        }
-    }
-    
-    // Add an event listener to the quantity field
-    document.getElementById('string_quantity').addEventListener('change', updatePrice);
 
     function extractFirstTwoCharacters(timeSlot) {
         return timeSlot.substring(0, 2);
@@ -328,22 +308,26 @@
         });
     }
 
-    function terminerCommande(commandeId, slider) {
-        if (slider.value == '1') { 
-            fetch('/orders/terminer-commande/' + commandeId, {  
-                method: 'POST'
-            })
-            .then(response => response.json())
-            .then(data => {
-                if(data.success) {
-                    const commandeElement = slider.closest('.commande');
-                    commandeElement.style.display = 'none'; 
-                } else {
-                    slider.value = '0';
-                    alert('Erreur lors de la mise à jour de la commande');
-                }
-            });
+    function verifierGlissement(commandeId, slider) {
+        if (slider.value == '100') { 
+            terminerCommande(commandeId, slider);
         }
+    }
+
+    function terminerCommande(commandeId, slider) {
+        fetch('/orders/terminer-commande/' + commandeId, {  
+            method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const commandeElement = slider.closest('.commande');
+                commandeElement.style.display = 'none'; 
+            } else {
+                slider.value = '0';  // Réinitialiser le slider en cas d'échec
+                alert('Erreur lors de la mise à jour de la commande');
+            }
+        });
     }
     
 
@@ -352,63 +336,87 @@
         var pickupOptions = document.querySelectorAll('input[name="pickup_option"]');
         var deliveryOptions = document.querySelectorAll('input[name="delivery_option"]');
         var inputs = document.getElementsByTagName('input');
+        var formulaireCommande = document.getElementById('orderForm');
 
-        updatePrice();
+        if(formulaireCommande){
 
-        for (var i = 0; i < inputs.length; i++) {
-            inputs[i].onkeydown = function(event) {
-                if (event.key === 'Enter') {
-                    event.preventDefault();
-                    return false;
+            function updatePrice() {
+                var searchString = document.getElementById('searchInput').value;
+                var info = stringsInfo[searchString];
+                if (info) {
+                    var unitPrice = info.prix;
+                    var shopifyVariantId = info.shopify_variant_id;
+                    var quantity = document.getElementById('string_quantity').value;
+                    var totalPrice = unitPrice * quantity;
+            
+                    var poseCordagePrice = 14.99; 
+                    totalPrice += poseCordagePrice;
+            
+                    document.getElementById('string_price').textContent = totalPrice.toFixed(2) + ' €';
+                    document.getElementById('shopifyVariantId').value = shopifyVariantId;
+                    document.getElementById('totalPrice').value = totalPrice.toFixed(2);
                 }
             }
+
+            // Add an event listener to the quantity field
+            document.getElementById('string_quantity').addEventListener('change', updatePrice);
+
+            updatePrice();
+
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].onkeydown = function(event) {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        return false;
+                    }
+                }
+            }
+    
+            pickupOptions.forEach(function(option) {
+                option.addEventListener('change', function() {
+                    var pickupField = document.getElementById('pickup_address');
+                    if (this.value === 'address') {
+                        document.getElementById('pickup_address_container').style.display = 'block';
+                        document.getElementById('pickup_time_container').style.display = 'block';
+                        pickupField.required = true;
+                    } else if (this.value === 'store') {
+                        document.getElementById('pickup_address_container').style.display = 'none';
+                        document.getElementById('pickup_time_container').style.display = 'none';
+                        pickupField.required = false;
+                    }
+                });
+            });
+    
+            deliveryOptions.forEach(function(option) {
+                option.addEventListener('change', function() {
+                    var deliveryField = document.getElementById('delivery_address');
+                    if (this.value === 'address') {
+                        document.getElementById('delivery_address_container').style.display = 'block';
+                        document.getElementById('delevery_time_container').style.display = 'block';
+                        deliveryField.required = true;
+                    } else if (this.value === 'store') {
+                        document.getElementById('delivery_address_container').style.display = 'none';
+                        document.getElementById('delevery_time_container').style.display = 'none'
+                        deliveryField.required = false;
+                    }
+                });
+            });
+            
+            retrieveAndDisplaySlots();
+    
+            document.getElementById('pickup_deposit_date').addEventListener('change', updateTimeSlotsDeposit);
+            document.getElementById('pickup_time_dropdown').addEventListener('change', function() {
+                var selectedSlot = this.value;
+                var firstTwoChars = extractFirstTwoCharacters(selectedSlot);
+                document.getElementById('selected_slot_deposit').value = firstTwoChars;
+            });
+    
+            document.getElementById('delivery_time_dropdown').addEventListener('change', function() {
+                var selectedSlot = this.value;
+                var firstTwoChars = extractFirstTwoCharacters(selectedSlot);
+                document.getElementById('selected_slot_delivery').value = firstTwoChars;
+            });
+    
+            document.getElementById('Tension').addEventListener('change', updateTensionValue);
         }
-
-        pickupOptions.forEach(function(option) {
-            option.addEventListener('change', function() {
-                var pickupField = document.getElementById('pickup_address');
-                if (this.value === 'address') {
-                    document.getElementById('pickup_address_container').style.display = 'block';
-                    document.getElementById('pickup_time_container').style.display = 'block';
-                    pickupField.required = true;
-                } else if (this.value === 'store') {
-                    document.getElementById('pickup_address_container').style.display = 'none';
-                    document.getElementById('pickup_time_container').style.display = 'none';
-                    pickupField.required = false;
-                }
-            });
-        });
-
-        deliveryOptions.forEach(function(option) {
-            option.addEventListener('change', function() {
-                var deliveryField = document.getElementById('delivery_address');
-                if (this.value === 'address') {
-                    document.getElementById('delivery_address_container').style.display = 'block';
-                    document.getElementById('delevery_time_container').style.display = 'block';
-                    deliveryField.required = true;
-                } else if (this.value === 'store') {
-                    document.getElementById('delivery_address_container').style.display = 'none';
-                    document.getElementById('delevery_time_container').style.display = 'none'
-                    deliveryField.required = false;
-                }
-            });
-        });
-        
-        retrieveAndDisplaySlots();
-
-        document.getElementById('pickup_deposit_date').addEventListener('change', updateTimeSlotsDeposit);
-        document.getElementById('pickup_time_dropdown').addEventListener('change', function() {
-            var selectedSlot = this.value;
-            var firstTwoChars = extractFirstTwoCharacters(selectedSlot);
-            document.getElementById('selected_slot_deposit').value = firstTwoChars;
-        });
-
-        document.getElementById('delivery_time_dropdown').addEventListener('change', function() {
-            var selectedSlot = this.value;
-            var firstTwoChars = extractFirstTwoCharacters(selectedSlot);
-            document.getElementById('selected_slot_delivery').value = firstTwoChars;
-        });
-
-        document.getElementById('Tension').addEventListener('change', updateTensionValue);
-
     });

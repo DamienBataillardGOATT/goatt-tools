@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 # Configure the secret key for session data
 app.secret_key = os.getenv('FLASK_SECRET_KEY')
-
+    
 # Register the Blueprints with their URL prefixes
 app.register_blueprint(client_bp, url_prefix='/client')
 app.register_blueprint(order_bp, url_prefix='/order')

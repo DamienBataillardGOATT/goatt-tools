@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <title>Livraisons de Cordage de Tennis</title>
+</head>
+<body>
+    <div class="livraisons-container">
+        <div class="colonne">
+            <h2>Livraison pour aujourd'hui</h2>
+                {% for livraisons in livraisons_aujourd_hui %}
+                <div class="livraison">
+                    <h3>{{ livraisons.client }}</h3>
+                    <p><strong>Date et Heure de Livraison:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
+                    <p><strong>Adresse de livraison:</strong> {{ livraisons.adresse_de_livraison}}</p>
+                    <p><strong>Téléphone:</strong> {{ livraisons.téléphone}}</p>
+                    <strong>Articles:</strong> 
+                    <div>
+                        {% for article in livraisons.Articles %}
+                            <div class="article">{{ article }}</div>
+                        {% endfor %}
+                    </div>    
+                    <textarea id="note-{{ livraisons.id }}" onblur="enregistrerNote('{{ livraisons.id }}')" placeholder="Ajoutez une note ici...">{{ livraisons.Note }}</textarea>
+                </div>
+                {% endfor %}
+        </div>
+    
+        <div class="colonne">
+            <h2>Livraison pour demain</h2>
+            {% for livraisons in livraisons_demain %}
+                <div class="livraison">
+                    <h3>{{ livraisons.client }}</h3>
+                    <p><strong>Date et Heure de Livraison:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
+                    <p><strong>Adresse de livraison:</strong> {{ livraisons.adresse_de_livraison}}</p>
+                    <p><strong>Téléphone:</strong> {{ livraisons.téléphone}}</p>
+                    <strong>Articles:</strong> 
+                    <div>
+                        {% for article in livraisons.Articles %}
+                            <div class="article">{{ article }}</div>
+                        {% endfor %}
+                    </div>    
+                    <textarea id="note-{{ livraisons.id }}" onblur="enregistrerNote('{{ livraisons.id }}')" placeholder="Ajoutez une note ici...">{{ livraisons.Note }}</textarea>
+                </div>
+            {% endfor %}
+        </div>
+    
+        <div class="colonne">
+            <h2>Livraisons à venir</h2>
+            {% for livraisons in livraisons_a_venir %}
+                <div class="livraison">
+                    <h3>{{ livraisons.client }}</h3>
+                    <p><strong>Date et Heure de Livraison:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
+                    <p><strong>Adresse de livraison:</strong> {{ livraisons.adresse_de_livraison}}</p>
+                    <p><strong>Téléphone:</strong> {{ livraisons.téléphone}}</p>
+                    <strong>Articles:</strong> 
+                    <div>
+                        {% for article in livraisons.Articles %}
+                            <div class="article">{{ article }}</div>
+                        {% endfor %}
+                    </div>    
+                    <textarea id="note-{{ livraisons.id }}" onblur="enregistrerNote('{{ livraisons.id }}')" placeholder="Ajoutez une note ici...">{{ livraisons.Note }}</textarea>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script src="/static/scripts/script.js"></script>
+</body>
+</html>
