@@ -61,6 +61,7 @@ def deliveries():
         elif date_livraison and date_livraison > demain:
             livraisons_a_venir.append(livraisons)
 
+
     return render_template('deliveries.html', livraisons_aujourd_hui=livraisons_aujourd_hui, livraisons_demain=livraisons_demain, livraisons_a_venir=livraisons_a_venir)
 
 @deliveries_bp.route('/enregistrer-note/<commandeId>', methods=['POST'])
