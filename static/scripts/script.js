@@ -92,11 +92,6 @@
     }
 
 
-    function convertToEuropeanDate(date) {
-        return date.split('-').reverse().join('/');
-    }
-
-
     function retrieveAndDisplaySlots() {
         fetch('https://goatt-db.onrender.com/get_available_slots')
             .then(response => response.json())
@@ -216,7 +211,11 @@
 
     function convertToEuropeanDate(date) {
         const [year, month, day] = date.split('-');
-        return `${day}/${month}/${year}`;
+        const dateObj = new Date(year, month - 1, day); 
+
+        const options = { weekday: 'long', day: 'numeric', month: 'long' };
+
+        return dateObj.toLocaleDateString('fr-FR', options);
     }
 
     function searchAddressDeposit(inputId, suggestionsId) {
