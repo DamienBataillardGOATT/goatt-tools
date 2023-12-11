@@ -10,88 +10,83 @@
         <div class="colonne">
             <h2>Livraison pour aujourd'hui</h2>
                 {% for commande in commandes_aujourd_hui %}
-                <div class="commande">
-                    {% if commande.type == 'B2C' %}
-                        <h3>{{ commande.client }}</h3> 
-                    {% else %}
-                        <h3>ID Client: {{ commande.id_client }}</h3> 
-                    {% endif %}
-            
-                    <p><strong>Date et Heure de Livraison:</strong> {{ commande.date_livraison}} {{commande.heure_livraison}}</p>
-                    <p><strong>Type de commande:</strong> {{ commande.type }}</p>
-                    <p><strong>Cordage:</strong> {{ commande.Cordage }}</p>
-                    <p><strong>Tension:</strong> {{ commande.Tension }}</p>
-                    <strong>Articles:</strong> 
-                    {% if commande.type == 'B2C' %}
-                    <div>
-                        {% for article in commande.Articles %}
-                            <div class="article">{{ article }}</div>
-                        {% endfor %}
+                    <div class="commande">
+                        <h3>{{ commande.date_livraison}} {{commande.heure_livraison}}</h3>
+                        {% if commande.type == 'B2C' %}
+                            <p><strong>{{ commande.client }}</strong> ({{ commande.téléphone }})</p>
+                        {% else %}
+                            <h4>ID Client: {{ commande.id_client }}</h4> 
+                        {% endif %}
+                        <p><strong>Nombre de raquettes:</strong> {{ commande.quantité }}</p>
+                        <p><strong>Tension:</strong> {{ commande.Tension }}</p>
+                        <strong>Articles:</strong> 
+                        {% if commande.type == 'B2C' %}
+                        <div>
+                            {% for article in commande.Articles %}
+                                <div class="article">{{ article }}</div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        {% endif %}                
+                        <textarea id="note-{{commande.id }}" onblur="enregistrerNote('{{ commande.id }}')" placeholder="Ajoutez une note ici...">{{ commande.Note }}</textarea>
+                        <input type="range" min="0" max="100" value="0" class="slider" id="slider-{{ commande.id }}" oninput="verifierGlissement('{{ commande.id }}', this)">
                     </div>
-                    {% else %}
-                    {% endif %}                
-                    <textarea id="note-{{commande.id }}" onblur="enregistrerNote('{{ commande.id }}')" placeholder="Ajoutez une note ici...">{{ commande.Note }}</textarea>
-                    <input type="range" min="0" max="100" value="0" class="slider" id="slider-{{ commande.id }}" oninput="verifierGlissement('{{ commande.id }}', this)">
-                </div>
-            {% endfor %}
+                {% endfor %}
         </div>
-    
         <div class="colonne">
             <h2>Livraison pour demain</h2>
                 {% for commande in commandes_demain %}
-                <div class="commande">
-                    {% if commande.type == 'B2C' %}
-                        <h3>{{ commande.client }}</h3> 
-                    {% else %}
-                        <h3>ID Client: {{ commande.id_client }}</h3> 
-                    {% endif %}
-            
-                    <p><strong>Date et Heure de Livraison:</strong> {{ commande.date_livraison}} {{commande.heure_livraison}}</p>
-                    <p><strong>Type de commande:</strong> {{ commande.type }}</p>
-                    <p><strong>Cordage:</strong> {{ commande.Cordage }}</p>
-                    <p><strong>Tension:</strong> {{ commande.Tension }}</p>
-                    <strong>Articles:</strong> 
-                    {% if commande.type == 'B2C' %}
-                    <div>
-                        {% for article in commande.Articles %}
-                            <div class="article">{{ article }}</div>
-                        {% endfor %}
+                    <div class="commande">
+                        <h3>{{ commande.date_livraison}} {{commande.heure_livraison}}</h3>
+                        {% if commande.type == 'B2C' %}
+                            <p><strong>{{ commande.client }}</strong> ({{ commande.téléphone }})</p>
+                        {% else %}
+                            <h4>ID Client: {{ commande.id_client }}</h4> 
+                        {% endif %}
+                        <p><strong>Nombre de raquettes:</strong> {{ commande.quantité }}</p>
+                        <p><strong>Tension:</strong> {{ commande.Tension }}</p>
+                        <strong>Articles:</strong> 
+                        {% if commande.type == 'B2C' %}
+                        <div>
+                            {% for article in commande.Articles %}
+                                <div class="article">{{ article }}</div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        {% endif %}                
+                        <textarea id="note-{{commande.id }}" onblur="enregistrerNote('{{ commande.id }}')" placeholder="Ajoutez une note ici...">{{ commande.Note }}</textarea>
+                        <input type="range" min="0" max="100" value="0" class="slider" id="slider-{{ commande.id }}" oninput="verifierGlissement('{{ commande.id }}', this)">
                     </div>
-                    {% else %}
-                    {% endif %}                
-                    <textarea id="note-{{commande.id }}" onblur="enregistrerNote('{{ commande.id }}')" placeholder="Ajoutez une note ici...">{{ commande.Note }}</textarea>
-                    <input type="range" min="0" max="100" value="0" class="slider" id="slider-{{ commande.id }}" oninput="verifierGlissement('{{ commande.id }}', this)">
-                </div>
-            {% endfor %}
+                {% endfor %}
         </div>
     
         <div class="colonne">
             <h2>Livraisons à venir</h2>
-            {% for commande in commandes_a_venir %}
-            <div class="commande">
-                {% if commande.type == 'B2C' %}
-                    <h3>{{ commande.client }}</h3> 
-                {% else %}
-                    <h3>ID Client: {{ commande.id_client }}</h3> 
-                {% endif %}
-
-                <p><strong>Date et Heure de Livraison:</strong> {{ commande.date_livraison}} {{commande.heure_livraison}}</p>
-                <p><strong>Type de commande:</strong> {{ commande.type }}</p>
-                <p><strong>Cordage:</strong> {{ commande.Cordage }}</p>
-                <p><strong>Tension:</strong> {{ commande.Tension }}</p>
-                <strong>Articles:</strong> 
-                {% if commande.type == 'B2C' %}
-                <div>
-                    {% for article in commande.Articles %}
-                        <div class="article">{{ article }}</div>
-                    {% endfor %}
-                </div>
-                {% else %}
-                {% endif %}                
-                <textarea id="note-{{commande.id }}" onblur="enregistrerNote('{{ commande.id }}')" placeholder="Ajoutez une note ici...">{{ commande.Note }}</textarea>
-                <input type="range" min="0" max="100" value="0" class="slider" id="slider-{{ commande.id }}" oninput="verifierGlissement('{{ commande.id }}', this)">
-            </div>
-            {% endfor %}
+                {% for commande in commandes_a_venir %}
+                    <div class="commande">
+                        <h3>{{ commande.date_livraison}} {{commande.heure_livraison}}</h3>
+                        {% if commande.type == 'B2C' %}
+                            <p><strong>{{ commande.client }}</strong> ({{ commande.téléphone }})</p>
+                        {% else %}
+                            <h4>ID Client: {{ commande.id_client }}</h4> 
+                        {% endif %}
+                        <p><strong>Nombre de raquettes:</strong> {{ commande.quantité }}</p>
+                        <p><strong>Tension:</strong> {{ commande.Tension }}</p>
+                        <strong>Articles:</strong> 
+                        {% if commande.type == 'B2C' %}
+                        <div>
+                            {% for article in commande.Articles %}
+                                <div class="article">{{ article }}</div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        {% endif %}                
+                        <textarea id="note-{{commande.id }}" onblur="enregistrerNote('{{ commande.id }}')" placeholder="Ajoutez une note ici...">{{ commande.Note }}</textarea>
+                        <div class="slider-container">
+                            <input type="range" min="0" max="100" value="0" class="slider" id="slider-{{ commande.id }}" oninput="verifierGlissement('{{ commande.id }}', this)">
+                        </div>
+                    </div>
+                {% endfor %}
         </div>
     </div>
     <script src="/static/scripts/orders.js"></script>

@@ -20,6 +20,11 @@ function enregistrerNote(commandeId) {
 function verifierGlissement(commandeId, slider) {
     if (slider.value == '100') { 
         terminerCommande(commandeId, slider);
+        slider.style.backgroundPosition = "left bottom";
+        slider.classList.add('active');
+    } else {
+        slider.style.backgroundPosition = "left bottom";
+        slider.classList.remove('active');
     }
 }
 
