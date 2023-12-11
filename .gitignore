@@ -1,2 +1,6 @@
 # Ignorer tous les fichiers .env
 .env
+
+*.pyc
+
+__pycache__/
