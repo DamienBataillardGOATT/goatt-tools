@@ -1,6 +1,6 @@
-function enregistrerNote(commandeId) {
+function writeNote(commandeId) {
     var note = document.getElementById('note-' + commandeId).value;
-    fetch('/deliveries/enregistrer-note/' + commandeId, {  
+    fetch('/deliveries/writeNote/' + commandeId, {  
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

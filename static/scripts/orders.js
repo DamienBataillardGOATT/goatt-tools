@@ -1,6 +1,6 @@
-function enregistrerNote(commandeId) {
+function writeNote(commandeId) {
     var note = document.getElementById('note-' + commandeId).value;
-    fetch('/orders/enregistrer-note/' + commandeId, {  
+    fetch('/orders/writeNote/' + commandeId, {  
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -17,9 +17,9 @@ function enregistrerNote(commandeId) {
     });
 }
 
-function verifierGlissement(commandeId, slider) {
+function checkSlide(commandeId, slider) {
     if (slider.value == '100') { 
-        terminerCommande(commandeId, slider);
+        finishCommande(commandeId, slider);
         slider.style.backgroundPosition = "left bottom";
         slider.classList.add('active');
     } else {
@@ -28,8 +28,8 @@ function verifierGlissement(commandeId, slider) {
     }
 }
 
-function terminerCommande(commandeId, slider) {
-    fetch('/orders/terminer-commande/' + commandeId, {  
+function finishCommande(commandeId, slider) {
+    fetch('/orders/finishCommande/' + commandeId, {  
         method: 'POST'
     })
     .then(response => response.json())
@@ -38,7 +38,7 @@ function terminerCommande(commandeId, slider) {
             const commandeElement = slider.closest('.commande');
             commandeElement.style.display = 'none'; 
         } else {
-            slider.value = '0';  // Réinitialiser le slider en cas d'échec
+            slider.value = '0'; 
             alert('Erreur lors de la mise à jour de la commande');
         }
     });

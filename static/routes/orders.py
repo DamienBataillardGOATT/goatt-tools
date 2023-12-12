@@ -8,23 +8,8 @@ orders_bp = Blueprint('orders_bp', __name__)
 airtable_cordarge = Airtable(BASE_ID_ORDERS, ORDERS_TABLE_2, API_KEY)
 airtable_decathlon = Airtable(BASE_ID_DECATHLON, DECATHLON_TABLE, API_KEY)
 
-def determine_priority_color(date_livraison):
-    if not date_livraison:
-        return 'date-grey'
-    
-    date_livraison = date_livraison.date()
-    today = datetime.today().date()
-    three_days_from_now = today + timedelta(days=3)
-
-    if date_livraison == today:
-        return 'date-red'
-    elif today < date_livraison <= three_days_from_now:
-        return 'date-orange'
-    else:
-        return 'date-green' 
-
 @orders_bp.route('/')
-def orders():
+def page_de_latelier():
     commandes_raw = airtable_cordarge.get_all(view='Atelier')
     commandes_decathlon_raw = airtable_decathlon.get_all(view='Vue atelier')
 
@@ -113,10 +98,10 @@ def orders():
         elif date_livraison and date_livraison > demain:
             commandes_a_venir.append(commande)
 
-    return render_template('orders.html', commandes_aujourd_hui=commandes_aujourd_hui, commandes_demain=commandes_demain, commandes_a_venir=commandes_a_venir)
+    return render_template('page de l’atelier.html', commandes_aujourd_hui=commandes_aujourd_hui, commandes_demain=commandes_demain, commandes_a_venir=commandes_a_venir)
 
-@orders_bp.route('/enregistrer-note/<commandeId>', methods=['POST'])
-def enregistrer_note(commandeId):
+@orders_bp.route('/writeNote/<commandeId>', methods=['POST'])
+def writeNote(commandeId):
     data = request.json
     note = data.get('note', '')
 
@@ -126,8 +111,8 @@ def enregistrer_note(commandeId):
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
-@orders_bp.route('/terminer-commande/<commandeId>', methods=['POST'])
-def terminer_commande(commandeId):
+@orders_bp.route('/finishCommande/<commandeId>', methods=['POST'])
+def finishCommande(commandeId):
     try:
         airtable_cordarge.update(commandeId, {'Statut pose': 'Done'})
         return jsonify({'success': True})

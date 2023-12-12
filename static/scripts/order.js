@@ -6,7 +6,7 @@
         quantity: 0, 
     };
 
-    function searchRaquette() {
+    function searchString() {
         let input = document.getElementById('searchInput').value;
         input = input.toLowerCase();
         let suggestions = document.getElementById('suggestions');

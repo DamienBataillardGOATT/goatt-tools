@@ -28,8 +28,8 @@
                         </div>
                         {% else %}
                         {% endif %}                
-                        <textarea id="note-{{commande.id }}" onblur="enregistrerNote('{{ commande.id }}')" placeholder="Ajoutez une note ici...">{{ commande.Note }}</textarea>
-                        <input type="range" min="0" max="100" value="0" class="slider" id="slider-{{ commande.id }}" oninput="verifierGlissement('{{ commande.id }}', this)">
+                        <textarea id="note-{{commande.id }}" onblur="writeNote('{{ commande.id }}')" placeholder="Ajoutez une note ici...">{{ commande.Note }}</textarea>
+                        <input type="range" min="0" max="100" value="0" class="slider" id="slider-{{ commande.id }}" oninput="checkSlide('{{ commande.id }}', this)">
                     </div>
                 {% endfor %}
         </div>
@@ -54,8 +54,8 @@
                         </div>
                         {% else %}
                         {% endif %}                
-                        <textarea id="note-{{commande.id }}" onblur="enregistrerNote('{{ commande.id }}')" placeholder="Ajoutez une note ici...">{{ commande.Note }}</textarea>
-                        <input type="range" min="0" max="100" value="0" class="slider" id="slider-{{ commande.id }}" oninput="verifierGlissement('{{ commande.id }}', this)">
+                        <textarea id="note-{{commande.id }}" onblur="writeNote('{{ commande.id }}')" placeholder="Ajoutez une note ici...">{{ commande.Note }}</textarea>
+                        <input type="range" min="0" max="100" value="0" class="slider" id="slider-{{ commande.id }}" oninput="checkSlide('{{ commande.id }}', this)">
                     </div>
                 {% endfor %}
         </div>
@@ -81,9 +81,9 @@
                         </div>
                         {% else %}
                         {% endif %}                
-                        <textarea id="note-{{commande.id }}" onblur="enregistrerNote('{{ commande.id }}')" placeholder="Ajoutez une note ici...">{{ commande.Note }}</textarea>
+                        <textarea id="note-{{commande.id }}" onblur="writeNote('{{ commande.id }}')" placeholder="Ajoutez une note ici...">{{ commande.Note }}</textarea>
                         <div class="slider-container">
-                            <input type="range" min="0" max="100" value="0" class="slider" id="slider-{{ commande.id }}" oninput="verifierGlissement('{{ commande.id }}', this)">
+                            <input type="range" min="0" max="100" value="0" class="slider" id="slider-{{ commande.id }}" oninput="checkSlide('{{ commande.id }}', this)">
                         </div>
                     </div>
                 {% endfor %}

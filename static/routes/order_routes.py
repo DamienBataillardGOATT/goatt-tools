@@ -171,7 +171,7 @@ def complete_order(order_data):
     return redirect(url_for('order_bp.order_confirmation'))
 
 @order_bp.route('/')
-def order():
+def page_des_commandes_de_pose_cordage():
     # Extract data from the database
     strings_raw = airtable_strings.get_all()
     leads_raw = airtable_cordarge.get_all()
@@ -195,7 +195,7 @@ def order():
     # Sort strings by brand in alphabetical order
     strings_info_sorted = dict(sorted(strings_info.items()))
     
-    return render_template('order.html', strings_info=strings_info_sorted, emails=emails)
+    return render_template('page des commandes de pose cordage.html', strings_info=strings_info_sorted, emails=emails)
 
 @order_bp.route('/stringing_order', methods=['POST'])
 def stringing_order():

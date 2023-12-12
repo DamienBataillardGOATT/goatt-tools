@@ -8,10 +8,10 @@
 <body>
     <div class="menu">
         <h1>Menu Principal</h1>
-        <a href="{{ url_for('order_bp.order') }}">Commande</a>
-        <a href="{{ url_for('client_bp.client') }}">Ajout de client</a>
-        <a href="{{ url_for('orders_bp.orders') }}">Visualisation des commandes</a>
-        <a href="{{ url_for('deliveries_bp.deliveries')}}">Visualisation des livraisons</a>
+        <a href="{{ url_for('order_bp.page_des_commandes_de_pose_cordage') }}">Commande</a>
+        <a href="{{ url_for('client_bp.page_nouveau_client') }}">Ajout de client</a>
+        <a href="{{ url_for('orders_bp.page_de_latelier') }}">Visualisation des commandes</a>
+        <a href="{{ url_for('deliveries_bp.page_des_livraisons')}}">Visualisation des livraisons</a>
     </div>
 </body>
 </html>

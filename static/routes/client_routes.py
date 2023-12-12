@@ -11,8 +11,8 @@ airtables_orders = Airtable(BASE_ID_ORDERS, ORDERS_TABLE, API_KEY)
 airtables_cordages = Airtable(BASE_ID_ORDERS, ORDERS_TABLE_2, API_KEY)
 
 @client_bp.route('/')
-def client():
-    return render_template('client.html')
+def page_nouveau_client():
+    return render_template('page nouveau client.html')
 
 @client_bp.route('/search_client', methods=['POST'])
 def search_client():
@@ -58,4 +58,4 @@ def add_client():
     airtable_clients.insert(client_info)
 
     session['client_info'] = client_info
-    return redirect(url_for('order_bp.order'))
+    return redirect(url_for('order_bp.page_des_commandes_de_pose_cordage'))

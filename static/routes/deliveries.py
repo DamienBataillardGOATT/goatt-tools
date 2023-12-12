@@ -8,7 +8,7 @@ deliveries_bp = Blueprint('deliveries_bp', __name__)
 airtable_cordage = Airtable(BASE_ID_ORDERS, ORDERS_TABLE_2, API_KEY)
 
 @deliveries_bp.route('/')
-def deliveries():
+def page_des_livraisons():
 
     livraisons_raw = airtable_cordage.get_all(view='Livraison')
 
@@ -77,10 +77,10 @@ def deliveries():
                 'Note': note
             })
 
-    return render_template('deliveries.html', livraisons_aujourd_hui=livraisons_aujourd_hui, livraisons_demain=livraisons_demain, livraisons_a_venir=livraisons_a_venir)
+    return render_template('page des livraisons.html', livraisons_aujourd_hui=livraisons_aujourd_hui, livraisons_demain=livraisons_demain, livraisons_a_venir=livraisons_a_venir)
 
-@deliveries_bp.route('/enregistrer-note/<commandeId>', methods=['POST'])
-def enregistrer_note(commandeId):
+@deliveries_bp.route('/writeNote/<commandeId>', methods=['POST'])
+def writeNote(commandeId):
     data = request.json
     note = data.get('note', '')
     print(note)

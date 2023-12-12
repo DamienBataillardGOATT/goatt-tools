@@ -21,7 +21,7 @@
                                 <div class="article">{{ article }}</div>
                             {% endfor %}
                         </div>    
-                        <textarea id="note-{{ livraisons.id }}" onblur="enregistrerNote('{{ livraisons.id }}')" placeholder="Ajoutez une note ici...">{{ livraisons.Note }}</textarea>
+                        <textarea id="note-{{ livraisons.id }}" onblur="writeNote('{{ livraisons.id }}')" placeholder="Ajoutez une note ici...">{{ livraisons.Note }}</textarea>
                     </div>
                 {% endfor %}
         </div>
@@ -40,7 +40,7 @@
                                 <div class="article">{{ article }}</div>
                             {% endfor %}
                         </div>    
-                        <textarea id="note-{{ livraisons.id }}" onblur="enregistrerNote('{{ livraisons.id }}')" placeholder="Ajoutez une note ici...">{{ livraisons.Note }}</textarea>
+                        <textarea id="note-{{ livraisons.id }}" onblur="writeNote('{{ livraisons.id }}')" placeholder="Ajoutez une note ici...">{{ livraisons.Note }}</textarea>
                     </div>
                 {% endfor %}
         </div>
@@ -59,11 +59,11 @@
                                 <div class="article">{{ article }}</div>
                             {% endfor %}
                         </div>    
-                        <textarea id="note-{{ livraisons.id }}" onblur="enregistrerNote('{{ livraisons.id }}')" placeholder="Ajoutez une note ici...">{{ livraisons.Note }}</textarea>
+                        <textarea id="note-{{ livraisons.id }}" onblur="writeNote('{{ livraisons.id }}')" placeholder="Ajoutez une note ici...">{{ livraisons.Note }}</textarea>
                     </div>
                 {% endfor %}
         </div>
     </div>
-    <script src="/static/scripts/script.js"></script>
+    <script src="/static/scripts/deliveries.js"></script>
 </body>
 </html>
