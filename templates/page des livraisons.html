@@ -12,8 +12,13 @@
                 {% for livraisons in livraisons_aujourd_hui %}
                     <div class="livraison">
                         <h3>{{ livraisons.client }}</h3>
-                        <p><strong>Date et Heure de Livraison:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
-                        <p><strong>Adresse de livraison:</strong> {{ livraisons.adresse_de_livraison}}</p>
+                        {% if livraisons.status_livraison == 'To Do'%}
+                            <p><strong>Date et Heure de Livraison:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
+                            <p><strong>Livraison</strong></p>
+                            <p><strong>Adresse de livraison:</strong> {{ livraisons.adresse_de_livraison}}</p>
+                        {% else %}
+                            <p><strong>Date et Heure de Récupération:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
+                        {% endif %}
                         <p><strong>Téléphone:</strong> {{ livraisons.téléphone}}</p>
                         <strong>Articles:</strong> 
                         <div>
@@ -31,8 +36,13 @@
                 {% for livraisons in livraisons_demain %}
                     <div class="livraison">
                         <h3>{{ livraisons.client }}</h3>
-                        <p><strong>Date et Heure de Livraison:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
-                        <p><strong>Adresse de livraison:</strong> {{ livraisons.adresse_de_livraison}}</p>
+                        {% if livraisons.status_livraison == 'To Do'%}
+                            <p><strong>Date et Heure de Livraison:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
+                            <p><strong>Livraison</strong></p>
+                            <p><strong>Adresse de livraison:</strong> {{ livraisons.adresse_de_livraison}}</p>
+                        {% else %}
+                            <p><strong>Date et Heure de Récupération:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
+                        {% endif %}
                         <p><strong>Téléphone:</strong> {{ livraisons.téléphone}}</p>
                         <strong>Articles:</strong> 
                         <div>
@@ -50,8 +60,13 @@
                 {% for livraisons in livraisons_a_venir %}
                     <div class="livraison">
                         <h3>{{ livraisons.client }}</h3>
-                        <p><strong>Date et Heure de Livraison:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
-                        <p><strong>Adresse de livraison:</strong> {{ livraisons.adresse_de_livraison}}</p>
+                        {% if livraisons.status_livraison == 'To Do'%}
+                            <p><strong>Date et Heure de Livraison:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
+                            <p><strong>Livraison</strong></p>
+                            <p><strong>Adresse de livraison:</strong> {{ livraisons.adresse_de_livraison}}</p>
+                        {% else %}
+                            <p><strong>Date et Heure de Récupération:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
+                        {% endif %}
                         <p><strong>Téléphone:</strong> {{ livraisons.téléphone}}</p>
                         <strong>Articles:</strong> 
                         <div>

@@ -19,7 +19,6 @@ def page_des_livraisons():
     aujourd_hui = datetime.today().date()
     demain = aujourd_hui + timedelta(days=1)
 
-    livraisons = []
     for livraison in livraisons_raw:
         livraison_id = livraison['id']
 
@@ -38,6 +37,8 @@ def page_des_livraisons():
 
         téléphone = livraison['fields'].get('Téléphone', '')
 
+        livra = livraison['fields'].get('Statut livraison', '')
+
         articles_str = livraison['fields'].get('Articles', '')
         articles= articles_str.split('\n')
 
@@ -51,6 +52,7 @@ def page_des_livraisons():
                 'heure_livraison': heure_livraison,
                 'adresse_de_livraison': adresse_livraison,
                 'téléphone': téléphone,
+                'status_livraison': livra,
                 'Articles': articles,
                 'Note': note
             })
@@ -62,6 +64,7 @@ def page_des_livraisons():
                 'heure_livraison': heure_livraison,
                 'adresse_de_livraison': adresse_livraison,
                 'téléphone': téléphone,
+                'status_livraison': livra,
                 'Articles': articles,
                 'Note': note
             })
@@ -73,6 +76,7 @@ def page_des_livraisons():
                 'heure_livraison': heure_livraison,
                 'adresse_de_livraison': adresse_livraison,
                 'téléphone': téléphone,
+                'status_livraison': livra,
                 'Articles': articles,
                 'Note': note
             })
