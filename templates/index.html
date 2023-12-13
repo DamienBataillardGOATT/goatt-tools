@@ -6,12 +6,14 @@
     <title>Menu Principal</title>
 </head>
 <body>
-    <div class="menu">
-        <h1>Menu Principal</h1>
-        <a href="{{ url_for('order_bp.page_des_commandes_de_pose_cordage') }}">Commande</a>
-        <a href="{{ url_for('client_bp.page_nouveau_client') }}">Ajout de client</a>
-        <a href="{{ url_for('orders_bp.page_de_latelier') }}">Visualisation des commandes</a>
-        <a href="{{ url_for('deliveries_bp.page_des_livraisons')}}">Visualisation des livraisons</a>
+    <div class="menu-container">
+        <h1>Goatt tools</h1>
+        <div class="menu">
+            <a href="{{ url_for('order_bp.page_des_commandes_de_pose_cordage') }}" class="menu-item nouvelle-pose">Nouvelle pose cordage</a>
+            <a href="{{ url_for('client_bp.page_nouveau_client') }}" class="menu-item nouveau-client">Nouveau client</a>
+            <a href="{{ url_for('orders_bp.page_de_latelier') }}" class="menu-item atelier">Atelier</a>
+            <a href="{{ url_for('deliveries_bp.page_des_livraisons')}}" class="menu-item livraisons">Livraisons</a>
+        </div>
     </div>
 </body>
 </html>

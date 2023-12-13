@@ -7,7 +7,7 @@
 </head>
 <body>
     <div class="livraisons-container">
-        <div class="colonne">
+        <section class="categorie">
             <h2>Livraison pour aujourd'hui</h2>
                 {% for livraisons in livraisons_aujourd_hui %}
                     <div class="livraison">
@@ -24,9 +24,9 @@
                         <textarea id="note-{{ livraisons.id }}" onblur="writeNote('{{ livraisons.id }}')" placeholder="Ajoutez une note ici...">{{ livraisons.Note }}</textarea>
                     </div>
                 {% endfor %}
-        </div>
+        </section>
     
-        <div class="colonne">
+        <section class="categorie">
             <h2>Livraison pour demain</h2>
                 {% for livraisons in livraisons_demain %}
                     <div class="livraison">
@@ -43,9 +43,9 @@
                         <textarea id="note-{{ livraisons.id }}" onblur="writeNote('{{ livraisons.id }}')" placeholder="Ajoutez une note ici...">{{ livraisons.Note }}</textarea>
                     </div>
                 {% endfor %}
-        </div>
+        </section>
     
-        <div class="colonne">
+        <section class="categorie">
             <h2>Livraisons à venir</h2>
                 {% for livraisons in livraisons_a_venir %}
                     <div class="livraison">
@@ -62,7 +62,7 @@
                         <textarea id="note-{{ livraisons.id }}" onblur="writeNote('{{ livraisons.id }}')" placeholder="Ajoutez une note ici...">{{ livraisons.Note }}</textarea>
                     </div>
                 {% endfor %}
-        </div>
+        </section>
     </div>
     <script src="/static/scripts/deliveries.js"></script>
 </body>

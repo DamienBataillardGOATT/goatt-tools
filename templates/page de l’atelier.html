@@ -7,10 +7,10 @@
 </head>
 <body>
     <div class="commandes-container">
-        <div class="colonne">
+        <section class="categorie">
             <h2>Livraison pour aujourd'hui</h2>
                 {% for commande in commandes_aujourd_hui %}
-                    <div class="commande">
+                    <div class="commandes">
                         <h3>{{ commande.date_livraison}} {{commande.heure_livraison}}</h3>
                         {% if commande.type == 'B2C' %}
                             <p><strong>{{ commande.client }}</strong> ({{ commande.téléphone }})</p>
@@ -32,11 +32,12 @@
                         <input type="range" min="0" max="100" value="0" class="slider" id="slider-{{ commande.id }}" oninput="checkSlide('{{ commande.id }}', this)">
                     </div>
                 {% endfor %}
-        </div>
-        <div class="colonne">
+        </section>
+
+        <section class="categorie">
             <h2>Livraison pour demain</h2>
                 {% for commande in commandes_demain %}
-                    <div class="commande">
+                    <div class="commandes">
                         <h3>{{ commande.date_livraison}} {{commande.heure_livraison}}</h3>
                         {% if commande.type == 'B2C' %}
                             <p><strong>{{ commande.client }}</strong> ({{ commande.téléphone }})</p>
@@ -58,12 +59,12 @@
                         <input type="range" min="0" max="100" value="0" class="slider" id="slider-{{ commande.id }}" oninput="checkSlide('{{ commande.id }}', this)">
                     </div>
                 {% endfor %}
-        </div>
+        </section>
     
-        <div class="colonne">
+        <section class="categorie">
             <h2>Livraisons à venir</h2>
                 {% for commande in commandes_a_venir %}
-                    <div class="commande">
+                    <div class="commandes">
                         <h3>{{ commande.date_livraison}} {{commande.heure_livraison}}</h3>
                         {% if commande.type == 'B2C' %}
                             <p><strong>{{ commande.client }}</strong> ({{ commande.téléphone }})</p>
@@ -87,7 +88,7 @@
                         </div>
                     </div>
                 {% endfor %}
-        </div>
+        </section>
     </div>
     <script src="/static/scripts/orders.js"></script>
 </body>
