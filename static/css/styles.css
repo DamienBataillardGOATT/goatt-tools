@@ -193,7 +193,6 @@ input[type="radio"] {
     }
 }
 
-
 .confirmation-box {
     text-align: center;
     background-color: #fff;
@@ -237,6 +236,7 @@ input[type="radio"] {
     border-radius: 10px;
     padding: 10px;
     background-color: #f8f9fa;
+    width: 70%
 }
 
 @media screen and (max-width: 600px) {
@@ -310,6 +310,7 @@ input[type="radio"] {
     border-radius: 10px;
     padding: 10px;
     background-color: #f8f9fa;
+    width: 60%
 }
 
 .livraison p {
