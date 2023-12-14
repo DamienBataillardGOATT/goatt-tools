@@ -186,7 +186,7 @@ def stringing_order():
         'Longitude Pickup Address': float(longitudeDeposit) if longitudeDeposit else None,
         'Latitude Delivery Address': float(latitudeDelivery) if latitudeDelivery else None,
         'Longitude Delivery Address': float(longitudeDelivery) if longitudeDelivery else None,
-        'short delivery address': short_adress_delivery if short_adress_delivery else None
+        'short delivery address': short_adress_delivery if short_adress_delivery else None,
         'Ville': city if delivery_option == 'address' else None,
         'Notes': notes if notes else None 
     }
