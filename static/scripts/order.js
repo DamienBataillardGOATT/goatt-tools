@@ -306,7 +306,6 @@
         }
     }
 
-    // Script to show/hide fields based on the chosen pickup option
     document.addEventListener('DOMContentLoaded', function() {
         var pickupOptions = document.querySelectorAll('input[name="pickup_option"]');
         var deliveryOptions = document.querySelectorAll('input[name="delivery_option"]');

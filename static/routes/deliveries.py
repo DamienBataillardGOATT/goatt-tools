@@ -1,16 +1,13 @@
 from flask import Blueprint, render_template, jsonify, request
-from static.routes.config import API_KEY, BASE_ID_ORDERS, ORDERS_TABLE_2
-from airtable import Airtable
+from static.scripts.airtable import get_livraison, update_note
 from datetime import datetime, timedelta
 
 deliveries_bp = Blueprint('deliveries_bp', __name__)
 
-airtable_cordage = Airtable(BASE_ID_ORDERS, ORDERS_TABLE_2, API_KEY)
-
 @deliveries_bp.route('/')
 def page_des_livraisons():
 
-    livraisons_raw = airtable_cordage.get_all(view='Livraison')
+    livraisons_raw = get_livraison()
 
     livraisons_aujourd_hui = []
     livraisons_demain = []
@@ -89,7 +86,7 @@ def writeNote(commandeId):
     note = data.get('note', '')
     print(note)
     try:
-        airtable_cordage .update(commandeId, {'Notes': note})
+        update_note(commandeId, note)
         return jsonify({'success': True})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500

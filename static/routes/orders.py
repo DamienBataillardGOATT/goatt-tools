@@ -1,17 +1,14 @@
 from flask import Blueprint, render_template, jsonify, request
-from static.routes.config import API_KEY, BASE_ID_ORDERS, ORDERS_TABLE_2, BASE_ID_DECATHLON, DECATHLON_TABLE
-from airtable import Airtable
+from static.scripts.airtable import get_atelier, get_decathlon, update_note, finish_commande
 from datetime import datetime, timedelta
 
 orders_bp = Blueprint('orders_bp', __name__)
 
-airtable_cordarge = Airtable(BASE_ID_ORDERS, ORDERS_TABLE_2, API_KEY)
-airtable_decathlon = Airtable(BASE_ID_DECATHLON, DECATHLON_TABLE, API_KEY)
 
 @orders_bp.route('/')
 def page_de_latelier():
-    commandes_raw = airtable_cordarge.get_all(view='Atelier')
-    commandes_decathlon_raw = airtable_decathlon.get_all(view='Vue atelier')
+    commandes_raw = get_atelier()
+    commandes_decathlon_raw = get_decathlon()
 
     commandes_info = {}
     for commande in commandes_raw:
@@ -106,7 +103,7 @@ def writeNote(commandeId):
     note = data.get('note', '')
 
     try:
-        airtable_cordarge.update(commandeId, {'Notes': note})
+        update_note(commandeId, note)
         return jsonify({'success': True})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
@@ -114,7 +111,7 @@ def writeNote(commandeId):
 @orders_bp.route('/finishCommande/<commandeId>', methods=['POST'])
 def finishCommande(commandeId):
     try:
-        airtable_cordarge.update(commandeId, {'Statut pose': 'Done'})
+        finish_commande(commandeId)
         return jsonify({'success': True})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500

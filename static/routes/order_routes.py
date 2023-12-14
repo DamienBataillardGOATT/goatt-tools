@@ -1,17 +1,10 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
-from static.routes.config import API_KEY, BASE_ID_LEADS, CLIENT_TABLE, BASE_ID_ORDERS, ORDERS_TABLE, BASE_ID_PRODUCTS, PRODUCTS_TABLE, SHOPIFY_API_KEY, ORDERS_TABLE_2
-from airtable import Airtable
-import requests
+from static.scripts.shopify import search_shopify_customer, create_draft_order
+from static.scripts.airtable import get_all_strings, get_all_orders, create_order
 import re
 
 # Creating a Blueprint for order routes
 order_bp = Blueprint('order_bp', __name__)
-
-# Initializing Airtable connection for products
-airtable_strings = Airtable(BASE_ID_PRODUCTS, PRODUCTS_TABLE, API_KEY)
-airtables_orders = Airtable(BASE_ID_ORDERS, ORDERS_TABLE, API_KEY)
-airtable_clients = Airtable(BASE_ID_LEADS, CLIENT_TABLE, API_KEY)
-airtable_cordarge = Airtable(BASE_ID_ORDERS, ORDERS_TABLE_2, API_KEY)
 
 def extract_postal_code_and_city(address):
     match = re.search(r'(\d{5})\s([A-Za-zÀ-ÿ\s-]+)$', address)
@@ -29,86 +22,6 @@ def extract_adress_street(adress):
 
     adresse_raccourcie = ' '.join(rue_et_numero)
     return adresse_raccourcie
-
-def get_shopify_headers():
-    return {
-        "Content-Type": "application/json",
-        "X-Shopify-Access-Token": SHOPIFY_API_KEY,
-    }
-
-def search_shopify_customer(email, first_name, last_name):
-    url = f"https://goatt-prod.myshopify.com/admin/api/2023-04/customers/search.json?query=email:{email}"
-    response = requests.get(url, headers=get_shopify_headers())
-    if response.status_code == 200:
-        customers = response.json().get('customers', [])
-        if customers:
-            customer_id = customers[0].get('id') 
-            return customer_id
-        else:
-            print("Aucun client trouvé.")
-            new_customer = create_shopify_customer(email, first_name, last_name)
-            return new_customer.get('id') if new_customer else None
-    else:
-        raise Exception(f"Failed to search customer: {response.text}")
-    
-def create_shopify_customer(email, first_name, last_name):
-    url = f"https://goatt-tennis.myshopify.com/admin/api/2021-01/customers.json"
-    data = {
-        "customer": {
-            "email": email,
-            "first_name": first_name,
-            "last_name": last_name
-        }
-    }
-    response = requests.post(url, json=data, headers=get_shopify_headers())
-    return response.json().get('customer')
-
-def create_draft_order(data):
-    url = f"https://goatt-shopify.onrender.com/create_draft_order_v2"
-
-    lineItems = [{
-        "variant_id": data['variant_id'],
-        "requires_shipping": 'false',
-        "quantity": data['quantité']
-    },
-     {
-        "variant_id": '42066577457335',
-        "requires_shipping": 'false',
-        "quantity": data['quantité']
-    },]
-
-    draft_order_data = {
-        "draft_order": {
-            "line_items": lineItems,
-            "customer": {
-                "id": data['shopify_customer_id']
-            },
-            "shipping_address": {
-                "address1": data['pickup_address'],
-                "phone": data['phone'],
-                "last_name": data['nom'],
-                "first_name": data['prenom'],
-                "city": data['pickup_town'],
-                "country": "France",
-                "zip": data['pickup_postal_code']
-            },
-            "shipping_line": {
-                "custom": True,
-                "price": data['price_delivery'],
-                "title": 'Récupération et Livraison - ' + data['pose_type']
-            },
-        }
-    }
-    
-    response = requests.post(url, json=draft_order_data, headers=get_shopify_headers())
-    if response.status_code == 200:
-        response_data = response.json()
-        invoice_url = response_data['draft_order']['admin_graphql_api_id']
-        order_id = invoice_url.split('/')[-1]
-        order_url = f"https://goatt-prod.myshopify.com/store/goatt-tennis/draft_orders/{order_id}"
-        return order_id, order_url
-    else:
-        return None 
 
 def complete_order(order_data):
     client_info = session.get('client_info', {})
@@ -164,7 +77,7 @@ def complete_order(order_data):
     order_data.pop('Ville', None)
     
     # Insert the complete order into the Airtable database
-    airtables_orders.insert(order_data)
+    create_order(order_data)
 
     # Clean up the session
     session.pop('order_data', None)
@@ -173,8 +86,8 @@ def complete_order(order_data):
 @order_bp.route('/')
 def page_des_commandes_de_pose_cordage():
     # Extract data from the database
-    strings_raw = airtable_strings.get_all()
-    leads_raw = airtable_cordarge.get_all()
+    strings_raw = get_all_strings()
+    leads_raw = get_all_orders()
 
     # Filter to keep only strings in stock and extract necessary info
     strings_info = {}
@@ -273,7 +186,7 @@ def stringing_order():
         'Longitude Pickup Address': float(longitudeDeposit) if longitudeDeposit else None,
         'Latitude Delivery Address': float(latitudeDelivery) if latitudeDelivery else None,
         'Longitude Delivery Address': float(longitudeDelivery) if longitudeDelivery else None,
-        'short delivery address': short_adress_delivery if short_adress_delivery else None,
+        'short delivery address': short_adress_delivery if short_adress_delivery else None
         'Ville': city if delivery_option == 'address' else None,
         'Notes': notes if notes else None 
     }

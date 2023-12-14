@@ -1,14 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
-from static.routes.config import API_KEY, BASE_ID_LEADS, CLIENT_TABLE, BASE_ID_ORDERS, ORDERS_TABLE, ORDERS_TABLE_2
-from airtable import Airtable
+from static.scripts.airtable import search_client, search_client_in_cordage, add_client
 
 # Creating a Blueprint for client routes
 client_bp = Blueprint('client_bp', __name__)
-
-# Initializing Airtable connection for clients
-airtable_clients = Airtable(BASE_ID_LEADS, CLIENT_TABLE, API_KEY)
-airtables_orders = Airtable(BASE_ID_ORDERS, ORDERS_TABLE, API_KEY)
-airtables_cordages = Airtable(BASE_ID_ORDERS, ORDERS_TABLE_2, API_KEY)
 
 @client_bp.route('/')
 def page_nouveau_client():
@@ -19,14 +13,14 @@ def search_client():
     search_email = request.form['search_email']
 
     # Search for string information by email in the strings table
-    client_info_string = airtables_cordages.search('Email', search_email)
+    client_info_string = search_client_in_cordage(search_email)
 
     if client_info_string:
         client_info_string = client_info_string[0]['fields']
         session['client_info'] = client_info_string
         return jsonify({'found': True, 'client': client_info_string, 'cordage': client_info_string['Cordage'], 'tension': client_info_string['Tension'], 'phonenumber' : client_info_string['Téléphone']})
     else:
-        client_info = airtable_clients.search('Email', search_email)
+        client_info = search_client(search_email)
         if client_info:
             client_info = client_info[0]['fields']
             session['client_info'] = client_info
@@ -40,7 +34,7 @@ def add_client():
     email = request.form['search_email']
     
     # Check if the user is already in the database
-    existing_client = airtable_clients.search('Email', email)
+    existing_client = search_client(email)
     
     # If yes, then return to the home page
     if existing_client:
@@ -55,7 +49,7 @@ def add_client():
         'Téléphone': request.form['phonenumber'],
     }
 
-    airtable_clients.insert(client_info)
+    add_client(client_info)
 
     session['client_info'] = client_info
     return redirect(url_for('order_bp.page_des_commandes_de_pose_cordage'))
