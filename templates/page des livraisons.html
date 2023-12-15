@@ -11,7 +11,7 @@
             <h2>Livraison pour aujourd'hui</h2>
                 {% for livraisons in livraisons_aujourd_hui %}
                     <div class="livraison">
-                        <h3>{{ livraisons.client }}</h3>
+                        <p><strong>{{ livraisons.client }}</strong></p>
                         {% if livraisons.status_livraison == 'To Do'%}
                             <p><strong>Date et Heure de Livraison:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
                             <p><strong>Livraison</strong></p>
@@ -35,7 +35,7 @@
             <h2>Livraison pour demain</h2>
                 {% for livraisons in livraisons_demain %}
                     <div class="livraison">
-                        <h3>{{ livraisons.client }}</h3>
+                        <p><strong>{{ livraisons.client }}</strong></p>
                         {% if livraisons.status_livraison == 'To Do'%}
                             <p><strong>Date et Heure de Livraison:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
                             <p><strong>Livraison</strong></p>
@@ -59,7 +59,7 @@
             <h2>Livraisons à venir</h2>
                 {% for livraisons in livraisons_a_venir %}
                     <div class="livraison">
-                        <h3>{{ livraisons.client }}</h3>
+                        <p><strong>{{ livraisons.client }}</strong></p>
                         {% if livraisons.status_livraison == 'To Do'%}
                             <p><strong>Date et Heure de Livraison:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
                             <p><strong>Livraison</strong></p>

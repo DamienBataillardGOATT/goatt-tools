@@ -18,28 +18,41 @@ function writeNote(commandeId) {
 }
 
 function checkSlide(commandeId, slider) {
-    if (slider.value == '100') { 
+    const sliderText = document.getElementById(`slider-text-${commandeId}`);
+    const value = slider.value;
+
+
+    slider.style.background = `linear-gradient(to right, #4CAF50 ${value}%, #d3d3d3 ${value}%)`;
+
+    if (value === '100') {
         finishCommande(commandeId, slider);
-        slider.style.backgroundPosition = "left bottom";
-        slider.classList.add('active');
+        sliderText.textContent = 'Pose faite'; 
     } else {
-        slider.style.backgroundPosition = "left bottom";
-        slider.classList.remove('active');
+        sliderText.textContent = 'Pose à faire'; 
     }
 }
 
 function finishCommande(commandeId, slider) {
-    fetch('/orders/finishCommande/' + commandeId, {  
+    fetch(`/orders/finishCommande/${commandeId}`, {
         method: 'POST'
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            const commandeElement = slider.closest('.commande');
-            commandeElement.style.display = 'none'; 
+            const commandeElement = slider.closest('.commandes');
+            commandeElement.style.display = 'none';
         } else {
-            slider.value = '0'; 
-            alert('Erreur lors de la mise à jour de la commande');
+            slider.value = '0';
+            document.getElementById(`slider-text-${commandeId}`).textContent = 'Pose à faire';
+            slider.style.background = 'linear-gradient(to right, #4CAF50 0%, #d3d3d3 0%)';
+            alert('Erreur lors de la mise à jour de la commande.');
         }
+    })
+    .catch(error => {
+        console.error('Erreur réseau:', error);
+        slider.value = '0';
+        document.getElementById(`slider-text-${commandeId}`).textContent = 'Pose à faire';
+        slider.style.background = 'linear-gradient(to right, #4CAF50 0%, #d3d3d3 0%)';
+        alert('Erreur réseau lors de la mise à jour de la commande.');
     });
 }

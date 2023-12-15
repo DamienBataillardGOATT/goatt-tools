@@ -97,18 +97,15 @@
         });
     }
 
-
     function extractFirstTwoCharacters(timeSlot) {
         return timeSlot.substring(0, 2);
     }
-
 
     function addDaysToDate(date, days) {
         var result = new Date(date);
         result.setDate(result.getDate() + days);
         return result;
     }
-
 
     function retrieveAndDisplaySlots() {
         fetch('https://goatt-db.onrender.com/get_available_slots')
@@ -157,7 +154,6 @@
                 console.error('Erreur lors de la récupération des créneaux disponibles', error);
             });
     }
-
 
     function displaySlotsForDateDeposit(selectedDate, slotsForDate) {
         const selectElementDeposit = document.getElementById('pickup_time_dropdown');
