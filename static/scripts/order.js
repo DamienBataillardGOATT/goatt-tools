@@ -118,36 +118,24 @@
                 selectElementDeposit.innerHTML = '';
                 selectElementDelivery.innerHTML = '';
         
-                let firstDate = null;
-        
-
                 for (const date in data) {
-                    if (!firstDate) firstDate = date;
-            
                     const europeanDate = convertToEuropeanDate(date);
-                    const option = document.createElement('option');
-                    option.value = date;
-                    option.textContent = europeanDate;
-                    selectElementDeposit.appendChild(option);
+                    const optionDeposit = document.createElement('option');
+                    const optionDelivery = document.createElement('option');
+    
+                    optionDeposit.value = date;
+                    optionDeposit.textContent = europeanDate;
+                    selectElementDeposit.appendChild(optionDeposit);
+    
+                    optionDelivery.value = date;
+                    optionDelivery.textContent = europeanDate;
+                    selectElementDelivery.appendChild(optionDelivery);
                 }
-
-                if (firstDate) {
-                    let firstDeliveryDate = addDaysToDate(new Date(firstDate), 2);
-
-                    for (const date in data) {
-                        let currentDate = new Date(date);
-                        if (currentDate >= firstDeliveryDate) {
-                            let europeanDate = convertToEuropeanDate(date);
-                            const option = document.createElement('option');
-                            option.value = date;
-                            option.textContent = europeanDate;
-                            selectElementDelivery.appendChild(option);
-                        }
-                    }
-
+    
+                if (Object.keys(data).length > 0) {
+                    let firstDate = Object.keys(data)[0];
                     displaySlotsForDateDeposit(firstDate, data[firstDate]);
-                    let firstDeliveryDateFormatted = firstDeliveryDate.toISOString().split('T')[0];
-                    displaySlotsForDateDelivery(firstDeliveryDateFormatted, data[firstDeliveryDateFormatted]);
+                    displaySlotsForDateDelivery(firstDate, data[firstDate]);
                 }
             })
             .catch(error => {
@@ -200,17 +188,18 @@
             displaySlotsForDateDeposit(selectedDateDeposit, slotsForDate);
         }
 
-        let newDeliveryDate = addDaysToDate(new Date(selectedDateDeposit), 2);
-        updateDeliveryDates(newDeliveryDate);
+        updateDeliveryDates(selectedDateDeposit);
+
     }
 
-    function updateDeliveryDates(newDeliveryDate) {
+    function updateDeliveryDates(startDate) {
         const selectElementDelivery = document.getElementById('pickup_delivery_date');
         selectElementDelivery.innerHTML = '';
-
+    
         for (const date in availableSlots) {
             let currentDate = new Date(date);
-            if (currentDate >= newDeliveryDate) {
+            let startDateObj = new Date(startDate);
+            if (currentDate >= startDateObj) {
                 let europeanDate = convertToEuropeanDate(date);
                 const option = document.createElement('option');
                 option.value = date;
@@ -218,9 +207,8 @@
                 selectElementDelivery.appendChild(option);
             }
         }
-
-        let firstDeliveryDateFormatted = newDeliveryDate.toISOString().split('T')[0];
-        displaySlotsForDateDelivery(firstDeliveryDateFormatted, availableSlots[firstDeliveryDateFormatted]);
+    
+        displaySlotsForDateDelivery(startDate, availableSlots[startDate]);
     }
 
     function convertToEuropeanDate(date) {
@@ -234,7 +222,7 @@
 
     function searchAddressDeposit(inputId, suggestionsId) {
         var input = document.getElementById(inputId).value;
-
+    
         if (input.length > 2) {
             fetch('https://api-adresse.data.gouv.fr/search/?q=' + encodeURIComponent(input))
             .then(response => response.json())
@@ -245,14 +233,22 @@
                     var div = document.createElement('div');
                     div.innerHTML = feature.properties.label;
                     div.onclick = function() {
-                        document.getElementById(inputId).value = feature.properties.label;
+                        var selectedAddress = feature.properties.label;
+    
+                        document.getElementById(inputId).value = selectedAddress;
+    
+                        document.getElementById('delivery_address').value = selectedAddress;
+    
                         suggestions.innerHTML = '';
-
-                        var longitudeDeposit = feature.geometry.coordinates[0];
-                        var latitudeDeposit = feature.geometry.coordinates[1];
-
-                        document.getElementById('longitudeDeposit').value = longitudeDeposit;
-                        document.getElementById('latitudeDeposit').value = latitudeDeposit;
+    
+                        var longitude = feature.geometry.coordinates[0];
+                        var latitude = feature.geometry.coordinates[1];
+    
+                        document.getElementById('longitudeDeposit').value = longitude;
+                        document.getElementById('latitudeDeposit').value = latitude;
+    
+                        document.getElementById('longitudeDelivery').value = longitude;
+                        document.getElementById('latitudeDelivery').value = latitude;
                     };
                     suggestions.appendChild(div);
                 });
