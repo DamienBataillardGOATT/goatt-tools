@@ -57,3 +57,43 @@ function finishCommande(commandeId, slider) {
         alert('Erreur réseau lors de la mise à jour de la commande.');
     });
 }
+
+function openModal(commandeDetailsJson) {
+    console.log("JSON reçu:", commandeDetailsJson);
+
+    try {
+        var commandeDetails = JSON.parse(commandeDetailsJson);
+    
+        var modalContentHtml = `
+        <p><strong>${commandeDetails.date_livraison} ${commandeDetails.heure_livraison}</strong></p>
+        ${commandeDetails.type == 'B2C' ? 
+            `<p><strong>${commandeDetails.client}</strong> (${commandeDetails.telephone})</p>` : 
+            `<p><strong>ID Client: ${commandeDetails.id_client}</strong></p>`}
+        <p><strong>Nombre de raquettes:</strong> ${commandeDetails.quantite}</p>
+        <p><strong>Tension:</strong> ${commandeDetails.tension}</p>
+        <strong>Articles:</strong>
+        <div>${commandeDetails.articles.map(article => `<div class="article">${article}</div>`).join('')}</div>
+        <p>${commandeDetails.shopify_url}</p>
+        <textarea id="note-${commandeDetails.id}" onblur="writeNote('${commandeDetails.id}')"placeholder="Ajoutez une note ici...">${commandeDetails.note}</textarea>
+        <div class="slider-container">
+            <input type="range" min="0" max="100" value="0" class="slider" id="slider-${commandeDetails.id}" oninput="checkSlide('${commandeDetails.id}', this)">
+            <div class="slider-value" id="slider-text-${commandeDetails.id}"></div>
+        </div>
+        `;
+    
+        document.getElementById('modalDetails').innerHTML = modalContentHtml;
+        document.getElementById('myModal').style.display = 'block';
+    } catch (e) {
+        console.error('Erreur de parsing JSON:', e);
+      }
+  }
+
+function closeModal() {
+  document.getElementById('myModal').style.display = 'none';
+}
+
+window.onclick = function(event) {
+  if (event.target == document.getElementById('myModal')) {
+    closeModal();
+  }
+}

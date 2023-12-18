@@ -29,7 +29,9 @@ def page_de_latelier():
 
         téléphone = commande['fields'].get('Téléphone', '')
 
+        cordage = commande['fields'].get('Cordage', '')
         quantité = commande['fields'].get('# raquettes','')
+        cordage_formatte = f"{quantité}x {cordage}" if quantité and cordage else ''
 
         tension = commande['fields'].get('Tension', '')
 
@@ -44,11 +46,12 @@ def page_de_latelier():
             'client': client,
             'date_livraison': date_livraison, 
             'heure_livraison': heure_livraison,
-            'téléphone': téléphone,
-            'quantité': quantité,
-            'Tension': tension,
-            'Note': note,
-            'Articles': articles,
+            'cordage': cordage_formatte, 
+            'telephone': téléphone,
+            'quantite': quantité,
+            'tension': tension,
+            'note': note,
+            'articles': articles,
             'type': 'B2C'
         }
 
@@ -73,9 +76,9 @@ def page_de_latelier():
             'id': commande_id,
             'client': id_client,
             'date_livraison': date_livraison, 
-            'Cordage': cordage_formatte, 
-            'Tension': tension,
-            'Note': note,
+            'cordage': cordage_formatte, 
+            'tension': tension,
+            'note': note,
             'type': 'B2B'
         }
 
