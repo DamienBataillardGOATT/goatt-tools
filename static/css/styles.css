@@ -177,8 +177,12 @@ input[type="radio"] {
     flex-direction: column;   
 }
 
-.categorie {
-    margin-bottom: 20px;
+.article{
+    font-size: 12px;
+}
+
+.categorie p {
+    margin: 0;
 }
 
 .commandes {
@@ -200,10 +204,6 @@ input[type="radio"] {
     padding: 10px;
     background-color: #f8f9fa;
     width: 15%
-}
-
-.livraison p {
-    margin: 5px 0;
 }
 
 .slider-container {
@@ -242,17 +242,17 @@ input[type="radio"] {
 }
 
 .slider-value {
+    display: none; 
     position: absolute;
     top: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 10px; 
     height: 50px;
     line-height: 50px;
     color: #555;
     font-family: Arial, sans-serif;
     font-size: 14px;
     user-select: none;
-}
+  }
 
 @media screen and (max-width: 600px) {
     .commandes-ligne {

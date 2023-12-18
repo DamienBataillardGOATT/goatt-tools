@@ -8,91 +8,107 @@
 <body>
     <div class="commandes-container">
         <section class="categorie">
-            <h2>Livraison pour aujourd'hui</h2>
-                {% for commande in commandes_aujourd_hui %}
-                    <div class="commandes">
-                        <p><strong>{{ commande.date_livraison}} {{commande.heure_livraison}}</strong></p>
-                        {% if commande.type == 'B2C' %}
-                            <p><strong>{{ commande.client }}</strong> ({{ commande.téléphone }})</p>
-                        {% else %}
-                            <p><strong>ID Client: {{ commande.id_client }}</strong></p>
-                        {% endif %}
-                        <p><strong>Nombre de raquettes:</strong> {{ commande.quantité }}</p>
-                        <p><strong>Tension:</strong> {{ commande.Tension }}</p>
-                        <strong>Articles:</strong> 
-                        {% if commande.type == 'B2C' %}
-                        <div>
-                            {% for article in commande.Articles %}
-                                <div class="article">{{ article }}</div>
-                            {% endfor %}
+            <h2>Accorder pour aujourd'hui</h2>
+                {% if commandes_aujourd_hui %}
+                    {% for commande in commandes_aujourd_hui %}
+                        <div class="commandes">
+                            <p><strong>{{ commande.date_livraison}} {{commande.heure_livraison}}</strong></p>
+                            {% if commande.type == 'B2C' %}
+                                <p><strong>{{ commande.client }}</strong> ({{ commande.téléphone }})</p>
+                            {% else %}
+                                <p><strong>ID Client: {{ commande.id_client }}</strong></p>
+                            {% endif %}
+                            <p><strong>Nombre de raquettes:</strong> {{ commande.quantité }}</p>
+                            <p><strong>Tension:</strong> {{ commande.Tension }}</p>
+                            <strong>Articles:</strong> 
+                            {% if commande.type == 'B2C' %}
+                            <div>
+                                {% for article in commande.Articles %}
+                                    <div class="article">{{ article }}</div>
+                                {% endfor %}
+                            </div>
+                            {% endif %} 
+                            <p>{{ commande.shopify_url }}</p>                
+                            <textarea id="note-{{commande.id }}" onblur="writeNote('{{ commande.id }}')" placeholder="Ajoutez une note ici...">{{ commande.Note }}</textarea>
+                            <div class="slider-container">
+                                <input type="range" min="0" max="100" value="0" class="slider" id="slider-{{ commande.id }}" oninput="checkSlide('{{ commande.id }}', this)">
+                                <div class="slider-value" id="slider-text-{{ commande.id }}"></div>
+                            </div>
                         </div>
-                        {% endif %}                
-                        <textarea id="note-{{commande.id }}" onblur="writeNote('{{ commande.id }}')" placeholder="Ajoutez une note ici...">{{ commande.Note }}</textarea>
-                        <div class="slider-container">
-                            <input type="range" min="0" max="100" value="0" class="slider" id="mySlider">
-                            <div class="slider-value" id="sliderValue">Pose à faire</div>
-                        </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                {% else %}
+                    <p>Aucun</p>
+                {% endif %}
         </section>
 
         <section class="categorie">
-            <h2>Livraison pour demain</h2>
-                {% for commande in commandes_demain %}
-                    <div class="commandes">
-                        <p><strong>{{ commande.date_livraison}} {{commande.heure_livraison}}</strong></p>
-                        {% if commande.type == 'B2C' %}
-                            <p><strong>{{ commande.client }}</strong> ({{ commande.téléphone }})</p>
-                        {% else %}
-                            <p><strong>ID Client: {{ commande.id_client }}</strong></p>
-                        {% endif %}
-                        <p><strong>Nombre de raquettes:</strong> {{ commande.quantité }}</p>
-                        <p><strong>Tension:</strong> {{ commande.Tension }}</p>
-                        <strong>Articles:</strong> 
-                        {% if commande.type == 'B2C' %}
-                        <div>
-                            {% for article in commande.Articles %}
-                                <div class="article">{{ article }}</div>
-                            {% endfor %}
+            <h2>Accorder pour demain</h2>
+                {% if commandes_demain%}
+                    {% for commande in commandes_demain %}
+                        <div class="commandes">
+                            <p><strong>{{ commande.date_livraison}} {{commande.heure_livraison}}</strong></p>
+                            {% if commande.type == 'B2C' %}
+                                <p><strong>{{ commande.client }}</strong> ({{ commande.téléphone }})</p>
+                            {% else %}
+                                <p><strong>ID Client: {{ commande.id_client }}</strong></p>
+                            {% endif %}
+                            <p><strong>Nombre de raquettes:</strong> {{ commande.quantité }}</p>
+                            <p><strong>Tension:</strong> {{ commande.Tension }}</p>
+                            <strong>Articles:</strong> 
+                            {% if commande.type == 'B2C' %}
+                            <div>
+                                {% for article in commande.Articles %}
+                                    <div class="article">{{ article }}</div>
+                                {% endfor %}
+                            </div>
+                            {% endif %} 
+                            <p>{{ commande.shopify_url }}</p>                
+                            <textarea id="note-{{commande.id }}" onblur="writeNote('{{ commande.id }}')" placeholder="Ajoutez une note ici...">{{ commande.Note }}</textarea>
+                            <div class="slider-container">
+                                <input type="range" min="0" max="100" value="0" class="slider" id="slider-{{ commande.id }}" oninput="checkSlide('{{ commande.id }}', this)">
+                                <div class="slider-value" id="slider-text-{{ commande.id }}"></div>
+                            </div>
                         </div>
-                        {% endif %}                
-                        <textarea id="note-{{commande.id }}" onblur="writeNote('{{ commande.id }}')" placeholder="Ajoutez une note ici...">{{ commande.Note }}</textarea>
-                        <div class="slider-container">
-                            <input type="range" min="0" max="100" value="0" class="slider" id="mySlider">
-                            <div class="slider-value" id="sliderValue">Pose à faire</div>
-                        </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                {% else %}
+                    <p>Aucun</p>
+                {% endif %}
         </section>
     
         <section class="categorie">
-            <h2>Livraisons à venir</h2>
-                {% for commande in commandes_a_venir %}
-                    <div class="commandes">
-                        <p><strong>{{ commande.date_livraison}} {{commande.heure_livraison}}</strong></p>
-                        {% if commande.type == 'B2C' %}
-                            <p><strong>{{ commande.client }}</strong> ({{ commande.téléphone }})</p>
-                        {% else %}
-                            <p><strong>ID Client: {{ commande.id_client }}</strong></p>
-                        {% endif %}
-                        <p><strong>Nombre de raquettes:</strong> {{ commande.quantité }}</p>
-                        <p><strong>Tension:</strong> {{ commande.Tension }}</p>
-                        <strong>Articles:</strong> 
-                        {% if commande.type == 'B2C' %}
-                        <div>
-                            {% for article in commande.Articles %}
-                                <div class="article">{{ article }}</div>
-                            {% endfor %}
+            <h2>Accorder à venir</h2>
+                {% if commandes_a_venir%}
+                    {% for commande in commandes_a_venir %}
+                        <div class="commandes">
+                            <p><strong>{{ commande.date_livraison}} {{commande.heure_livraison}}</strong></p>
+                            {% if commande.type == 'B2C' %}
+                                <p><strong>{{ commande.client }}</strong> ({{ commande.téléphone }})</p>
+                            {% else %}
+                                <p><strong>ID Client: {{ commande.id_client }}</strong></p>
+                            {% endif %}
+                            <p><strong>Nombre de raquettes:</strong> {{ commande.quantité }}</p>
+                            <p><strong>Tension:</strong> {{ commande.Tension }}</p>
+                            <p><strong>Articles:</strong></p> 
+                            {% if commande.type == 'B2C' %}
+                            <div>
+                                {% for article in commande.Articles %}
+                                    <div class="article">{{ article }}</div>
+                                {% endfor %}
+                            </div>
+                            {% endif %} 
+                            <p>{{ commande.shopify_url }}</p>                
+                            <textarea id="note-{{commande.id }}" onblur="writeNote('{{ commande.id }}')" placeholder="Ajoutez une note ici...">{{ commande.Note }}</textarea>
+                            <div class="slider-container">
+                                <input type="range" min="0" max="100" value="0" class="slider" id="slider-{{ commande.id }}" oninput="checkSlide('{{ commande.id }}', this)">
+                                <div class="slider-value" id="slider-text-{{ commande.id }}"></div>
+                            </div>
                         </div>
-                        {% endif %}                
-                        <textarea id="note-{{commande.id }}" onblur="writeNote('{{ commande.id }}')" placeholder="Ajoutez une note ici...">{{ commande.Note }}</textarea>
-                        <div class="slider-container">
-                            <input type="range" min="0" max="100" value="0" class="slider" id="slider-{{ commande.id }}" oninput="checkSlide('{{ commande.id }}', this)">
-                            <div class="slider-value" id="slider-text-{{ commande.id }}">Pose à faire</div>
-                        </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                {% else %}
+                    <p>Aucun</p>
+                {% endif %}
         </section>
+        <p><a href="/">Retour à l'accueil</a></p>
     </div>
     <script src="/static/scripts/orders.js"></script>
 </body>

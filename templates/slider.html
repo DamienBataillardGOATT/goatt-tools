@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slider Interactif</title>
+<link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="menu">
+        <a href="{{ url_for('order_bp.page_des_commandes_de_pose_cordage') }}" class="menu-item nouvelle-pose">Nouvelle pose cordage</a>
+        <a href="{{ url_for('client_bp.page_nouveau_client') }}" class="menu-item nouveau-client">Nouveau client</a>
+        <a href="{{ url_for('orders_bp.page_de_latelier') }}" class="menu-item atelier">Atelier</a>
+        <a href="{{ url_for('deliveries_bp.page_des_livraisons')}}" class="menu-item livraisons">Livraisons</a>
+    </div>
+
+
+    <div class="slider-container">
+        <input type="range" min="0" max="100" value="0" class="slider" id="mySlider">
+        <div class="slider-value" id="sliderValue">Pose à faire</div>
+      </div>
+<script src="/static/scripts/orders.js"></script>
+</body>
+</html

@@ -14,6 +14,8 @@ def page_de_latelier():
     for commande in commandes_raw:
         commande_id = commande['id']
 
+        shopify_url = commande['fields'].get('Shopify Order url', '')
+
         client = commande['fields'].get('Nom complet', '')
         
         date_iso = commande['fields'].get('Delivery Date Time', '').rstrip('Z')
@@ -38,6 +40,7 @@ def page_de_latelier():
 
         commandes_info[commande_id] = {
             'id': commande_id,
+            'shopify_url': shopify_url,
             'client': client,
             'date_livraison': date_livraison, 
             'heure_livraison': heure_livraison,

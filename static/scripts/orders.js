@@ -25,10 +25,11 @@ function checkSlide(commandeId, slider) {
     slider.style.background = `linear-gradient(to right, #4CAF50 ${value}%, #d3d3d3 ${value}%)`;
 
     if (value === '100') {
+        sliderText.style.display = 'block'; 
+        sliderText.textContent = 'Pose terminée';
         finishCommande(commandeId, slider);
-        sliderText.textContent = 'Pose faite'; 
     } else {
-        sliderText.textContent = 'Pose à faire'; 
+        sliderText.style.display = 'none'; 
     }
 }
 

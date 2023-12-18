@@ -9,75 +9,88 @@
     <div class="livraisons-container">
         <section class="categorie">
             <h2>Livraison pour aujourd'hui</h2>
-                {% for livraisons in livraisons_aujourd_hui %}
-                    <div class="livraison">
-                        <p><strong>{{ livraisons.client }}</strong></p>
-                        {% if livraisons.status_livraison == 'To Do'%}
-                            <p><strong>Date et Heure de Livraison:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
-                            <p><strong>Livraison</strong></p>
-                            <p><strong>Adresse de livraison:</strong> {{ livraisons.adresse_de_livraison}}</p>
-                        {% else %}
-                            <p><strong>Date et Heure de Récupération:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
-                        {% endif %}
-                        <p><strong>Téléphone:</strong> {{ livraisons.téléphone}}</p>
-                        <strong>Articles:</strong> 
-                        <div>
-                            {% for article in livraisons.Articles %}
-                                <div class="article">{{ article }}</div>
-                            {% endfor %}
-                        </div>    
-                        <textarea id="note-{{ livraisons.id }}" onblur="writeNote('{{ livraisons.id }}')" placeholder="Ajoutez une note ici...">{{ livraisons.Note }}</textarea>
-                    </div>
-                {% endfor %}
+                {% if livraisons_aujourd_hui %}
+                    {% for livraisons in livraisons_aujourd_hui %}
+                        <div class="livraison">
+                            <p><strong>{{ livraisons.client }}</strong></p>
+                            {% if livraisons.status_livraison == 'To Do'%}
+                                <p><strong>Date et Heure de Livraison:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
+                                <p><strong>Livraison</strong></p>
+                                <p><strong>Adresse de livraison:</strong> {{ livraisons.adresse_de_livraison}}</p>
+                            {% else %}
+                                <p><strong>Date et Heure de Récupération:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
+                            {% endif %}
+                            <p><strong>Téléphone:</strong> {{ livraisons.téléphone}}</p>
+                            <strong>Articles:</strong> 
+                            <div>
+                                {% for article in livraisons.Articles %}
+                                    <div class="article">{{ article }}</div>
+                                {% endfor %}
+                            </div>    
+                            <textarea id="note-{{ livraisons.id }}" onblur="writeNote('{{ livraisons.id }}')" placeholder="Ajoutez une note ici...">{{ livraisons.Note }}</textarea>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>Aucun</p>
+                {% endif %}
         </section>
     
         <section class="categorie">
             <h2>Livraison pour demain</h2>
-                {% for livraisons in livraisons_demain %}
-                    <div class="livraison">
-                        <p><strong>{{ livraisons.client }}</strong></p>
-                        {% if livraisons.status_livraison == 'To Do'%}
-                            <p><strong>Date et Heure de Livraison:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
-                            <p><strong>Livraison</strong></p>
-                            <p><strong>Adresse de livraison:</strong> {{ livraisons.adresse_de_livraison}}</p>
-                        {% else %}
-                            <p><strong>Date et Heure de Récupération:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
-                        {% endif %}
-                        <p><strong>Téléphone:</strong> {{ livraisons.téléphone}}</p>
-                        <strong>Articles:</strong> 
-                        <div>
-                            {% for article in livraisons.Articles %}
-                                <div class="article">{{ article }}</div>
-                            {% endfor %}
-                        </div>    
-                        <textarea id="note-{{ livraisons.id }}" onblur="writeNote('{{ livraisons.id }}')" placeholder="Ajoutez une note ici...">{{ livraisons.Note }}</textarea>
-                    </div>
-                {% endfor %}
+                {% if livraisons_demain %}
+                    {% for livraisons in livraisons_demain %}
+                        <div class="livraison">
+                            <p><strong>{{ livraisons.client }}</strong></p>
+                            {% if livraisons.status_livraison == 'To Do'%}
+                                <p><strong>Date et Heure de Livraison:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
+                                <p><strong>Livraison</strong></p>
+                                <p><strong>Adresse de livraison:</strong> {{ livraisons.adresse_de_livraison}}</p>
+                            {% else %}
+                                <p><strong>Date et Heure de Récupération:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
+                            {% endif %}
+                            <p><strong>Téléphone:</strong> {{ livraisons.téléphone}}</p>
+                            <strong>Articles:</strong> 
+                            <div>
+                                {% for article in livraisons.Articles %}
+                                    <div class="article">{{ article }}</div>
+                                {% endfor %}
+                            </div>    
+                            <textarea id="note-{{ livraisons.id }}" onblur="writeNote('{{ livraisons.id }}')" placeholder="Ajoutez une note ici...">{{ livraisons.Note }}</textarea>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>Aucun</p>
+                {% endif %}
         </section>
     
         <section class="categorie">
             <h2>Livraisons à venir</h2>
-                {% for livraisons in livraisons_a_venir %}
-                    <div class="livraison">
-                        <p><strong>{{ livraisons.client }}</strong></p>
-                        {% if livraisons.status_livraison == 'To Do'%}
-                            <p><strong>Date et Heure de Livraison:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
-                            <p><strong>Livraison</strong></p>
-                            <p><strong>Adresse de livraison:</strong> {{ livraisons.adresse_de_livraison}}</p>
-                        {% else %}
-                            <p><strong>Date et Heure de Récupération:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
-                        {% endif %}
-                        <p><strong>Téléphone:</strong> {{ livraisons.téléphone}}</p>
-                        <strong>Articles:</strong> 
-                        <div>
-                            {% for article in livraisons.Articles %}
-                                <div class="article">{{ article }}</div>
-                            {% endfor %}
-                        </div>    
-                        <textarea id="note-{{ livraisons.id }}" onblur="writeNote('{{ livraisons.id }}')" placeholder="Ajoutez une note ici...">{{ livraisons.Note }}</textarea>
-                    </div>
-                {% endfor %}
+                {% if livraisons_a_venir %}
+                    {% for livraisons in livraisons_a_venir %}
+                        <div class="livraison">
+                            <p><strong>{{ livraisons.client }}</strong></p>
+                            {% if livraisons.status_livraison == 'To Do'%}
+                                <p><strong>Date et Heure de Livraison:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
+                                <p><strong>Livraison</strong></p>
+                                <p><strong>Adresse de livraison:</strong> {{ livraisons.adresse_de_livraison}}</p>
+                            {% else %}
+                                <p><strong>Date et Heure de Récupération:</strong> {{ livraisons.date_livraison }} {{ livraisons.heure_livraison }}</p>
+                            {% endif %}
+                            <p><strong>Téléphone:</strong> {{ livraisons.téléphone}}</p>
+                            <p><strong>Articles:</strong></p>
+                            <div>
+                                {% for article in livraisons.Articles %}
+                                    <div class="article">{{ article }}</div>
+                                {% endfor %}
+                            </div>    
+                            <textarea id="note-{{ livraisons.id }}" onblur="writeNote('{{ livraisons.id }}')" placeholder="Ajoutez une note ici...">{{ livraisons.Note }}</textarea>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>Aucun</p>
+                {% endif %}
         </section>
+        <p><a href="/">Retour à l'accueil</a></p>
     </div>
     <script src="/static/scripts/deliveries.js"></script>
 </body>
