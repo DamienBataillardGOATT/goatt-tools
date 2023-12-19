@@ -34,9 +34,15 @@
         if (info) {
             var unitPrice = info.prix;
             var shopifyVariantId = info.shopify_variant_id;
-            var quantity = document.getElementById('string_quantity').value;
-            var totalPrice = unitPrice * quantity;
+            var quantityElement = document.getElementById('string_quantity');
+            var quantity = parseInt(quantityElement.value, 10);
     
+            if (!Number.isInteger(quantity)) {
+                quantity = Math.round(quantity); 
+                quantityElement.value = quantity; 
+            }
+    
+            var totalPrice = unitPrice * quantity;
             var poseCordagePrice = 14.99; 
             totalPrice += poseCordagePrice;
     
