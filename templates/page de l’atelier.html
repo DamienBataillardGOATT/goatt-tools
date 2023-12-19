@@ -7,8 +7,9 @@
 </head>
 <body>
     <div class="commandes-container">
+        <h1>Commande en cours</h1>
         <section class="categorie">
-            <h2>A corder pour aujourd'hui</h2>
+            <h2>Aujourd'hui</h2>
                 {% if commandes_aujourd_hui %}
                     {% for commande in commandes_aujourd_hui %}
                         <div class="commandes" data-commande-id="{{ commande.id }}" data-commande-details='{{ commande | tojson | safe }}' onclick="openModal(this.getAttribute('data-commande-details'))">
@@ -23,11 +24,11 @@
                         </div>
                     {% endfor %}
                 {% else %}
-                    <p>Aucun</p>
+                    <p>Aucune commande pour aujourd'hui</p>
                 {% endif %}
         </section>
         <section class="categorie">
-            <h2>A corder pour demain</h2>
+            <h2>Demain</h2>
                 {% if commandes_demain%}
                     {% for commande in commandes_demain %}
                         <div class="commandes" data-commande-id="{{ commande.id }}" data-commande-details='{{ commande | tojson | safe }}' onclick="openModal(this.getAttribute('data-commande-details'))">
@@ -42,11 +43,11 @@
                         </div>
                     {% endfor %}
                 {% else %}
-                    <p>Aucun</p>
+                    <p>Aucune commande pour demain</p>
                 {% endif %}
         </section>
         <section class="categorie">
-            <h2>A corder pour plus tard</h2>
+            <h2>Plus tard</h2>
                 {% if commandes_a_venir%}
                     {% for commande in commandes_a_venir %}
                         <div class="commandes" data-commande-id="{{ commande.id }}" data-commande-details='{{ commande | tojson | safe }}' onclick="openModal(this.getAttribute('data-commande-details'))">
@@ -61,7 +62,7 @@
                         </div>
                     {% endfor %}
                 {% else %}
-                    <p>Aucun</p>
+                    <p>Aucune commande pour plus tard</p>
                 {% endif %}
         </section>
         <p><a href="/">Retour à l'accueil</a></p>

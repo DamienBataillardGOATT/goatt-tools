@@ -184,6 +184,10 @@ input[type="radio"] {
     margin: 0;
 }
 
+.categorie h2 {
+    margin: 0;
+}
+
 .commandes {
     border: 2px solid ;
     border-radius: 10px;
@@ -247,14 +251,13 @@ input[type="radio"] {
 }
 
 .slider-value {
-    display: none; 
     position: absolute;
     top: 0;
-    right: 10px; 
+    left: 50%; 
+    transform: translateX(-50%); 
     height: 50px;
     line-height: 50px;
     color: #555;
-    font-family: Arial, sans-serif;
     font-size: 14px;
     user-select: none;
   }

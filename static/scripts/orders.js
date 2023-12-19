@@ -25,11 +25,9 @@ function checkSlide(commandeId, slider) {
     slider.style.background = `linear-gradient(to right, #4CAF50 ${value}%, #d3d3d3 ${value}%)`;
 
     if (value === '100') {
-        sliderText.style.display = 'block'; 
-        sliderText.textContent = 'Pose terminée';
         finishCommande(commandeId, slider);
     } else {
-        sliderText.style.display = 'none'; 
+
     }
 }
 
@@ -73,11 +71,11 @@ function openModal(commandeDetailsJson) {
         <p><strong>Tension:</strong> ${commandeDetails.tension}</p>
         <strong>Articles:</strong>
         <div>${commandeDetails.articles.map(article => `<div class="article">${article}</div>`).join('')}</div>
-        <p>${commandeDetails.shopify_url}</p>
+        <a href="${commandeDetails.shopify_url}">${commandeDetails.shopify_url}</a>
         <textarea id="note-${commandeDetails.id}" onblur="writeNote('${commandeDetails.id}')"placeholder="Ajoutez une note ici...">${commandeDetails.note}</textarea>
         <div class="slider-container">
             <input type="range" min="0" max="100" value="0" class="slider" id="slider-${commandeDetails.id}" oninput="checkSlide('${commandeDetails.id}', this)">
-            <div class="slider-value" id="slider-text-${commandeDetails.id}"></div>
+            <div class="slider-value" id="slider-text-${commandeDetails.id}">Pose terminée</div>
         </div>
         `;
     
