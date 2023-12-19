@@ -8,7 +8,7 @@
 <body>
     <div class="commandes-container">
         <section class="categorie">
-            <h2>Accorder pour aujourd'hui</h2>
+            <h2>A corder pour aujourd'hui</h2>
                 {% if commandes_aujourd_hui %}
                     {% for commande in commandes_aujourd_hui %}
                         <div class="commandes" data-commande-id="{{ commande.id }}" data-commande-details='{{ commande | tojson | safe }}' onclick="openModal(this.getAttribute('data-commande-details'))">
@@ -27,7 +27,7 @@
                 {% endif %}
         </section>
         <section class="categorie">
-            <h2>Accorder pour demain</h2>
+            <h2>A corder pour demain</h2>
                 {% if commandes_demain%}
                     {% for commande in commandes_demain %}
                         <div class="commandes" data-commande-id="{{ commande.id }}" data-commande-details='{{ commande | tojson | safe }}' onclick="openModal(this.getAttribute('data-commande-details'))">
@@ -46,7 +46,7 @@
                 {% endif %}
         </section>
         <section class="categorie">
-            <h2>Accorder à venir</h2>
+            <h2>A corder pour plus tard</h2>
                 {% if commandes_a_venir%}
                     {% for commande in commandes_a_venir %}
                         <div class="commandes" data-commande-id="{{ commande.id }}" data-commande-details='{{ commande | tojson | safe }}' onclick="openModal(this.getAttribute('data-commande-details'))">
