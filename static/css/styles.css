@@ -5,6 +5,25 @@ body {
     height: 100%; 
 }
 
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f8f8f8;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.logo-container img {
+    height: 50px; 
+}
+
+.navigation .home-link {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
 .container {
     display: flex;
     justify-content: center; 
@@ -20,7 +39,7 @@ form {
     border-radius: 5px; 
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 25%; 
-    margin: 0 auto;
+    margin: 20px auto;
 }
 
 input[type="text"], input[type="email"], input[type="number"], select, textarea {
@@ -174,6 +193,7 @@ input[type="radio"] {
 .commandes-container {
     display: flex;
     flex-direction: column;   
+    margin: 0px 30px;
 }
 
 .article{
@@ -205,6 +225,7 @@ input[type="radio"] {
 .livraisons-container {
     display: flex;
     flex-direction: column;
+    margin: 0px 30px;
 }
 
 .livraison {

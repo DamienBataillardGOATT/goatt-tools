@@ -17,18 +17,14 @@ function writeNote(commandeId) {
     });
 }
 
-function checkSlide(commandeId, slider) {
-    const sliderText = document.getElementById(`slider-text-${commandeId}`);
+function checkSlide(commandeId, slider, isFinal) {
     const value = slider.value;
-
-
     slider.style.background = `linear-gradient(to right, #4CAF50 ${value}%, #d3d3d3 ${value}%)`;
 
-    if (value === '100') {
+    if (isFinal && value === '100') {
         finishCommande(commandeId, slider);
-    } else {
-
     }
+
 }
 
 function finishCommande(commandeId, slider) {
@@ -58,33 +54,32 @@ function finishCommande(commandeId, slider) {
 
 function openModal(commandeDetailsJson) {
     console.log("JSON reçu:", commandeDetailsJson);
+    var commandeDetails = JSON.parse(commandeDetailsJson);
+    
+    var modalContentHtml = `
+    <p><strong>${commandeDetails.date_livraison} ${commandeDetails.heure_livraison}</strong></p>
+    ${commandeDetails.type == 'B2C' ? 
+        `<p><strong>${commandeDetails.client}</strong> (${commandeDetails.telephone})</p>` : 
+         `<p><strong>ID Client: ${commandeDetails.id_client}</strong></p>`}
+    <p><strong>Nombre de raquettes:</strong> ${commandeDetails.quantite}</p>
+    <p><strong>Tension:</strong> ${commandeDetails.tension}</p>
+    <strong>Articles:</strong>
+    <div>${commandeDetails.articles.map(article => `<div class="article">${article}</div>`).join('')}</div>
+    <a href="${commandeDetails.shopify_url}">${commandeDetails.shopify_url}</a>
+    <textarea id="note-${commandeDetails.id}" onblur="writeNote('${commandeDetails.id}')"placeholder="Ajoutez une note ici...">${commandeDetails.note}</textarea>
+    <div class="slider-container">
+        <input type="range" min="0" max="100" value="0" class="slider" id="slider-${commandeDetails.id}" oninput="checkSlide('${commandeDetails.id}', this)">
+        <div class="slider-value" id="slider-text-${commandeDetails.id}">Pose terminée</div>
+    </div>
+    `;
+    
+    document.getElementById('modalDetails').innerHTML = modalContentHtml;
+    document.getElementById('myModal').style.display = 'block';
 
-    try {
-        var commandeDetails = JSON.parse(commandeDetailsJson);
-    
-        var modalContentHtml = `
-        <p><strong>${commandeDetails.date_livraison} ${commandeDetails.heure_livraison}</strong></p>
-        ${commandeDetails.type == 'B2C' ? 
-            `<p><strong>${commandeDetails.client}</strong> (${commandeDetails.telephone})</p>` : 
-            `<p><strong>ID Client: ${commandeDetails.id_client}</strong></p>`}
-        <p><strong>Nombre de raquettes:</strong> ${commandeDetails.quantite}</p>
-        <p><strong>Tension:</strong> ${commandeDetails.tension}</p>
-        <strong>Articles:</strong>
-        <div>${commandeDetails.articles.map(article => `<div class="article">${article}</div>`).join('')}</div>
-        <a href="${commandeDetails.shopify_url}">${commandeDetails.shopify_url}</a>
-        <textarea id="note-${commandeDetails.id}" onblur="writeNote('${commandeDetails.id}')"placeholder="Ajoutez une note ici...">${commandeDetails.note}</textarea>
-        <div class="slider-container">
-            <input type="range" min="0" max="100" value="0" class="slider" id="slider-${commandeDetails.id}" oninput="checkSlide('${commandeDetails.id}', this)">
-            <div class="slider-value" id="slider-text-${commandeDetails.id}">Pose terminée</div>
-        </div>
-        `;
-    
-        document.getElementById('modalDetails').innerHTML = modalContentHtml;
-        document.getElementById('myModal').style.display = 'block';
-    } catch (e) {
-        console.error('Erreur de parsing JSON:', e);
-      }
-  }
+    const slider = document.getElementById(`slider-${commandeDetails.id}`);
+    slider.oninput = function() { checkSlide(commandeDetails.id, this, false); };
+    slider.onchange = function() { checkSlide(commandeDetails.id, this, true); };
+}
 
 function closeModal() {
   document.getElementById('myModal').style.display = 'none';
