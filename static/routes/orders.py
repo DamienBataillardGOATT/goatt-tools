@@ -4,11 +4,9 @@ from datetime import datetime, timedelta
 
 orders_bp = Blueprint('orders_bp', __name__)
 
-
 @orders_bp.route('/')
 def page_de_latelier():
     commandes_raw = get_atelier()
-    commandes_decathlon_raw = get_decathlon()
 
     commandes_info = {}
     for commande in commandes_raw:
@@ -38,6 +36,11 @@ def page_de_latelier():
         articles_str = commande['fields'].get('Articles', '')
         articles= articles_str.split('\n')
 
+        status_recup = commande['fields'].get('Statut récup', '')
+        status_pose = commande['fields'].get('Statut pose', '')
+        status_livraison = commande['fields'].get('Statut livraison', '')
+
+
         note = commande['fields'].get('Notes', '')
 
         commandes_info[commande_id] = {
@@ -50,58 +53,32 @@ def page_de_latelier():
             'telephone': téléphone,
             'quantite': quantité,
             'tension': tension,
+            'status_recup': status_recup,
+            'status_pose': status_pose,
+            'status_livraison': status_livraison,
             'note': note,
             'articles': articles,
             'type': 'B2C'
         }
 
-    decathlon_commandes_info = {}
-    for commande in commandes_decathlon_raw:
-        commande_id = commande['id']
+    commandes_a_recuperer = []
+    commandes_a_poser = []
+    commandes_a_livrer = []
 
-        id_client = commande['fields'].get('id', '')
+    for commande_id, commande in commandes_info.items():
+        status_recup = commande.get('status_recup', '')
+        status_pose = commande.get('status_pose', '')
+        status_livraison = commande.get('status_livraison', '')
 
-        date_brute = commande['fields'].get('decat_date', '')
-        date_livraison = datetime.strptime(date_brute, '%Y-%m-%d') if date_brute else None
 
-        cordage = commande['fields'].get('cordage', '')
-        quantité = commande['fields'].get('quantité','')
-        cordage_formatte = f"{quantité}x {cordage}" if quantité and cordage else ''
+        if status_recup == 'To Do':
+            commandes_a_recuperer.append(commande)
+        elif status_recup == 'Done' and status_pose == 'To Do':
+            commandes_a_poser.append(commande)
+        elif status_recup == 'Done' and status_pose == 'Done' and status_livraison == 'To Do':
+            commandes_a_livrer.append(commande)
 
-        tension = commande['fields'].get('tension', '')
-
-        note = commande['fields'].get('notes_goatt', '')
-
-        decathlon_commandes_info[commande_id] = {
-            'id': commande_id,
-            'client': id_client,
-            'date_livraison': date_livraison, 
-            'cordage': cordage_formatte, 
-            'tension': tension,
-            'note': note,
-            'type': 'B2B'
-        }
-
-    toutes_commandes = list(commandes_info.values()) + list(decathlon_commandes_info.values())
-
-    commandes_aujourd_hui = []
-    commandes_demain = []
-    commandes_a_venir = []
-
-    aujourd_hui = datetime.today().date()
-    demain = aujourd_hui + timedelta(days=1)
-
-    for commande in toutes_commandes:
-        date_livraison = datetime.strptime(commande['date_livraison'], '%d/%m/%Y').date() if commande['date_livraison'] else None
-
-        if date_livraison == aujourd_hui:
-            commandes_aujourd_hui.append(commande)
-        elif date_livraison == demain:
-            commandes_demain.append(commande)
-        elif date_livraison and date_livraison > demain:
-            commandes_a_venir.append(commande)
-
-    return render_template('page de l’atelier.html', commandes_aujourd_hui=commandes_aujourd_hui, commandes_demain=commandes_demain, commandes_a_venir=commandes_a_venir)
+    return render_template('page de l’atelier.html', commandes_a_recuperer=commandes_a_recuperer, commandes_a_poser=commandes_a_poser, commandes_a_livrer=commandes_a_livrer)
 
 @orders_bp.route('/writeNote/<commandeId>', methods=['POST'])
 def writeNote(commandeId):
