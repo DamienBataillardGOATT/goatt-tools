@@ -155,10 +155,6 @@ input[type="radio"] {
     background-color: #74D3FD;
 }
 
-.livraisons {
-    background-color: #FDE074;
-}
-
 .confirmation-box {
     text-align: center;
     background-color: #fff;
@@ -194,6 +190,11 @@ input[type="radio"] {
     margin: 0px 30px;
 }
 
+.categorie {
+    display: flex;
+    flex-wrap: wrap;
+}
+
 .article{
     font-size: 12px;
 }
@@ -202,7 +203,7 @@ input[type="radio"] {
     margin: 0;
 }
 
-.categorie h2 {
+.commandes-container h2 {
     margin: 0;
 }
 

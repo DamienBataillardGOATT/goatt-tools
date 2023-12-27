@@ -18,8 +18,8 @@
     </header>
     <div class="commandes-container">
         <h1>Commande en cours</h1>
+        <h2>A récupérer</h2>
         <section class="categorie">
-            <h2>A récupérer</h2>
                 {% if commandes_a_recuperer %}
                     {% for commande in commandes_a_recuperer %}
                         <div class="commandes" data-commande-id="{{ commande.id }}" data-commande-details='{{ commande | tojson | safe }}' onclick="openModal(this.getAttribute('data-commande-details'))">
@@ -37,8 +37,8 @@
                     <p>Aucune commande a récupérer</p>
                 {% endif %}
         </section>
+        <h2>A corder</h2>
         <section class="categorie">
-            <h2>A corder</h2>
                 {% if commandes_a_poser %}
                     {% for commande in commandes_a_poser %}
                         <div class="commandes" data-commande-id="{{ commande.id }}" data-commande-details='{{ commande | tojson | safe }}' onclick="openModal(this.getAttribute('data-commande-details'))">
@@ -56,8 +56,8 @@
                     <p>Aucune commande a corder</p>
                 {% endif %}
         </section>
+        <h2>A livrer</h2>
         <section class="categorie">
-            <h2>A livrer</h2>
                 {% if commandes_a_livrer %}
                     {% for commande in commandes_a_livrer %}
                         <div class="commandes" data-commande-id="{{ commande.id }}" data-commande-details='{{ commande | tojson | safe }}' onclick="openModal(this.getAttribute('data-commande-details'))">
