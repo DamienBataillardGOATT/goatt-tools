@@ -118,7 +118,7 @@ def stringing_order():
     delivery_option = request.form['delivery_option']
     pickup_date = request.form['pickup_deposit_date']
     delivery_date = request.form['pickup_delivery_date']
-    total_price = request.form['totalPrice']
+    total_price = float(request.form['totalPrice'])
     shopify_variant_id = request.form['shopifyVariantId']
     tension = request.form['Tension']
     quantity = request.form['string_quantity']
@@ -176,7 +176,7 @@ def stringing_order():
         'Date de livraison': delivery_date,
         'Heure de livraison': int(delivery_time) if delivery_time else None,
         'Adresse de livraison': delivery_address if delivery_option == 'address' else None,
-        'Prix': float(total_price),
+        'Prix': total_price,
         'Statut récup' : statut_recup,
         'Statut livraison' : statut_livraison,
         'ShopifyVariantId': shopify_variant_id,
