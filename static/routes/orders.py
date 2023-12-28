@@ -78,7 +78,7 @@ def page_de_latelier():
         elif status_recup == 'Done' and status_pose == 'Done' and status_livraison == 'To Do':
             commandes_a_livrer.append(commande)
 
-    return render_template('page de l’atelier.html', commandes_a_recuperer=commandes_a_recuperer, commandes_a_poser=commandes_a_poser, commandes_a_livrer=commandes_a_livrer)
+    return render_template('page de atelier.html', commandes_a_recuperer=commandes_a_recuperer, commandes_a_poser=commandes_a_poser, commandes_a_livrer=commandes_a_livrer)
 
 @orders_bp.route('/writeNote/<commandeId>', methods=['POST'])
 def writeNote(commandeId):
