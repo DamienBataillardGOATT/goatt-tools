@@ -22,7 +22,7 @@
         <section class="categorie">
                 {% if commandes_a_recuperer %}
                     {% for commande in commandes_a_recuperer %}
-                        <div class="commandes" data-commande-id="{{ commande.id }}" data-commande-details='{{ commande | tojson | safe }}' onclick="openModal(this.getAttribute('data-commande-details'))">
+                        <div class="commandes" data-commande-id="{{ commande.id }}" data-commande-details='{{ commande | tojson | safe }}' onclick="openModal(this.getAttribute('data-commande-details'), 'aRecuperer')">
                             <p><strong>{{ commande.date_livraison}} {{commande.heure_livraison}}</strong></p>
                             {% if commande.type == 'B2C' %}
                                 <p><strong>{{ commande.client }}</strong> ({{ commande.telephone }})</p>
@@ -41,7 +41,7 @@
         <section class="categorie">
                 {% if commandes_a_poser %}
                     {% for commande in commandes_a_poser %}
-                        <div class="commandes" data-commande-id="{{ commande.id }}" data-commande-details='{{ commande | tojson | safe }}' onclick="openModal(this.getAttribute('data-commande-details'))">
+                        <div class="commandes" data-commande-id="{{ commande.id }}" data-commande-details='{{ commande | tojson | safe }}' onclick="openModal(this.getAttribute('data-commande-details'), 'aCorder')">
                             <p><strong>{{ commande.date_livraison}} {{commande.heure_livraison}}</strong></p>
                             {% if commande.type == 'B2C' %}
                                 <p><strong>{{ commande.client }}</strong> ({{ commande.telephone }})</p>
@@ -60,7 +60,7 @@
         <section class="categorie">
                 {% if commandes_a_livrer %}
                     {% for commande in commandes_a_livrer %}
-                        <div class="commandes" data-commande-id="{{ commande.id }}" data-commande-details='{{ commande | tojson | safe }}' onclick="openModal(this.getAttribute('data-commande-details'))">
+                        <div class="commandes" data-commande-id="{{ commande.id }}" data-commande-details='{{ commande | tojson | safe }}' onclick="openModal(this.getAttribute('data-commande-details'), 'aLivrer')">
                             <p><strong>{{ commande.date_livraison}} {{commande.heure_livraison}}</strong></p>
                             {% if commande.type == 'B2C' %}
                                 <p><strong>{{ commande.client }}</strong> ({{ commande.telephone }})</p>

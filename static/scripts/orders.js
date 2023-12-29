@@ -52,9 +52,24 @@ function finishCommande(commandeId, slider) {
     });
 }
 
-function openModal(commandeDetailsJson) {
+function openModal(commandeDetailsJson, categorie) {
     console.log("JSON reçu:", commandeDetailsJson);
     var commandeDetails = JSON.parse(commandeDetailsJson);
+
+    var infoCategorieHtml = '';
+
+    switch (categorie) {
+        case 'aRecuperer':
+            break;
+        case 'aCorder':
+            infoCategorieHtml = `<div class="slider-container">
+                                    <input type="range" min="0" max="100" value="0" class="slider" id="slider-${commandeDetails.id}" oninput="checkSlide('${commandeDetails.id}', this)">
+                                    <div class="slider-value" id="slider-text-${commandeDetails.id}">Pose terminée</div>
+                                </div>`;
+            break;
+        case 'aLivrer':
+            break;
+    }
     
     var modalContentHtml = `
     <p><strong>${commandeDetails.date_livraison} ${commandeDetails.heure_livraison}</strong></p>
@@ -67,18 +82,16 @@ function openModal(commandeDetailsJson) {
     <div>${commandeDetails.articles.map(article => `<div class="article">${article}</div>`).join('')}</div>
     <a href="${commandeDetails.shopify_url}">${commandeDetails.shopify_url}</a>
     <textarea id="note-${commandeDetails.id}" onblur="writeNote('${commandeDetails.id}')"placeholder="Ajoutez une note ici...">${commandeDetails.note}</textarea>
-    <div class="slider-container">
-        <input type="range" min="0" max="100" value="0" class="slider" id="slider-${commandeDetails.id}" oninput="checkSlide('${commandeDetails.id}', this)">
-        <div class="slider-value" id="slider-text-${commandeDetails.id}">Pose terminée</div>
-    </div>
-    `;
+    ${infoCategorieHtml}`;
     
     document.getElementById('modalDetails').innerHTML = modalContentHtml;
     document.getElementById('myModal').style.display = 'block';
 
     const slider = document.getElementById(`slider-${commandeDetails.id}`);
-    slider.oninput = function() { checkSlide(commandeDetails.id, this, false); };
-    slider.onchange = function() { checkSlide(commandeDetails.id, this, true); };
+    if (slider) {
+        slider.oninput = function() { checkSlide(commandeDetails.id, this, false); };
+        slider.onchange = function() { checkSlide(commandeDetails.id, this, true); };
+    }
 }
 
 function closeModal() {

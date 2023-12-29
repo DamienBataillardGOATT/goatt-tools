@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, jsonify, request
-from static.scripts.airtable import get_atelier, get_decathlon, update_note, finish_commande
+from static.scripts.airtable import get_atelier, update_note, finish_commande
 from datetime import datetime, timedelta
 
 orders_bp = Blueprint('orders_bp', __name__)

@@ -31,7 +31,8 @@ def search_client_in_cordage(search_email):
 def create_order(data):
     return airtable_orders.insert(data)
 
-def update_note(commandeId, data):
+def update_note(commandeId, note):
+    data = {"Notes" : note}
     return airtable_cordage.update(commandeId, data)
 
 def finish_commande(commandeId):
