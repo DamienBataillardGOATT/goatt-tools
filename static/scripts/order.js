@@ -229,13 +229,19 @@
 
         return dateObj.toLocaleDateString('fr-FR', options);
     }
-
+    
     function searchAddressDeposit(inputId, suggestionsId) {
         var input = document.getElementById(inputId).value;
+        console.log(encodeURIComponent(input))
     
         if (input.length > 2) {
             fetch('https://api-adresse.data.gouv.fr/search/?q=' + encodeURIComponent(input))
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Réponse réseau non OK');
+                }
+                return response.json();
+            })
             .then(data => {
                 var suggestions = document.getElementById(suggestionsId);
                 suggestions.innerHTML = '';
@@ -262,6 +268,11 @@
                     };
                     suggestions.appendChild(div);
                 });
+            })
+            .catch(error => {
+                console.error('Problème de récupération des données :', error);
+                var suggestions = document.getElementById(suggestionsId);
+                suggestions.innerHTML = 'Impossible de charger les suggestions.';
             });
         }
     }

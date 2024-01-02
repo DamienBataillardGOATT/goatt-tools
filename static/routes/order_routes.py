@@ -108,7 +108,7 @@ def page_des_commandes_de_pose_cordage():
     # Sort strings by brand in alphabetical order
     strings_info_sorted = dict(sorted(strings_info.items()))
     
-    return render_template('page des commandes de pose cordage.html', strings_info=strings_info_sorted, emails=emails)
+    return render_template('order_page.html', strings_info=strings_info_sorted, emails=emails)
 
 @order_bp.route('/stringing_order', methods=['POST'])
 def stringing_order():

@@ -6,7 +6,7 @@ client_bp = Blueprint('client_bp', __name__)
 
 @client_bp.route('/')
 def page_nouveau_client():
-    return render_template('page nouveau client.html')
+    return render_template('new_customer_page.html')
 
 @client_bp.route('/search_client', methods=['POST'])
 def search_client():
