@@ -17,6 +17,7 @@
             for (let stringName in stringsInfo) {
                 if (stringName.toLowerCase().includes(input)) {
                     let div = document.createElement('div');
+                    document.getElementById('suggestions').style.display = 'block';
                     div.innerHTML = stringName;
                     div.onclick = function() {
                         document.getElementById('searchInput').value = stringName;
@@ -63,6 +64,7 @@
             emailsInfo.forEach(email => {
                 if (email.toLowerCase().includes(input)) {
                     let div = document.createElement('div');
+                    document.getElementById('emailSuggestions').style.display = 'block';
                     div.innerHTML = email;
                     div.onclick = function() {
                         document.getElementById('search_email').value = email;
@@ -102,6 +104,8 @@
             }
         });
     }
+
+    
 
     function extractFirstTwoCharacters(timeSlot) {
         return timeSlot.substring(0, 2);
@@ -327,12 +331,12 @@
                 option.addEventListener('change', function() {
                     var pickupField = document.getElementById('pickup_address');
                     if (this.value === 'address') {
-                        document.getElementById('pickup_address_container').style.display = 'block';
-                        document.getElementById('pickup_time_container').style.display = 'block';
+                        document.getElementById('pickup_address_container').style.display = 'flex';
+                        document.getElementById('pickup_time_dropdown').style.display = 'flex';
                         pickupField.required = true;
                     } else if (this.value === 'store') {
                         document.getElementById('pickup_address_container').style.display = 'none';
-                        document.getElementById('pickup_time_container').style.display = 'none';
+                        document.getElementById('pickup_time_dropdown').style.display = 'none';
                         pickupField.required = false;
                     }
                 });
@@ -342,12 +346,12 @@
                 option.addEventListener('change', function() {
                     var deliveryField = document.getElementById('delivery_address');
                     if (this.value === 'address') {
-                        document.getElementById('delivery_address_container').style.display = 'block';
-                        document.getElementById('delevery_time_container').style.display = 'block';
+                        document.getElementById('delivery_address_container').style.display = 'flex';
+                        document.getElementById('delivery_time_dropdown').style.display = 'flex';
                         deliveryField.required = true;
                     } else if (this.value === 'store') {
                         document.getElementById('delivery_address_container').style.display = 'none';
-                        document.getElementById('delevery_time_container').style.display = 'none'
+                        document.getElementById('delivery_time_dropdown').style.display = 'none'
                         deliveryField.required = false;
                     }
                 });

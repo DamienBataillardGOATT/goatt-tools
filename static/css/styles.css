@@ -33,15 +33,24 @@ body {
 
 form {
     background-color: #ffffff; 
-    padding: 30px; 
+    padding: 20px; 
     border-radius: 5px; 
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 25%; 
+    width: 50%; 
     margin: 20px auto;
 }
 
-input[type="text"], input[type="email"], input[type="number"], select, textarea {
-    width: 100%;
+input[type="text"], input[type="email"], input[type="tel"], select, textarea {
+    width: calc(100% - 40px);
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type="number"] {
     padding: 12px 20px;
     margin: 8px 0;
     display: inline-block;
@@ -51,7 +60,7 @@ input[type="text"], input[type="email"], input[type="number"], select, textarea 
 }
 
 input[type="submit"] {
-    width: 100%;
+    width: calc(100% - 40px);
     background-color: #4CAF50;
     color: white;
     padding: 14px 20px;
@@ -71,13 +80,16 @@ input[type="radio"] {
     padding: 0; 
     border: none; 
     border-radius: 0; 
+    margin-top: 0
 }
 
 .suggestions {
+    display: none;
     border: 1px solid #ddd;
     border-top: none;
-    width: 100%;
+    width: 25%;
     background-color: white;
+    position: absolute;
 }
 
 .suggestions div {
@@ -98,6 +110,7 @@ input[type="radio"] {
 .price-container {
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 
 .price-label {
@@ -106,6 +119,44 @@ input[type="radio"] {
 
 .price-value {
     font-weight: bold;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+}
+
+.form-group > label,
+.form-group > input,
+.form-group > select,
+.form-group > .price-container {
+    flex: 1;
+    margin-right: 10px; 
+}
+
+
+.radio-group {
+    display: flex;
+    align-items: center;
+}
+
+.radio-option-container {
+    margin: 10px 0;
+}
+
+.radio-option-container label {
+    margin-right: 20px; 
+    font-size: 14px; 
+    color: #333; 
+}
+
+.date-time-container {
+    display: block; 
+    margin-bottom: 10px;
+}
+
+.date-time-container select {
+    margin-right: 10px;
 }
 
 .confirm-form {
@@ -246,7 +297,8 @@ input[type="radio"] {
    border-radius: 25px;
    background: #d3d3d3 ;
    outline: none;
-   transition: background 450ms ease-in;
+   position: relative; 
+   z-index: 1;
 }
 
 .slider::-webkit-slider-thumb {
@@ -258,7 +310,7 @@ input[type="radio"] {
    background: #FFFFFF;
    cursor: pointer;
    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
-   transition: background 450ms ease-in;
+   z-index: 10;
 }
 
 .slider::-moz-range-thumb {
@@ -267,7 +319,7 @@ input[type="radio"] {
     border-radius: 25px;
     background: #FFFFFF;
     cursor: pointer;
-    transition: background 450ms ease-in;
+    z-index: 10;
 }
 
 .slider-value {
@@ -280,6 +332,7 @@ input[type="radio"] {
     color: #555;
     font-size: 14px;
     user-select: none;
+    z-index: 1;
   }
 
   .modal {
