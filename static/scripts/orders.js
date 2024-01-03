@@ -62,7 +62,8 @@ function openModal(commandeDetailsJson, categorie) {
         case 'aRecuperer':
             break;
         case 'aCorder':
-            infoCategorieHtml = `<div class="slider-container">
+            infoCategorieHtml = `<textarea id="note-${commandeDetails.id}" onblur="writeNote('${commandeDetails.id}')"placeholder="Ajoutez une note ici...">${commandeDetails.note}</textarea>
+                                <div class="slider-container">
                                     <input type="range" min="0" max="100" value="0" class="slider" id="slider-${commandeDetails.id}" oninput="checkSlide('${commandeDetails.id}', this)">
                                     <div class="slider-value" id="slider-text-${commandeDetails.id}">Pose terminée</div>
                                 </div>`;
@@ -81,7 +82,6 @@ function openModal(commandeDetailsJson, categorie) {
     <strong>Articles:</strong>
     <div>${commandeDetails.articles.map(article => `<div class="article">${article}</div>`).join('')}</div>
     <a href="${commandeDetails.shopify_url}">${commandeDetails.shopify_url}</a>
-    <textarea id="note-${commandeDetails.id}" onblur="writeNote('${commandeDetails.id}')"placeholder="Ajoutez une note ici...">${commandeDetails.note}</textarea>
     ${infoCategorieHtml}`;
     
     document.getElementById('modalDetails').innerHTML = modalContentHtml;
