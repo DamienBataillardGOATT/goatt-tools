@@ -5,18 +5,24 @@ from datetime import datetime, timedelta
 orders_bp = Blueprint('orders_bp', __name__)
 
 @orders_bp.route('/')
-def page_de_latelier():
-    commandes_raw = get_atelier()
+def workshop_page():
+    response = get_atelier()
+
+    # Check if the response contains 'records'
+    if 'records' in response:
+        commandes_raw = response['records']
+    else:
+        commandes_raw = []
 
     commandes_info = {}
     for commande in commandes_raw:
+        fields = commande.get('fields', {})
         commande_id = commande['id']
 
-        shopify_url = commande['fields'].get('Shopify Order url', '')
+        shopify_url = fields.get('Shopify Order url', '')
+        client = fields.get('Nom complet', '')
 
-        client = commande['fields'].get('Nom complet', '')
-        
-        date_iso = commande['fields'].get('Delivery Date Time', '').rstrip('Z')
+        date_iso = fields.get('Delivery Date Time', '').rstrip('Z')
         if date_iso:
             datetime_livraison = datetime.fromisoformat(date_iso)
             date_livraison = datetime_livraison.strftime('%d/%m/%Y')
@@ -25,23 +31,17 @@ def page_de_latelier():
             date_livraison = ''
             heure_livraison = ''
 
-        téléphone = commande['fields'].get('Téléphone', '')
-
-        cordage = commande['fields'].get('Cordage', '')
-        quantité = commande['fields'].get('# raquettes','')
+        téléphone = fields.get('Téléphone', '')
+        cordage = fields.get('Cordage', '')
+        quantité = fields.get('# raquettes', '')
         cordage_formatte = f"{quantité}x {cordage}" if quantité and cordage else ''
-
-        tension = commande['fields'].get('Tension', '')
-
-        articles_str = commande['fields'].get('Articles', '')
-        articles= articles_str.split('\n')
-
-        status_recup = commande['fields'].get('Statut récup', '')
-        status_pose = commande['fields'].get('Statut pose', '')
-        status_livraison = commande['fields'].get('Statut livraison', '')
-
-
-        note = commande['fields'].get('Notes', '')
+        tension = fields.get('Tension', '')
+        articles_str = fields.get('Articles', '')
+        articles = articles_str.split('\n')
+        status_recup = fields.get('Statut récup', '')
+        status_pose = fields.get('Statut pose', '')
+        status_livraison = fields.get('Statut livraison', '')
+        note = fields.get('Notes', '')
 
         commandes_info[commande_id] = {
             'id': commande_id,
@@ -65,17 +65,12 @@ def page_de_latelier():
     commandes_a_poser = []
     commandes_a_livrer = []
 
-    for commande_id, commande in commandes_info.items():
-        status_recup = commande.get('status_recup', '')
-        status_pose = commande.get('status_pose', '')
-        status_livraison = commande.get('status_livraison', '')
-
-
-        if status_recup == 'To Do':
+    for commande in commandes_info.values():
+        if commande['status_recup'] == 'To Do':
             commandes_a_recuperer.append(commande)
-        elif status_recup == 'Done' and status_pose == 'To Do':
+        elif commande['status_recup'] == 'Done' and commande['status_pose'] == 'To Do':
             commandes_a_poser.append(commande)
-        elif status_recup == 'Done' and status_pose == 'Done' and status_livraison == 'To Do':
+        elif commande['status_recup'] == 'Done' and commande['status_pose'] == 'Done' and commande['status_livraison'] == 'To Do':
             commandes_a_livrer.append(commande)
 
     return render_template('workshop_page.html', commandes_a_recuperer=commandes_a_recuperer, commandes_a_poser=commandes_a_poser, commandes_a_livrer=commandes_a_livrer)

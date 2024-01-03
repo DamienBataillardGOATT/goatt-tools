@@ -47,7 +47,6 @@ input[type="text"], input[type="email"], input[type="tel"], select, textarea {
     display: inline-block;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box;
 }
 
 input[type="number"] {

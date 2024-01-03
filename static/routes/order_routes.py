@@ -84,31 +84,48 @@ def complete_order(order_data):
     return redirect(url_for('order_bp.order_confirmation'))
 
 @order_bp.route('/')
-def page_des_commandes_de_pose_cordage():
-    # Extract data from the database
-    strings_raw = get_all_strings()
-    leads_raw = get_all_orders()
+def order_page():
+    try:
+        # Extract data from the database
+        strings_response = get_all_strings()
+        leads_response = get_all_orders()
 
-    # Filter to keep only strings in stock and extract necessary info
-    strings_info = {}
-    for string in strings_raw:
-        if string['fields'].get('En stock'):
-            string_name = string['fields'].get('String', '')
-            prix = string['fields'].get('price', 0)
-            shopify_variant_id = string['fields'].get('Shopify variant id', '')
-            strings_info[string_name] = {'prix': prix, 'shopify_variant_id': shopify_variant_id}
+        # Check if the response contains 'records'
+        if 'records' in strings_response:
+            strings_raw = strings_response['records']
+        else:
+            strings_raw = []
 
+        if 'records' in leads_response:
+            leads_raw = leads_response['records']
+        else:
+            leads_raw = []
 
-    emails = []
-    for lead in leads_raw:
-        email = lead['fields'].get('Email', '')
-        if email:
-            emails.append(email)
+        # Filter to keep only strings in stock and extract necessary info
+        strings_info = {}
+        for string in strings_raw:
+            fields = string.get('fields', {})
+            if fields.get('En stock'):
+                string_name = fields.get('String', '')
+                prix = fields.get('price', 0)
+                shopify_variant_id = fields.get('Shopify variant id', '')
+                strings_info[string_name] = {'prix': prix, 'shopify_variant_id': shopify_variant_id}
 
-    # Sort strings by brand in alphabetical order
-    strings_info_sorted = dict(sorted(strings_info.items()))
-    
-    return render_template('order_page.html', strings_info=strings_info_sorted, emails=emails)
+        emails = []
+        for lead in leads_raw:
+            fields = lead.get('fields', {})
+            email = fields.get('Email', '')
+            if email:
+                emails.append(email)
+
+        # Sort strings by brand in alphabetical order
+        strings_info_sorted = dict(sorted(strings_info.items()))
+
+        return render_template('order_page.html', strings_info=strings_info_sorted, emails=emails)
+
+    except Exception as e:
+        print("Error:", e)
+        # Handle the exception or return an error message
 
 @order_bp.route('/stringing_order', methods=['POST'])
 def stringing_order():

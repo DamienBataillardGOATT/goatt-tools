@@ -1,42 +1,108 @@
-from static.routes.config import API_KEY, BASE_ID_LEADS, CLIENT_TABLE, BASE_ID_ORDERS, ORDERS_TABLE, BASE_ID_PRODUCTS, PRODUCTS_TABLE, ORDERS_TABLE_2, BASE_ID_DECATHLON, DECATHLON_TABLE
-from airtable import Airtable
-
-airtable_strings = Airtable(BASE_ID_PRODUCTS, PRODUCTS_TABLE, API_KEY)
-airtable_orders = Airtable(BASE_ID_ORDERS, ORDERS_TABLE, API_KEY)
-airtable_clients = Airtable(BASE_ID_LEADS, CLIENT_TABLE, API_KEY)
-airtable_cordage = Airtable(BASE_ID_ORDERS, ORDERS_TABLE_2, API_KEY)
-airtable_decathlon = Airtable(BASE_ID_DECATHLON, DECATHLON_TABLE, API_KEY)
+from static.routes.config import API_KEY, BASE_ID_LEADS, CLIENT_TABLE_ID, BASE_ID_ORDERS, PRODUCTS_TABLE_ID, BASE_ID_PRODUCTS, ORDERS_TABLE_2_ID, ORDERS_TABLE_ID, DECATHLON_TABLE_ID, BASE_ID_DECATHLON
+import requests
 
 def get_all_strings():
-    return airtable_strings.get_all()
+    url = f'https://api.airtable.com/v0/{BASE_ID_PRODUCTS}/{PRODUCTS_TABLE_ID}'
+    headers = {
+        'Authorization': f'Bearer {API_KEY}'
+    }
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return {'error': response.json()}
 
 def get_all_orders():
-    return airtable_cordage.get_all()
-
-def get_livraison():
-    return airtable_cordage.get_all(view='Livraison')
+    url = f'https://api.airtable.com/v0/{BASE_ID_ORDERS}/{ORDERS_TABLE_2_ID}'
+    headers = {'Authorization': f'Bearer {API_KEY}'}
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return {'error': response.json()}
 
 def get_atelier():
-    return airtable_cordage.get_all(view='Atelier')
-
+    url = f'https://api.airtable.com/v0/{BASE_ID_ORDERS}/{ORDERS_TABLE_2_ID}?view=Atelier'
+    headers = {'Authorization': f'Bearer {API_KEY}'}
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return {'error': response.json()}
+    
 def get_decathlon():
-    return airtable_decathlon.get_all(view='Vue atelier')
+    url = f'https://api.airtable.com/v0/{BASE_ID_DECATHLON}/{DECATHLON_TABLE_ID}?view=Vue atelier'
+    headers = {'Authorization': f'Bearer {API_KEY}'}
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return {'error': response.json()}
 
 def search_client(search_email):
-    return airtable_clients.search('Email', search_email)
+    url = f'https://api.airtable.com/v0/{BASE_ID_LEADS}/{CLIENT_TABLE_ID}?filterByFormula=SEARCH("{search_email}", {{Email}})'
+    headers = {'Authorization': f'Bearer {API_KEY}'}
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return {'error': response.json()}
 
 def search_client_in_cordage(search_email):
-    return airtable_cordage.search('Email', search_email)
-
+    url = f'https://api.airtable.com/v0/{BASE_ID_ORDERS}/{ORDERS_TABLE_2_ID}?filterByFormula=SEARCH("{search_email}", {{Email}})'
+    headers = {'Authorization': f'Bearer {API_KEY}'}
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return {'error': response.json()}
+    
 def create_order(data):
-    return airtable_orders.insert(data)
-
+    url = f'https://api.airtable.com/v0/{BASE_ID_ORDERS}/{ORDERS_TABLE_ID}'
+    headers = {
+        'Authorization': f'Bearer {API_KEY}',
+        'Content-Type': 'application/json'
+    }
+    response = requests.post(url, headers=headers, json=data)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return {'error': response.json()}
+    
 def update_note(commandeId, note):
-    data = {"Notes" : note}
-    return airtable_cordage.update(commandeId, data)
-
+    url = f'https://api.airtable.com/v0/{BASE_ID_ORDERS}/{ORDERS_TABLE_2_ID}/{commandeId}'
+    headers = {
+        'Authorization': f'Bearer {API_KEY}',
+        'Content-Type': 'application/json'
+    }
+    data = {"fields": {"Notes": note}}
+    response = requests.patch(url, headers=headers, json=data)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return {'error': response.json()}
+    
 def finish_commande(commandeId):
-    return airtable_cordage.update(commandeId, {'Statut pose': 'Done'})
-
+    url = f'https://api.airtable.com/v0/{BASE_ID_ORDERS}/{ORDERS_TABLE_2_ID}/{commandeId}'
+    headers = {
+        'Authorization': f'Bearer {API_KEY}',
+        'Content-Type': 'application/json'
+    }
+    data = {"fields": {"Statut pose": "Done"}}
+    response = requests.patch(url, headers=headers, json=data)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return {'error': response.json()}
+    
 def add_client(client_info):
-    return airtable_clients.insert(client_info)
+    url = f'https://api.airtable.com/v0/{BASE_ID_LEADS}/{CLIENT_TABLE_ID}'
+    headers = {
+        'Authorization': f'Bearer {API_KEY}',
+        'Content-Type': 'application/json'
+    }
+    response = requests.post(url, headers=headers, json=client_info)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return {'error': response.json()}

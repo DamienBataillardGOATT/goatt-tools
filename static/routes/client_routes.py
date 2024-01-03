@@ -5,26 +5,31 @@ from static.scripts.airtable import search_client, search_client_in_cordage, add
 client_bp = Blueprint('client_bp', __name__)
 
 @client_bp.route('/')
-def page_nouveau_client():
+def new_customer_page():
     return render_template('new_customer_page.html')
 
 @client_bp.route('/search_client', methods=['POST'])
-def search_client():
+def search_client_route():
     search_email = request.form['search_email']
 
-    # Search for string information by email in the strings table
-    client_info_string = search_client_in_cordage(search_email)
+    # Search for client information by email in the cordage table
+    client_info_string_response = search_client_in_cordage(search_email)
+    client_info_string_records = client_info_string_response.get('records', [])
 
-    if client_info_string:
-        client_info_string = client_info_string[0]['fields']
+    if client_info_string_records:
+        client_info_string = client_info_string_records[0]['fields']
         session['client_info'] = client_info_string
-        return jsonify({'found': True, 'client': client_info_string, 'cordage': client_info_string['Cordage'], 'tension': client_info_string['Tension'], 'phonenumber' : client_info_string['Téléphone']})
+        return jsonify({'found': True, 'client': client_info_string, 'cordage': client_info_string.get('Cordage', ''), 'tension': client_info_string.get('Tension', ''), 'phonenumber' : client_info_string.get('Téléphone', '')})
     else:
-        client_info = search_client(search_email)
-        if client_info:
-            client_info = client_info[0]['fields']
+        # Search for client information by email in the client table
+        client_info_response = search_client(search_email)
+        client_info_records = client_info_response.get('records', [])
+
+        if client_info_records:
+            client_info = client_info_records[0]['fields']
             session['client_info'] = client_info
             return jsonify({'found': True, 'client': client_info})
+        
         return jsonify({'found': False, 'message': 'Aucun utilisateur trouvé avec cet email.'})
     
 @client_bp.route('/add_client', methods=['POST'])
