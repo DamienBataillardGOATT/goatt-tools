@@ -91,15 +91,6 @@ input[type="radio"] {
     position: absolute;
 }
 
-.adresssuggestions {
-    display: none;
-    border: 1px solid #ddd;
-    border-top: none;
-    width: 17%;
-    background-color: white;
-    position: absolute;
-}
-
 .suggestions div {
     padding: 10px;
     cursor: pointer;
