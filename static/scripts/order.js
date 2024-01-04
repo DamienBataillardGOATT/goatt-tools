@@ -9,7 +9,7 @@
     function searchString() {
         let input = document.getElementById('searchInput').value;
         input = input.toLowerCase();
-        let suggestions = document.getElementById('suggestions');
+        let suggestions = document.getElementById('cordagesuggestions');
 
         suggestions.innerHTML = '';
 
@@ -17,7 +17,7 @@
             for (let stringName in stringsInfo) {
                 if (stringName.toLowerCase().includes(input)) {
                     let div = document.createElement('div');
-                    document.getElementById('suggestions').style.display = 'block';
+                    document.getElementById('cordagesuggestions').style.display = 'block';
                     div.innerHTML = stringName;
                     div.onclick = function() {
                         document.getElementById('searchInput').value = stringName;
@@ -230,18 +230,13 @@
     
     function searchAddressDeposit(inputId, suggestionsId) {
         var input = document.getElementById(inputId).value;
-        console.log(encodeURIComponent(input))
     
         if (input.length > 2) {
             fetch('https://api-adresse.data.gouv.fr/search/?q=' + encodeURIComponent(input))
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Réponse réseau non OK');
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 var suggestions = document.getElementById(suggestionsId);
+                document.getElementById(suggestionsId).style.display = 'block';
                 suggestions.innerHTML = '';
                 data.features.forEach(function(feature) {
                     var div = document.createElement('div');
@@ -266,11 +261,6 @@
                     };
                     suggestions.appendChild(div);
                 });
-            })
-            .catch(error => {
-                console.error('Problème de récupération des données :', error);
-                var suggestions = document.getElementById(suggestionsId);
-                suggestions.innerHTML = 'Impossible de charger les suggestions.';
             });
         }
     }
@@ -283,6 +273,7 @@
             .then(response => response.json())
             .then(data => {
                 var suggestions = document.getElementById(suggestionsId);
+                document.getElementById(suggestionsId).style.display = 'block';
                 suggestions.innerHTML = '';
                 data.features.forEach(function(feature) {
                     var div = document.createElement('div');

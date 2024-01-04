@@ -198,6 +198,7 @@ def stringing_order():
         'Adresse de livraison': delivery_address if delivery_option == 'address' else None,
         'Prix': total_price,
         'Statut récup' : statut_recup,
+        'Status pose' : 'To Do',
         'Statut livraison' : statut_livraison,
         'ShopifyVariantId': shopify_variant_id,
         'short pickup address': short_adress_pickup if short_adress_pickup else None,

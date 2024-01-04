@@ -64,7 +64,7 @@
                 <input type="text" id="Tension" name="Tension"  placeholder="Montant, Travers : 22, 24 , recommandation expert" required>
             </div>
 
-            <div id="suggestions" class="suggestions"></div>
+            <div id="cordagesuggestions" class="suggestions"></div>
 
             <!-- Hidden field to store the shopify variant id -->
             <input type="hidden" id="shopifyVariantId" name="shopifyVariantId">
@@ -98,7 +98,8 @@
                 <label for="pickup_address">Adresse</label>
                 <input type="text" id="pickup_address" name="pickup_address" placeholder="Ex: 15 Avenue de Clichy 75017 Paris" onkeyup="searchAddressDeposit('pickup_address', 'pickup_suggestions')">
             </div>
-                <div id="pickup_suggestions" class="suggestions"></div>
+            
+            <div id="pickup_suggestions" class="adresssuggestions"></div>
 
             <input type="hidden" id="longitudeDeposit" name="longitudeDeposit">
             <input type="hidden" id="latitudeDeposit" name="latitudeDeposit">
@@ -134,8 +135,9 @@
             <div id="delivery_address_container" class="form-group"  style="display:none;">
                 <label for="delivery_address">Adresse</label>
                 <input type="text" id="delivery_address" name="delivery_address" placeholder="Ex: 15 Av de Clichy, 75017 Paris, France" onkeyup="searchAddressDelivery('delivery_address', 'delivery_suggestions')">
-                <div id="delivery_suggestions" class="suggestions"></div>
             </div>
+
+            <div id="delivery_suggestions" class="addresssugestions"></div>
 
             <input type="hidden" id="longitudeDelivery" name="longitudeDelivery">
             <input type="hidden" id="latitudeDelivery" name="latitudeDelivery">
