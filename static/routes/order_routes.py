@@ -64,7 +64,7 @@ def complete_order(order_data):
     order_id, order_url = create_draft_order(draft_order_info)
 
     if order_id:
-        order_data['draft shopify id'] = order_id
+        order_data['draft shopify id'] = int(order_id)
         session['draft_order_url'] = order_url
 
     # Remove the 'ShopifyVariantId' key from order_data if it exists
@@ -135,7 +135,10 @@ def stringing_order():
     delivery_option = request.form['delivery_option']
     pickup_date = request.form['pickup_deposit_date']
     delivery_date = request.form['pickup_delivery_date']
-    total_price = float(request.form['totalPrice'])
+    total_price_str = request.form['totalPrice']
+    total_price_str = total_price_str.replace('€', '').strip()  
+    total_price_str = total_price_str.replace(',', '.')
+    total_price = float(total_price_str)
     shopify_variant_id = request.form['shopifyVariantId']
     tension = request.form['Tension']
     quantity = request.form['string_quantity']

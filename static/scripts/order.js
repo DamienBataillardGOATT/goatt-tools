@@ -105,8 +105,6 @@
         });
     }
 
-    
-
     function extractFirstTwoCharacters(timeSlot) {
         return timeSlot.substring(0, 2);
     }

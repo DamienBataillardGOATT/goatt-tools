@@ -58,12 +58,16 @@ def search_client_in_cordage(search_email):
         return {'error': response.json()}
     
 def create_order(data):
+    formatted_data = {"fields": data}
+    print(formatted_data)
     url = f'https://api.airtable.com/v0/{BASE_ID_ORDERS}/{ORDERS_TABLE_ID}'
     headers = {
         'Authorization': f'Bearer {API_KEY}',
         'Content-Type': 'application/json'
     }
-    response = requests.post(url, headers=headers, json=data)
+    response = requests.post(url, headers=headers, json=formatted_data)
+    print(response)
+    print(response.json())
     if response.status_code == 200:
         return response.json()
     else:
