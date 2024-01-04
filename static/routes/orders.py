@@ -68,7 +68,7 @@ def workshop_page():
     for commande in commandes_info.values():
         if commande['status_recup'] == 'To Do':
             commandes_a_recuperer.append(commande)
-        elif commande['status_recup'] == 'Done' and commande['status_pose'] == 'To Do':
+        elif (commande['status_recup'] == 'Done' or commande['status_recup'] == 'No Recup')and commande['status_pose'] == 'To Do':
             commandes_a_poser.append(commande)
         elif commande['status_recup'] == 'Done' and commande['status_pose'] == 'Done' and commande['status_livraison'] == 'To Do':
             commandes_a_livrer.append(commande)
