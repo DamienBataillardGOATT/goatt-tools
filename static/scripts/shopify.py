@@ -76,7 +76,7 @@ def create_draft_order(data):
         response_data = response.json()
         invoice_url = response_data['draft_order']['admin_graphql_api_id']
         order_id = invoice_url.split('/')[-1]
-        order_url = f"https://goatt-prod.myshopify.com/store/goatt-tennis/draft_orders/{order_id}"
+        order_url = f"https://admin.shopify.com/store/goatt-prod/draft_orders/{order_id}"
         return order_id, order_url
     else:
         return None 
