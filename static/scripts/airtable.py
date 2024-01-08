@@ -43,8 +43,20 @@ def search_client(search_email):
     url = f'https://api.airtable.com/v0/{BASE_ID_LEADS}/{CLIENT_TABLE_ID}?filterByFormula=SEARCH("{search_email}", {{Email}})'
     headers = {'Authorization': f'Bearer {API_KEY}'}
     response = requests.get(url, headers=headers)
+    
     if response.status_code == 200:
-        return response.json()
+        data = response.json()
+        if data['records']:
+            client_record = data['records'][0]
+            client_info = {
+                'Nom': client_record['fields'].get('Nom', ''),
+                'Prénom': client_record['fields'].get('Prénom', ''),
+                'Email': client_record['fields'].get('Email', ''),
+                'Téléphone': client_record['fields'].get('Téléphone', '')
+            }
+            return client_info
+        else:
+            return None
     else:
         return {'error': response.json()}
 
@@ -59,7 +71,6 @@ def search_client_in_cordage(search_email):
     
 def create_order(data):
     formatted_data = {"fields": data}
-    print(formatted_data)
     url = f'https://api.airtable.com/v0/{BASE_ID_ORDERS}/{ORDERS_TABLE_ID}'
     headers = {
         'Authorization': f'Bearer {API_KEY}',
@@ -99,13 +110,15 @@ def finish_commande(commandeId):
     else:
         return {'error': response.json()}
     
-def add_client(client_info):
+def add_client_to_airtable(client_info):
+    formatted_client_info = {"fields": client_info}
     url = f'https://api.airtable.com/v0/{BASE_ID_LEADS}/{CLIENT_TABLE_ID}'
     headers = {
         'Authorization': f'Bearer {API_KEY}',
         'Content-Type': 'application/json'
     }
-    response = requests.post(url, headers=headers, json=client_info)
+    response = requests.post(url, headers=headers, json=formatted_client_info)
+    print(response.json())
     if response.status_code == 200:
         return response.json()
     else:

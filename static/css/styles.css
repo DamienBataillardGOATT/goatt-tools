@@ -241,6 +241,14 @@ input[type="radio"] {
     margin: 0px 30px;
 }
 
+.confirmation-box ul li {
+    list-style-type: none; 
+}
+
+.confirmation-box ul {
+    padding-left: 0; 
+}
+
 .categorie {
     display: flex;
     flex-wrap: wrap;

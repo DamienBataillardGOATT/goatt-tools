@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <title>Confirmation de Création de Client</title>
+</head>
+<body>
+    <div class="confirmation-box">
+        <h1>Confirmation de Création de Client</h1>
+        {% if client_added %}
+            <p>Félicitations ! Le client a été ajouté avec succès.</p>
+            <p>Informations du client:</p>
+            <ul>
+                <li>Nom: {{ client_info['Nom'] }}</li>
+                <li>Prénom: {{ client_info['Prénom'] }}</li>
+                <li>Email: {{ client_info['Email'] }}</li>
+                <li>Téléphone: {{ client_info['Téléphone'] }}</li>
+            </ul>
+            <p><a href="{{ url_for('order_bp.order_page') }}">Continuer vers la prise de commande</a></p>
+        {% else %}
+            <p>Le client existe déjà dans la base de données.</p>
+            <p>Informations du client:</p>
+            <ul>
+                <li>Nom: {{ client_info['Nom'] }}</li>
+                <li>Prénom: {{ client_info['Prénom'] }}</li>
+                <li>Email: {{ client_info['Email'] }}</li>
+                <li>Téléphone: {{ client_info['Téléphone'] }}</li>
+            </ul>
+            <p><a href="{{ url_for('order_bp.order_page') }}">Continuer vers la prise de commande</a></p>
+        {% endif %}
+        <p><a href="/">Retour à l'accueil</a></p>
+    </div>
+</body>
+</html>
