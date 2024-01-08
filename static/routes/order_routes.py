@@ -86,22 +86,12 @@ def complete_order(order_data):
 @order_bp.route('/')
 def order_page():
     try:
-        # Extract data from the database
         strings_response = get_all_strings()
         leads_response = get_all_orders()
 
-        # Check if the response contains 'records'
-        if 'records' in strings_response:
-            strings_raw = strings_response['records']
-        else:
-            strings_raw = []
+        strings_raw = strings_response.get('records', []) if 'records' in strings_response else []
+        leads_raw = leads_response.get('records', []) if 'records' in leads_response else []
 
-        if 'records' in leads_response:
-            leads_raw = leads_response['records']
-        else:
-            leads_raw = []
-
-        # Filter to keep only strings in stock and extract necessary info
         strings_info = {}
         for string in strings_raw:
             fields = string.get('fields', {})
@@ -118,14 +108,12 @@ def order_page():
             if email:
                 emails.append(email)
 
-        # Sort strings by brand in alphabetical order
         strings_info_sorted = dict(sorted(strings_info.items()))
 
         return render_template('order_page.html', strings_info=strings_info_sorted, emails=emails)
 
     except Exception as e:
         print("Error:", e)
-        # Handle the exception or return an error message
 
 @order_bp.route('/stringing_order', methods=['POST'])
 def stringing_order():

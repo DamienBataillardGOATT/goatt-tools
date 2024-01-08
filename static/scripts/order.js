@@ -57,12 +57,19 @@
         let input = document.getElementById('search_email').value;
         input = input.toLowerCase();
         let suggestions = document.getElementById('emailSuggestions');
-
+    
         suggestions.innerHTML = '';
 
+        let displayedEmails = new Set();
+        
+        console.log('Nombre total d\'emails:', emailsInfo.length);
+    
         if (input.length > 0) {
             emailsInfo.forEach(email => {
-                if (email.toLowerCase().includes(input)) {
+                let lowerCaseEmail = email.toLowerCase();
+                if (lowerCaseEmail.includes(input) && !displayedEmails.has(lowerCaseEmail)) {
+                    displayedEmails.add(lowerCaseEmail); 
+    
                     let div = document.createElement('div');
                     document.getElementById('emailSuggestions').style.display = 'block';
                     div.innerHTML = email;

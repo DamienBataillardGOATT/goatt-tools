@@ -61,6 +61,8 @@ def workshop_page():
             'type': 'B2C'
         }
 
+    print(commandes_info)
+
     commandes_a_recuperer = []
     commandes_a_poser = []
     commandes_a_livrer = []

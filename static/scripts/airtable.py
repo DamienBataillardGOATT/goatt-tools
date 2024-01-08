@@ -13,18 +13,33 @@ def get_all_strings():
         return {'error': response.json()}
 
 def get_all_orders():
-    url = f'https://api.airtable.com/v0/{BASE_ID_ORDERS}/{ORDERS_TABLE_2_ID}'
+    url = f'https://api.airtable.com/v0/{BASE_ID_ORDERS}/{ORDERS_TABLE_2_ID}?view=Global'
     headers = {'Authorization': f'Bearer {API_KEY}'}
-    response = requests.get(url, headers=headers)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return {'error': response.json()}
+
+    all_orders = []
+    while True:
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            all_orders.extend(data.get('records', []))
+
+            # Check if there's more data to fetch
+            offset = data.get('offset')
+            if offset:
+                url = f'https://api.airtable.com/v0/{BASE_ID_ORDERS}/{ORDERS_TABLE_2_ID}?view=Global&offset={offset}'
+            else:
+                break
+        else:
+            return {'error': response.json()}
+
+    return {'records': all_orders}
 
 def get_atelier():
-    url = f'https://api.airtable.com/v0/{BASE_ID_ORDERS}/{ORDERS_TABLE_2_ID}?view=Atelier'
+    url = (f'https://api.airtable.com/v0/{BASE_ID_ORDERS}/{ORDERS_TABLE_2_ID}'
+           f'?view=Global&sort[0][field]=Created%20time&sort[0][direction]=desc')
     headers = {'Authorization': f'Bearer {API_KEY}'}
     response = requests.get(url, headers=headers)
+    print(response.json())
     if response.status_code == 200:
         return response.json()
     else:
